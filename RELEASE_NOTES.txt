@@ -169,3 +169,5 @@
 2026-08-12 11:14:13 +0200 | v2.1.4 | Update performance benchmark script and results in CI workflow
 2026-08-12 11:34:13 +0200 | v2.1.5 | Enhance performance benchmarking: separate charts for Debug and Release builds, update CI workflow, and improve output handling
 2026-08-12 12:46:56 +0200 | v2.1.6 | Refactor CI workflow: separate build-and-test jobs for Debug and Release, update performance benchmark steps, and improve artifact handling
+2026-08-12 12:46:56 +0200 | v2.1.6 | Refactor CI workflow: separate build-and-test jobs for Debug and Release, update performance benchmark steps, and improve artifact handling
+2026-08-12 12:49:21 +0200 | v2.1.7 | Fix duplicate entry in release notes for CI workflow refactor
