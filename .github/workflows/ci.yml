@@ -14,7 +14,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build_type: [Debug, Release]
+        include:
+          - build_type: Debug
+            threshold_percent: 10
+          - build_type: Release
+            threshold_percent: 10
 
     steps:
       - name: Checkout
@@ -53,7 +57,7 @@ jobs:
 
       - name: Run performance benchmark
         env:
-          THRESHOLD_PERCENT: 10
+          THRESHOLD_PERCENT: ${{ matrix.threshold_percent }}
         run: |
           git fetch origin main --depth=1 || true
           TEST_BIN="$(find build-ci/${{ matrix.build_type }} -type f -name 'EquinoxLoggerTests.x86' | head -n 1)"
@@ -61,7 +65,8 @@ jobs:
           bash scripts/run_performance_benchmark.sh \
             --binary "$TEST_BIN" \
             --output-dir "$GITHUB_WORKSPACE/docs/images" \
-            --history-file "$GITHUB_WORKSPACE/benchmarks/performance-history.json" \
+            --chart-name "performance-benchmark-${{ matrix.build_type }}.svg" \
+            --history-file "$GITHUB_WORKSPACE/benchmarks/performance-history-${{ matrix.build_type }}.json" \
             --threshold "$THRESHOLD_PERCENT"
 
       - name: Upload performance chart
@@ -69,5 +74,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: performance-chart-${{ matrix.build_type }}
-          path: docs/images/performance-benchmark.svg
+          path: docs/images/performance-benchmark-${{ matrix.build_type }}.svg
           if-no-files-found: error

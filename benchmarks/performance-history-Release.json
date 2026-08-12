@@ -1,0 +1,18 @@
+{
+  "baseline_ms": 38.7253,
+  "current_ms": 27.4077,
+  "delta_percent": -29.23,
+  "threshold_percent": 10.0,
+  "threshold_value_ms": 42.6,
+  "history": [
+    {
+      "label": "baseline",
+      "value_ms": 38.73
+    },
+    {
+      "label": "current",
+      "value_ms": 27.41
+    }
+  ],
+  "last_updated_utc": "2026-08-12T09:29:36Z"
+}

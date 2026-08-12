@@ -167,3 +167,4 @@
 2026-08-12 10:35:43 +0200 | v2.1.2 | Add git hooks for automated release notes generation and version management
 2026-08-12 11:08:04 +0200 | v2.1.3 | Add performance benchmarking and reporting to CI workflow
 2026-08-12 11:14:13 +0200 | v2.1.4 | Update performance benchmark script and results in CI workflow
+2026-08-12 11:34:13 +0200 | v2.1.5 | Enhance performance benchmarking: separate charts for Debug and Release builds, update CI workflow, and improve output handling

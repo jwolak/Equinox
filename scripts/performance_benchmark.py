@@ -148,6 +148,7 @@ def main():
     parser = argparse.ArgumentParser(description="Run the EquinoxLogger logging performance benchmark and compare it to the baseline history.")
     parser.add_argument("--binary", type=Path, required=True, help="Path to the EquinoxLoggerTests.x86 binary.")
     parser.add_argument("--output-dir", type=Path, default=Path("docs/images"), help="Directory for generated chart output.")
+    parser.add_argument("--chart-name", type=str, default="performance-benchmark.svg", help="Output filename for the generated SVG chart.")
     parser.add_argument("--history-file", type=Path, default=Path("benchmarks/performance-history.json"), help="Path to the JSON baseline history file.")
     parser.add_argument("--threshold", type=float, default=10.0, help="Maximum allowed slowdown percentage before the benchmark fails.")
     parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[1], help="Repository root used for Git baseline lookup.")
@@ -174,7 +175,7 @@ def main():
     threshold_value = baseline_ms * (1.0 + (args.threshold / 100.0))
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    chart_path = output_dir / "performance-benchmark.svg"
+    chart_path = output_dir / args.chart_name
     build_svg_chart(chart_path, current_ms, baseline_ms, args.threshold)
 
     history_payload = {
@@ -194,6 +195,7 @@ def main():
     print(f"Benchmark current: {current_ms:.2f} ms")
     print(f"Benchmark baseline: {baseline_ms:.2f} ms")
     print(f"Benchmark change: {delta_percent:.2f}%")
+    print(f"Threshold: {args.threshold}%")
     print(f"Chart written to: {chart_path}")
 
     if delta_percent > args.threshold:
