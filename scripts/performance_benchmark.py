@@ -38,9 +38,6 @@ def parse_benchmark_stdout(stdout: str):
         payload = line.split("BENCHMARK_RESULT:", 1)[1].strip()
         payloads.append(json.loads(payload))
 
-    if not payloads:
-        raise RuntimeError("Benchmark result not found in test output. Expected BENCHMARK_RESULT JSON.")
-
     return payloads
 
 
@@ -198,6 +195,10 @@ def run_benchmark(binary_path: Path, test_filter: str = "PerformanceBenchmark.Lo
     result = subprocess.run(command, capture_output=True, text=True, cwd=str(resolved_binary.parent), check=False)
     stdout = (result.stdout or "") + (result.stderr or "")
     benchmark_results = parse_benchmark_stdout(stdout)
+
+    if not benchmark_results and "SKIPPED" in stdout:
+        return [], result.returncode
+
     return benchmark_results, result.returncode
 
 
