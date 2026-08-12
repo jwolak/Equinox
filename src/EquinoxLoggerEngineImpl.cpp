@@ -123,6 +123,8 @@ void equinox::EquinoxLoggerEngineImpl::logMessage(level::LOG_LEVEL msgLevel, con
 
 bool equinox::EquinoxLoggerEngineImpl::setup(level::LOG_LEVEL logLevel, const std::string& logPrefix, logs_output::SINK logsOutputSink,
                                              const std::string& logFileName, std::size_t maxLogFileSizeBytes, std::size_t maxLogFiles) {
+    mAsyncLogQueueEngine_->stopWorker();
+
     mLogLevel_ = logLevel;
     mLogPrefix_ = std::string("[" + logPrefix + "]");
     mAsyncLogQueueEngine_->setLogsOutputSink(logsOutputSink);
@@ -148,6 +150,7 @@ void equinox::EquinoxLoggerEngineImpl::changeLevel(level::LOG_LEVEL logLevel) {
 }
 
 bool equinox::EquinoxLoggerEngineImpl::changeLogsOutputSink(logs_output::SINK logsOutputSink) {
+    mAsyncLogQueueEngine_->stopWorker();
     mAsyncLogQueueEngine_->setLogsOutputSink(logsOutputSink);
 
     if (equinox::logs_output::SINK::file == logsOutputSink or equinox::logs_output::SINK::console_and_file == logsOutputSink) {
@@ -158,6 +161,8 @@ bool equinox::EquinoxLoggerEngineImpl::changeLogsOutputSink(logs_output::SINK lo
             return false;
         }
     }
+
+    mAsyncLogQueueEngine_->startWorkerIfNeeded();
     return true;
 }
 

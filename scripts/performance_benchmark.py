@@ -28,11 +28,20 @@ def write_json_file(path: Path, payload):
 
 
 def parse_benchmark_stdout(stdout: str):
-    match = re.search(r"BENCHMARK_RESULT:\s*(\{.*\})", stdout, re.DOTALL)
-    if not match:
+    payloads = []
+
+    for raw_line in stdout.splitlines():
+        line = raw_line.strip()
+        if "BENCHMARK_RESULT:" not in line:
+            continue
+
+        payload = line.split("BENCHMARK_RESULT:", 1)[1].strip()
+        payloads.append(json.loads(payload))
+
+    if not payloads:
         raise RuntimeError("Benchmark result not found in test output. Expected BENCHMARK_RESULT JSON.")
-    payload = match.group(1)
-    return json.loads(payload)
+
+    return payloads
 
 
 def git_history_baseline(repo_root: Path, history_path: Path):
@@ -92,14 +101,6 @@ def build_svg_chart(output_path: Path, current_ms: float, baseline_ms: float | N
     def y_for(value: float) -> float:
         return chart_height - margin_bottom - ((value / max_value) * plot_height)
 
-    bar_width = plot_width / 4.0
-    baseline_x = margin_left + 40
-    current_x = baseline_x + bar_width + 40
-
-    baseline_y = y_for(baseline_value)
-    current_y = y_for(current_ms)
-    threshold_y = y_for(threshold_value)
-
     labels = [
         "baseline",
         "current",
@@ -113,8 +114,8 @@ def build_svg_chart(output_path: Path, current_ms: float, baseline_ms: float | N
         f'<text x="{chart_width / 2}" y="26" text-anchor="middle" font-size="22" fill="#e5e7eb" font-family="Arial">Log print performance benchmark</text>',
         f'<line x1="{margin_left}" y1="{chart_height - margin_bottom}" x2="{chart_width - margin_right}" y2="{chart_height - margin_bottom}" stroke="#9ca3af" stroke-width="1.5"/>',
         f'<line x1="{margin_left}" y1="{margin_top}" x2="{margin_left}" y2="{chart_height - margin_bottom}" stroke="#9ca3af" stroke-width="1.5"/>',
-        f'<line x1="{margin_left}" y1="{threshold_y}" x2="{chart_width - margin_right}" y2="{threshold_y}" stroke="#fbbf24" stroke-dasharray="7 5" stroke-width="1.5"/>',
-        f'<text x="{chart_width - margin_right}" y="{threshold_y - 8}" text-anchor="end" font-size="12" fill="#fbbf24" font-family="Arial">10% threshold</text>',
+        f'<line x1="{margin_left}" y1="{y_for(threshold_value)}" x2="{chart_width - margin_right}" y2="{y_for(threshold_value)}" stroke="#fbbf24" stroke-dasharray="7 5" stroke-width="1.5"/>',
+        f'<text x="{chart_width - margin_right}" y="{y_for(threshold_value) - 8}" text-anchor="end" font-size="12" fill="#fbbf24" font-family="Arial">10% threshold</text>',
     ]
 
     for idx, label in enumerate(labels):
@@ -135,20 +136,77 @@ def build_svg_chart(output_path: Path, current_ms: float, baseline_ms: float | N
     output_path.write_text("\n".join(svg_lines), encoding="utf-8")
 
 
-def run_benchmark(binary_path: Path):
+def build_sink_chart(output_path: Path, records):
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    sinks = ["console", "file", "console_and_file"]
+    lengths = sorted({int(item["message_length"]) for item in records})
+    chart_width = 920
+    chart_height = 520
+    margin_left = 90
+    margin_right = 40
+    margin_top = 60
+    margin_bottom = 100
+    plot_width = chart_width - margin_left - margin_right
+    plot_height = chart_height - margin_top - margin_bottom
+    max_value = max(float(item["logs_per_second"]) for item in records) * 1.2
+    colors = {"console": "#7aa2f7", "file": "#34d399", "console_and_file": "#fbbf24"}
+
+    svg_lines = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{chart_width}" height="{chart_height}" viewBox="0 0 {chart_width} {chart_height}">',
+        '<rect width="100%" height="100%" fill="#111827"/>',
+        f'<text x="{chart_width / 2}" y="28" text-anchor="middle" font-size="22" fill="#e5e7eb" font-family="Arial">Throughput by output sink and message length</text>',
+        f'<line x1="{margin_left}" y1="{chart_height - margin_bottom}" x2="{chart_width - margin_right}" y2="{chart_height - margin_bottom}" stroke="#9ca3af" stroke-width="1.5"/>',
+        f'<line x1="{margin_left}" y1="{margin_top}" x2="{margin_left}" y2="{chart_height - margin_bottom}" stroke="#9ca3af" stroke-width="1.5"/>',
+    ]
+
+    group_width = plot_width / len(lengths)
+    bar_width = group_width / (len(sinks) + 1)
+
+    for tick in range(0, 6):
+        value = (max_value / 5.0) * tick
+        y = chart_height - margin_bottom - ((value / max_value) * plot_height)
+        svg_lines.append(f'<line x1="{margin_left}" y1="{y}" x2="{chart_width - margin_right}" y2="{y}" stroke="#374151" stroke-width="1"/>')
+        svg_lines.append(f'<text x="{margin_left - 12}" y="{y + 4}" text-anchor="end" font-size="11" fill="#cbd5e1" font-family="Arial">{value:.0f}</text>')
+
+    for idx, message_length in enumerate(lengths):
+        x0 = margin_left + idx * group_width + 18
+        svg_lines.append(f'<text x="{x0 + group_width / 2 - 10}" y="{chart_height - margin_bottom + 22}" text-anchor="middle" font-size="12" fill="#e5e7eb" font-family="Arial">{message_length}B</text>')
+
+        for sink_idx, sink_name in enumerate(sinks):
+            value = next((float(item["logs_per_second"]) for item in records if item["sink"] == sink_name and int(item["message_length"]) == message_length), 0.0)
+            x = x0 + sink_idx * bar_width + 8
+            bar_height = (value / max_value) * plot_height
+            y = chart_height - margin_bottom - bar_height
+            color = colors.get(sink_name, "#ffffff")
+            svg_lines.append(f'<rect x="{x}" y="{y}" width="{bar_width - 8}" height="{bar_height}" fill="{color}" rx="4"/>')
+            svg_lines.append(f'<text x="{x + (bar_width - 10) / 2}" y="{y - 8}" text-anchor="middle" font-size="10" fill="#f8fafc" font-family="Arial">{value:.0f}</text>')
+
+    legend_y = margin_top - 8
+    for sink_name in sinks:
+        label_x = margin_left + 30 + sinks.index(sink_name) * 140
+        svg_lines.append(f'<rect x="{label_x}" y="{legend_y - 12}" width="14" height="14" fill="{colors[sink_name]}" rx="3"/>')
+        svg_lines.append(f'<text x="{label_x + 20}" y="{legend_y}" font-size="12" fill="#e5e7eb" font-family="Arial">{sink_name}</text>')
+
+    svg_lines.append('</svg>')
+    output_path.write_text("\n".join(svg_lines), encoding="utf-8")
+
+
+def run_benchmark(binary_path: Path, test_filter: str = "PerformanceBenchmark.LogPrintThroughput"):
     resolved_binary = binary_path.expanduser().resolve()
-    command = [str(resolved_binary), "--gtest_filter=PerformanceBenchmark.LogPrintThroughput", "--gtest_brief=1"]
+    command = [str(resolved_binary), f"--gtest_filter={test_filter}", "--gtest_brief=1"]
     result = subprocess.run(command, capture_output=True, text=True, cwd=str(resolved_binary.parent), check=False)
     stdout = (result.stdout or "") + (result.stderr or "")
-    benchmark_result = parse_benchmark_stdout(stdout)
-    return benchmark_result, result.returncode
+    benchmark_results = parse_benchmark_stdout(stdout)
+    return benchmark_results, result.returncode
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run the EquinoxLogger logging performance benchmark and compare it to the baseline history.")
+    parser = argparse.ArgumentParser(description="Run the EquinoxLogger logging performance benchmarks and compare them to the baseline history.")
     parser.add_argument("--binary", type=Path, required=True, help="Path to the EquinoxLoggerTests.x86 binary.")
     parser.add_argument("--output-dir", type=Path, default=Path("docs/images"), help="Directory for generated chart output.")
-    parser.add_argument("--chart-name", type=str, default="performance-benchmark.svg", help="Output filename for the generated SVG chart.")
+    parser.add_argument("--chart-name", type=str, default="performance-benchmark.svg", help="Output filename for the generated baseline SVG chart.")
+    parser.add_argument("--sink-chart-name", type=str, default="performance-throughput-by-sink.svg", help="Output filename for the sink/message-length throughput SVG chart.")
     parser.add_argument("--history-file", type=Path, default=Path("benchmarks/performance-history.json"), help="Path to the JSON baseline history file.")
     parser.add_argument("--threshold", type=float, default=10.0, help="Maximum allowed slowdown percentage before the benchmark fails.")
     parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[1], help="Repository root used for Git baseline lookup.")
@@ -163,7 +221,37 @@ def main():
         print(f"Benchmark binary not found: {binary_path}", file=sys.stderr)
         return 2
 
-    benchmark_result, exit_code = run_benchmark(binary_path)
+    benchmark_result = None
+    sink_records = []
+    overall_exit_code = 0
+
+    for test_filter in [
+        "PerformanceBenchmark.LogPrintThroughput",
+        "PerformanceBenchmark.ThroughputBySinkAndMessageLength_Console",
+        "PerformanceBenchmark.ThroughputBySinkAndMessageLength_File",
+        "PerformanceBenchmark.ThroughputBySinkAndMessageLength_ConsoleAndFile",
+    ]:
+        partial_results, exit_code = run_benchmark(binary_path, test_filter)
+        overall_exit_code = exit_code if exit_code != 0 else overall_exit_code
+
+        if test_filter == "PerformanceBenchmark.LogPrintThroughput":
+            if partial_results:
+                benchmark_result = partial_results[0]
+        else:
+            sink_records.extend(item for item in partial_results if "logs_per_second" in item)
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    if sink_records:
+        sink_chart_path = output_dir / args.sink_chart_name
+        build_sink_chart(sink_chart_path, sink_records)
+        print(f"Generated throughput chart: {sink_chart_path}")
+        for item in sink_records:
+            print(f"Sink={item['sink']} len={item['message_length']} logs/sec={float(item['logs_per_second']):.2f}")
+
+    if benchmark_result is None:
+        return overall_exit_code
+
     current_ms = float(benchmark_result["elapsed_ms"])
 
     baseline_ms = git_history_baseline(repo_root, history_file)
@@ -174,7 +262,6 @@ def main():
     delta_percent = 0.0 if baseline_ms <= 0 else ((current_ms - baseline_ms) / baseline_ms) * 100.0
     threshold_value = baseline_ms * (1.0 + (args.threshold / 100.0))
 
-    output_dir.mkdir(parents=True, exist_ok=True)
     chart_path = output_dir / args.chart_name
     build_svg_chart(chart_path, current_ms, baseline_ms, args.threshold)
 
@@ -202,8 +289,8 @@ def main():
         print(f"Performance regression exceeds {args.threshold}% threshold ({delta_percent:.2f}% slower).", file=sys.stderr)
         return 1
 
-    if exit_code != 0:
-        return exit_code
+    if overall_exit_code != 0:
+        return overall_exit_code
 
     return 0
 

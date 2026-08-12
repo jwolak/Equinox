@@ -155,6 +155,25 @@ To generate the charts locally:
 
 The output is saved separately for each build type, with Release used as the primary benchmark shown in the main README and Debug kept as an additional comparison chart.
 
+### Throughput by message length and sink
+
+The project also includes a second benchmark that measures how many log entries per second can be processed for different message sizes and output sinks.
+
+For each combination of message length and sink (`console`, `file`, `console_and_file`) the test records the throughput in logs/sec and renders a grouped chart.
+
+![Throughput by message length and sink](docs/images/performance-throughput-by-sink.svg)
+
+To generate this chart locally:
+```sh
+./scripts/run_performance_benchmark.sh \
+  --binary build/Debug/tests/EquinoxLoggerTests.x86 \
+  --output-dir docs/images \
+  --chart-name performance-throughput-by-sink.svg \
+  --threshold 10
+```
+
+This benchmark is useful for understanding how output destination and log message size affect throughput in real workloads.
+
 ## Unit Test Coverage
 
 Coverage measured with [LCOV](https://github.com/linux-test-project/lcov) on 2026-05-01:
