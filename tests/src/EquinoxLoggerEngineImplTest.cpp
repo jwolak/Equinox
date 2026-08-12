@@ -137,6 +137,7 @@ namespace equinox_logger_engine_impl_test {
     TEST_P(EquinoxLoggerEngineImplSetupLogLevelParameterizedTest, Setup_Logger_For_All_Log_Levels) {
         const SetupLogLevelTestCase testCase = GetParam();
 
+        EXPECT_CALL(*async_log_queue_engine_mock, stopWorker()).Times(1);
         EXPECT_CALL(*async_log_queue_engine_mock, setLogsOutputSink(logs_output::SINK::console)).Times(1);
         EXPECT_CALL(*file_logs_producer_mock, setupFile(_, _, _)).Times(0);
         EXPECT_CALL(*async_log_queue_engine_mock, startWorkerIfNeeded()).Times(1);
@@ -162,6 +163,7 @@ namespace equinox_logger_engine_impl_test {
     TEST_P(EquinoxLoggerEngineImplSetupSinkParameterizedTest, Setup_Logger_For_All_Output_Sinks) {
         const SetupSinkTestCase testCase = GetParam();
 
+        EXPECT_CALL(*async_log_queue_engine_mock, stopWorker()).Times(1);
         EXPECT_CALL(*async_log_queue_engine_mock, setLogsOutputSink(testCase.sink)).Times(1);
         EXPECT_CALL(*async_log_queue_engine_mock, startWorkerIfNeeded()).Times(1);
 
@@ -205,6 +207,7 @@ namespace equinox_logger_engine_impl_test {
     TEST_P(EquinoxLoggerEngineImplChangeSinkParameterizedTest, Change_Logs_Output_Sink_For_All_Sinks) {
         const SetupSinkTestCase testCase = GetParam();
 
+        EXPECT_CALL(*async_log_queue_engine_mock, stopWorker()).Times(1);
         EXPECT_CALL(*async_log_queue_engine_mock, setLogsOutputSink(logs_output::SINK::console)).Times(1);
         EXPECT_CALL(*file_logs_producer_mock, setupFile(_, _, _)).Times(0);
         EXPECT_CALL(*async_log_queue_engine_mock, startWorkerIfNeeded()).Times(1);
@@ -215,6 +218,7 @@ namespace equinox_logger_engine_impl_test {
         Mock::VerifyAndClearExpectations(async_log_queue_engine_mock);
         Mock::VerifyAndClearExpectations(file_logs_producer_mock);
 
+        EXPECT_CALL(*async_log_queue_engine_mock, stopWorker()).Times(1);
         EXPECT_CALL(*async_log_queue_engine_mock, setLogsOutputSink(testCase.sink)).Times(1);
 
         if (testCase.shouldSetupFile) {
@@ -222,6 +226,8 @@ namespace equinox_logger_engine_impl_test {
         } else {
             EXPECT_CALL(*file_logs_producer_mock, setupFile(_, _, _)).Times(0);
         }
+
+        EXPECT_CALL(*async_log_queue_engine_mock, startWorkerIfNeeded()).Times(1);
 
         const bool changeResult = equinox_Logger_engine_impl.changeLogsOutputSink(testCase.sink);
 
