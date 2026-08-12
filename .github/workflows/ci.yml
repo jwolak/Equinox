@@ -9,16 +9,9 @@ on:
       - "main"
 
 jobs:
-  build-and-test:
+  build-and-test-debug:
+    name: build-and-test (Debug)
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - build_type: Debug
-            threshold_percent: 10
-          - build_type: Release
-            threshold_percent: 10
 
     steps:
       - name: Checkout
@@ -33,17 +26,17 @@ jobs:
 
       - name: Configure
         run: >
-          cmake -S . -B build-ci/${{ matrix.build_type }}
+          cmake -S . -B build-ci/Debug
           -G Ninja
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DCMAKE_BUILD_TYPE=Debug
           -DEQUINOX_LOGGER_TESTS=ON
           -DEQUINOX_LOGGER_EXAMPLES=OFF
 
       - name: Build
-        run: cmake --build build-ci/${{ matrix.build_type }} --parallel
+        run: cmake --build build-ci/Debug --parallel
 
       - name: Run tests
-        working-directory: build-ci/${{ matrix.build_type }}
+        working-directory: build-ci/Debug
         run: |
           TEST_BIN=$(find . -type f -name "EquinoxLoggerTests.x86" | head -n 1)
           if [ -z "$TEST_BIN" ]; then
@@ -57,22 +50,83 @@ jobs:
 
       - name: Run performance benchmark
         env:
-          THRESHOLD_PERCENT: ${{ matrix.threshold_percent }}
+          THRESHOLD_PERCENT: 10
         run: |
           git fetch origin main --depth=1 || true
-          TEST_BIN="$(find build-ci/${{ matrix.build_type }} -type f -name 'EquinoxLoggerTests.x86' | head -n 1)"
+          TEST_BIN="$(find build-ci/Debug -type f -name 'EquinoxLoggerTests.x86' | head -n 1)"
           chmod +x scripts/run_performance_benchmark.sh
           bash scripts/run_performance_benchmark.sh \
             --binary "$TEST_BIN" \
             --output-dir "$GITHUB_WORKSPACE/docs/images" \
-            --chart-name "performance-benchmark-${{ matrix.build_type }}.svg" \
-            --history-file "$GITHUB_WORKSPACE/benchmarks/performance-history-${{ matrix.build_type }}.json" \
+            --chart-name "performance-benchmark-Debug.svg" \
+            --history-file "$GITHUB_WORKSPACE/benchmarks/performance-history-Debug.json" \
             --threshold "$THRESHOLD_PERCENT"
 
       - name: Upload performance chart
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: performance-chart-${{ matrix.build_type }}
-          path: docs/images/performance-benchmark-${{ matrix.build_type }}.svg
+          name: performance-chart-debug
+          path: docs/images/performance-benchmark-Debug.svg
+          if-no-files-found: error
+
+  build-and-test-release:
+    name: build-and-test (Release)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build build-essential libgtest-dev libgmock-dev python3
+
+      - name: Configure
+        run: >
+          cmake -S . -B build-ci/Release
+          -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DEQUINOX_LOGGER_TESTS=ON
+          -DEQUINOX_LOGGER_EXAMPLES=OFF
+
+      - name: Build
+        run: cmake --build build-ci/Release --parallel
+
+      - name: Run tests
+        working-directory: build-ci/Release
+        run: |
+          TEST_BIN=$(find . -type f -name "EquinoxLoggerTests.x86" | head -n 1)
+          if [ -z "$TEST_BIN" ]; then
+            echo "Test binary not found"
+            exit 1
+          fi
+
+          chmod +x "$TEST_BIN"
+          export LD_LIBRARY_PATH="$PWD:$PWD/tests:${LD_LIBRARY_PATH:-}"
+          "$TEST_BIN" --gtest_color=yes
+
+      - name: Run performance benchmark
+        env:
+          THRESHOLD_PERCENT: 10
+        run: |
+          git fetch origin main --depth=1 || true
+          TEST_BIN="$(find build-ci/Release -type f -name 'EquinoxLoggerTests.x86' | head -n 1)"
+          chmod +x scripts/run_performance_benchmark.sh
+          bash scripts/run_performance_benchmark.sh \
+            --binary "$TEST_BIN" \
+            --output-dir "$GITHUB_WORKSPACE/docs/images" \
+            --chart-name "performance-benchmark-Release.svg" \
+            --history-file "$GITHUB_WORKSPACE/benchmarks/performance-history-Release.json" \
+            --threshold "$THRESHOLD_PERCENT"
+
+      - name: Upload performance chart
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-chart-release
+          path: docs/images/performance-benchmark-Release.svg
           if-no-files-found: error
