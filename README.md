@@ -184,6 +184,16 @@ To generate this chart locally:
 
 This benchmark is useful for understanding how output destination and log message size affect throughput in real workloads.
 
+### CI benchmark policy
+
+The benchmark suite is intentionally a bit different in CI than on a developer machine.
+
+- full sink-by-length throughput benchmarks are kept for local validation
+- in GitHub Actions, the noisy `console` and `console_and_file` variants are skipped to avoid flooding the job logs
+- CI still runs a compact `file`-sink throughput check to preserve meaningful regression coverage without causing log spam
+
+This keeps the PR checks readable while still measuring the most important performance path under automation.
+
 ## Unit Test Coverage
 
 Coverage measured with [LCOV](https://github.com/linux-test-project/lcov) on 2026-05-01:

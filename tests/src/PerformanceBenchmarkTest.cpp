@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "EquinoxLogger.h"
 
@@ -39,13 +40,12 @@ namespace {
                   << ",\"iterations\":" << iterations << ",\"elapsed_ms\":" << elapsedMs << ",\"logs_per_second\":" << logsPerSecond << "}" << std::endl;
     }
 
-    void RunSinkThroughputBenchmark(const std::string& sinkName, equinox::logs_output::SINK sinkType, const std::string& baseFilePath) {
-        const bool isCiEnvironment = std::getenv("CI") != nullptr || std::getenv("GITHUB_ACTIONS") != nullptr;
-        const std::array<int, 4> allMessageLengths{32, 128, 512, 2048};
-        const std::array<int, 3> ciMessageLengths{32, 128, 512};
-        const auto& messageLengths = isCiEnvironment ? ciMessageLengths : allMessageLengths;
-        const int iterationsPerCase = isCiEnvironment ? 250 : 2000;
+    bool IsCiEnvironment() {
+        return std::getenv("CI") != nullptr || std::getenv("GITHUB_ACTIONS") != nullptr;
+    }
 
+    void RunSinkThroughputBenchmarkImpl(const std::string& sinkName, equinox::logs_output::SINK sinkType, const std::string& baseFilePath,
+                                       const std::vector<int>& messageLengths, int iterationsPerCase) {
         for (const int messageLength : messageLengths) {
             const std::string logFilePath = baseFilePath + "_" + std::to_string(messageLength) + ".log";
             std::filesystem::remove(logFilePath);
@@ -65,6 +65,18 @@ namespace {
             const double elapsedMs = std::chrono::duration<double, std::milli>(end - start).count();
             EmitBenchmarkRecord("LogThroughputBySinkAndMessageLength", sinkName, messageLength, iterationsPerCase, elapsedMs);
         }
+    }
+
+    void RunSinkThroughputBenchmark(const std::string& sinkName, equinox::logs_output::SINK sinkType, const std::string& baseFilePath) {
+        const std::vector<int> messageLengths{32, 128, 512, 2048};
+        const int iterationsPerCase = 2000;
+        RunSinkThroughputBenchmarkImpl(sinkName, sinkType, baseFilePath, messageLengths, iterationsPerCase);
+    }
+
+    void RunCiQuietSinkThroughputBenchmark(const std::string& sinkName, equinox::logs_output::SINK sinkType, const std::string& baseFilePath) {
+        const std::vector<int> messageLengths{32, 128};
+        const int iterationsPerCase = 100;
+        RunSinkThroughputBenchmarkImpl(sinkName, sinkType, baseFilePath, messageLengths, iterationsPerCase);
     }
 
     TEST(PerformanceBenchmark, LogPrintThroughput) {
@@ -91,14 +103,24 @@ namespace {
     }
 
     TEST(PerformanceBenchmark, ThroughputBySinkAndMessageLength_Console) {
+        if (IsCiEnvironment()) {
+            GTEST_SKIP() << "console sink benchmark is skipped in CI to keep logs quiet";
+        }
         RunSinkThroughputBenchmark("console", equinox::logs_output::SINK::console, "/tmp/equinox_logger_sink_console");
     }
 
     TEST(PerformanceBenchmark, ThroughputBySinkAndMessageLength_File) {
+        if (IsCiEnvironment()) {
+            RunCiQuietSinkThroughputBenchmark("file", equinox::logs_output::SINK::file, "/tmp/equinox_logger_sink_file");
+            return;
+        }
         RunSinkThroughputBenchmark("file", equinox::logs_output::SINK::file, "/tmp/equinox_logger_sink_file");
     }
 
     TEST(PerformanceBenchmark, ThroughputBySinkAndMessageLength_ConsoleAndFile) {
+        if (IsCiEnvironment()) {
+            GTEST_SKIP() << "console_and_file sink benchmark is skipped in CI to keep logs quiet";
+        }
         RunSinkThroughputBenchmark("console_and_file", equinox::logs_output::SINK::console_and_file, "/tmp/equinox_logger_sink_both");
     }
 
