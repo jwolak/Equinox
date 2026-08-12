@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+set -eu
+
+if [ "${EQUINOX_SKIP_RELEASE_NOTES:-0}" = "1" ]; then
+    exit 0
+fi
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+PACKAGE_JSON="$REPO_ROOT/package.json"
+NOTES_FILE="$REPO_ROOT/RELEASE_NOTES.txt"
+
+if [ ! -f "$PACKAGE_JSON" ]; then
+    exit 0
+fi
+
+VERSION="$(sed -n 's/^[[:space:]]*"version":[[:space:]]*"\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)".*/\1/p' "$PACKAGE_JSON" | head -n 1)"
+
+if [ -z "$VERSION" ]; then
+    echo "Cannot find semantic version in $PACKAGE_JSON" >&2
+    exit 1
+fi
+
+SUBJECT="$(git log -1 --pretty=%s)"
+TIMESTAMP="$(git log -1 --date=format:'%Y-%m-%d %H:%M:%S %z' --pretty=%ad)"
+
+if [ -z "$SUBJECT" ]; then
+    SUBJECT="(no subject)"
+fi
+
+if [ ! -f "$NOTES_FILE" ]; then
+    cat > "$NOTES_FILE" <<'EOF'
+# Equinox Logger release notes history
+# Format: YYYY-MM-DD HH:MM:SS +ZZZZ | vMAJOR.MINOR.PATCH | commit message
+
+EOF
+fi
+
+printf '%s | v%s | %s\n' "$TIMESTAMP" "$VERSION" "$SUBJECT" >> "$NOTES_FILE"
+
+git add "$NOTES_FILE"
+EQUINOX_SKIP_RELEASE_NOTES=1 git commit --amend --no-edit --no-verify >/dev/null

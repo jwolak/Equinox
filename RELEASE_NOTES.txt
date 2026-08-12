@@ -1,0 +1,167 @@
+# Equinox Logger release notes history
+# Format: YYYY-MM-DD HH:MM:SS +ZZZZ | vMAJOR.MINOR.PATCH | commit message
+
+2022-10-26 20:48:07 +0200 | vunknown | Initial commit
+2022-10-26 21:00:56 +0200 | vunknown | Setup enviroment #1
+2022-10-26 21:53:30 +0200 | vunknown | CMakeLists.txt files started
+2022-10-27 21:42:12 +0200 | vunknown | CMakeLists.txt modified and implementation started
+2022-12-17 21:18:07 +0100 | vunknown | Set logger interface
+2022-12-17 23:02:10 +0100 | vunknown | GetLoggerEngineInstance() implemented
+2022-12-19 18:23:11 +0100 | vunknown | Set LoggerManager as static instance
+2022-12-20 10:21:41 +0100 | vunknown | Merge pull request #1 from jwolak/development
+2023-01-03 11:46:22 +0100 | vunknown | CMakeLists.txt for unit tests added
+2023-01-10 22:16:54 +0100 | vunknown | Variadic template skeleton introduced to API
+2023-01-13 21:59:38 +0100 | vunknown | Logger interface defined
+2023-01-13 23:01:59 +0100 | vunknown | Examples set up. Perfect forwarding added
+2023-01-13 23:32:29 +0100 | vunknown | Fixed problems with cmake warnings and sub dir build order
+2023-01-14 19:33:37 +0100 | vunknown | Console and File logger classes created
+2023-01-14 19:53:11 +0100 | vunknown | TimestampProducer class created
+2023-01-14 20:05:31 +0100 | vunknown | TimestampProducer class injected to console and file logs producers
+2023-01-18 16:28:45 +0100 | vunknown | Interface final interface created
+2023-01-18 18:06:25 +0100 | vunknown | File and console loging impl
+2023-01-28 16:50:18 +0100 | vunknown | setBacktrace removed
+2023-01-28 17:06:55 +0100 | vunknown | Timestamp in us added
+2023-01-28 18:42:30 +0100 | vunknown | LogsProducerTests implemented
+2023-02-03 18:29:53 +0100 | vunknown | Refatored and reduced. Bug with thread access fixed
+2023-02-03 18:57:17 +0100 | vunknown | Multiple threads test added
+2023-02-03 19:01:26 +0100 | vunknown | Merge pull request #2 from jwolak/development
+2023-02-03 19:37:57 +0100 | vunknown | Setup function added
+2023-02-03 19:40:31 +0100 | vunknown | Merge pull request #3 from jwolak/development
+2023-02-04 18:46:56 +0100 | vunknown | Update README.md
+2023-02-08 20:29:32 +0100 | vunknown | Prefixes moved to log()
+2023-02-08 21:40:04 +0100 | vunknown | Install lib oprion #1
+2023-02-08 22:26:18 +0100 | vunknown | All headers added
+2023-02-09 18:55:55 +0100 | vunknown | Merge pull request #4 from jwolak/development
+2023-02-13 19:45:22 +0100 | vunknown | Fixed multiple definition of functions
+2023-02-13 19:46:08 +0100 | vunknown | Merge pull request #5 from jwolak/development
+2023-03-30 20:50:36 +0200 | vunknown | First version
+2023-03-31 10:54:55 +0200 | vunknown | Build fixed
+2023-03-31 11:01:28 +0200 | vunknown | Implementation hidden
+2023-03-31 12:47:45 +0200 | vunknown | EquinoxLoggerEngineImpl skeleton
+2023-03-31 13:16:37 +0200 | vunknown | Console logging implemented
+2023-03-31 14:19:07 +0200 | vunknown | File logging implemented
+2023-03-31 15:30:55 +0200 | vunknown | File support implemented
+2023-03-31 15:43:18 +0200 | vunknown | Test added. License changed
+2023-03-31 15:59:48 +0200 | vunknown | License updated
+2023-04-03 12:14:08 +0200 | vunknown | cosnt ref for stings
+2023-04-03 12:52:31 +0200 | vunknown | Doxygen descriptions added. README updated
+2023-04-03 15:45:30 +0200 | vunknown | Example output
+2023-04-03 15:46:41 +0200 | vunknown | Example output #2
+2023-08-14 20:37:18 +0200 | vunknown | __FILENAME__ macro added
+2023-08-14 20:43:55 +0200 | vunknown | Merge pull request #7 from jwolak/development
+2026-02-09 13:23:47 +0100 | vunknown | Add support for log file rotation
+2026-02-09 13:26:01 +0100 | vunknown | Merge pull request #8 from jwolak/add_log_files_rotation_fix_the_github_issue
+2026-02-09 13:29:19 +0100 | vunknown | Reorder License section in README.md for clarity
+2026-02-12 16:53:54 +0100 | vunknown | Critical thread safety fixed
+2026-02-12 16:55:35 +0100 | vunknown | Typo logMesaage fixed
+2026-02-12 17:03:09 +0100 | vunknown | Forwarding fixed
+2026-02-12 18:03:59 +0100 | vunknown | Queue the first implementation
+2026-02-12 18:44:03 +0100 | vunknown | AsyncLogQueueEngine implemented and used
+2026-02-12 21:06:12 +0100 | vunknown | Fix double snprints use
+2026-02-12 21:23:50 +0100 | vunknown | Exceptions handling fixes
+2026-02-12 21:41:57 +0100 | vunknown | Error statuses added
+2026-02-12 21:42:41 +0100 | vunknown | Fix formatting in setup method parameters for better readability
+2026-02-12 21:48:33 +0100 | vunknown | Refactor logger initialization to remove unused logsOutputSink member variable
+2026-02-12 22:02:18 +0100 | vunknown | Refactor logging mechanisms to use thread-local buffers and remove unused member variables
+2026-02-12 22:17:50 +0100 | vunknown | Add flush() method to logging classes for immediate log message writing
+2026-02-12 22:19:27 +0100 | vunknown | Merge pull request #9 from jwolak/users/improvment_2026
+2026-02-13 09:04:39 +0100 | vunknown | Rename queue_ to log_messages_queue_ and update related variables for clarity in AsyncLogQueue
+2026-02-13 09:26:45 +0100 | vunknown | Refactor AsyncLogQueue and TimestampProducer for consistency in naming conventions and improve code clarity
+2026-02-13 09:34:50 +0100 | vunknown | Rename dispatchMessage to dispatchLogMessage for improved clarity
+2026-02-13 10:47:52 +0100 | vunknown | Refactor dispatchLogMessage logic into startWorkerIfNeeded for improved thread safety and clarity
+2026-02-13 11:30:22 +0100 | vunknown | Rename AsyncLogQueue variable for clarity and improve thread safety with updated mutex and atomic flags
+2026-02-13 15:22:14 +0100 | vunknown | Merge pull request #10 from jwolak/users/improvment_2026
+2026-02-20 13:33:44 +0100 | vunknown | Colored log meassages added
+2026-02-20 13:45:06 +0100 | vunknown | Colored logs removed from log file
+2026-02-20 13:55:54 +0100 | vunknown | Refactor ColorFormatter and ConsoleLogsProducer for improved color handling and clarity
+2026-02-20 14:00:24 +0100 | vunknown | Refactor ColorFormatter and ConsoleLogsProducer to use std::string_view for improved performance and clarity
+2026-02-20 14:05:24 +0100 | vunknown | Refactor ColorFormatter to use std::string_view for ANSI color codes to enhance performance and clarity
+2026-02-20 14:28:35 +0100 | vunknown | Add build script with support for multiple build types and options
+2026-02-20 14:31:27 +0100 | vunknown | Refactor applyConsoleColors method to remove log level parameter for improved clarity
+2026-02-20 14:32:52 +0100 | vunknown | Add case for LOG_LEVEL::off in logMessage method for completeness
+2026-02-20 14:42:17 +0100 | vunknown | Refactor CMakeLists.txt to remove unused library variable and link EquinoxLogger target; add AsyncLogQueueTest source file for testing
+2026-02-20 14:52:32 +0100 | vunknown | Add protected method to access log messages queue and enhance test coverage
+2026-02-20 15:03:36 +0100 | vunknown | Enhance AsyncLogQueue tests with multi-threaded enqueue scenarios and adjust queue max size
+2026-02-20 15:29:42 +0100 | vunknown | Refactor AsyncLogQueue to expose log messages queue and add stop request methods; enhance test coverage for queue operations
+2026-02-20 15:42:29 +0100 | vunknown | Add coverage report generation support to build script; include options for enabling coverage and handling lcov installation
+2026-02-21 09:21:08 +0100 | vunknown | Implement IAsyncLogQueue interface and refactor AsyncLogQueue; add mock and engine test files
+2026-02-21 09:25:18 +0100 | vunknown | Refactor AsyncLogQueueEngine to use unique_ptr for log message queue management; update enqueue, dequeue, and stop methods accordingly
+2026-02-21 09:28:21 +0100 | vunknown | Add .clang-format file and refactor AsyncLogQueueEngine for consistency; adjust includes and formatting
+2026-02-21 09:33:20 +0100 | vunknown | Refactor logging system for improved readability and consistency
+2026-02-21 09:40:27 +0100 | vunknown | Refactor AsyncLogQueueEngine constructor for testability; add protected constructor to facilitate dependency injection
+2026-02-21 10:19:59 +0100 | vunknown | Refactor AsyncLogQueueEngine to improve dependency injection; update constructors and member variables for better testability
+2026-02-21 10:30:47 +0100 | vunknown | Refactor AsyncLogQueueEngine and EquinoxLoggerEngineImpl for improved dependency injection; update constructors to use shared_ptr for better resource management
+2026-03-25 09:54:29 +0100 | vunknown | Fix AsyncLogQueueEngine constructor to use correct timestamp producer for ConsoleLogsProducer
+2026-03-25 09:58:43 +0100 | vunknown | Add test for repeated concurrent logging to ensure stability under stress
+2026-03-25 10:12:11 +0100 | vunknown | Merge pull request #11 from jwolak/users/improvment_2026
+2026-03-25 12:53:39 +0100 | vunknown | Add CI workflow for automated build and testing on push and pull requests
+2026-03-25 12:54:44 +0100 | vunknown | Merge pull request #12 from jwolak/users/improvment_2026
+2026-03-25 13:22:38 +0100 | vunknown | Add EquinoxLogger.hpp header file and update references in CMakeLists.txt and README.md
+2026-03-25 13:26:33 +0100 | vunknown | Add colored logs preview to README and update header file inclusion in examples
+2026-03-25 13:42:49 +0100 | vunknown | Merge pull request #14 from jwolak/users/improvment_2026
+2026-04-07 13:28:27 +0200 | vunknown | Add git commands for branch management to helper file
+2026-04-07 13:30:34 +0200 | vunknown | Add ColorFormatterTest.cpp to the test sources in CMakeLists.txt
+2026-04-07 13:38:24 +0200 | vunknown | Add unit tests for ColorFormatter class
+2026-04-07 13:39:46 +0200 | vunknown | Add additional unit tests for ColorFormatter class to validate log level extraction and color application
+2026-04-07 13:44:19 +0200 | vunknown | Add unit tests for ColorFormatter color level mappings and default color handling
+2026-04-07 13:52:01 +0200 | vunknown | Update .clang-format for consistent styling and enhance ColorFormatterTest with additional test cases
+2026-04-07 13:53:20 +0200 | vunknown | Add unit tests for ColorFormatter level extraction and color application
+2026-04-07 14:02:59 +0200 | vunknown | Merge pull request #15 from jwolak/feature/04-2026_color_formatter_unit_tests
+2026-04-09 08:40:33 +0200 | vunknown | Add initial unit test setup for ConsoleLogsProducer
+2026-04-09 08:44:10 +0200 | vunknown | Add mock implementation for ITimestampProducer in TimestampProducerMock
+2026-04-09 08:47:33 +0200 | vunknown | Add IColorFormatter interface and ColorFormatterMock implementation for unit testing
+2026-04-09 08:54:01 +0200 | vunknown | Add ConsoleLogsProducerTest to unit tests
+2026-04-09 08:57:08 +0200 | vunknown | Add ITimestampProducer interface and update TimestampProducer implementation
+2026-04-09 09:01:53 +0200 | vunknown | Add CHANGELOG.md to document project updates and versioning
+2026-04-09 09:11:51 +0200 | vunknown | Refactor ConsoleLogsProducer and ColorFormatter to implement IColorFormatter interface
+2026-04-09 09:19:20 +0200 | vunknown | Add unit test for logMessage method in ConsoleLogsProducerTest
+2026-04-09 09:21:45 +0200 | vunknown | Add stdout capture to logMessage test for proper output verification
+2026-04-09 09:24:46 +0200 | vunknown | Add TrackingStringBuf and CoutBufferGuard for stream buffer synchronization tests
+2026-04-09 09:29:31 +0200 | vunknown | Add unit tests for logMessage method to verify formatting for different log levels
+2026-04-09 09:47:38 +0200 | vunknown | Refactor ConsoleLogsProducerTest to use constants for log message and timestamps
+2026-04-09 09:50:25 +0200 | vunknown | Update trace log message formatting in ConsoleLogsProducerTest to use color
+2026-04-09 09:53:06 +0200 | vunknown | Refactor ConsoleLogsProducerTest to use parameterized tests for log message formatting across all log levels
+2026-04-09 09:55:41 +0200 | vunknown | Merge pull request #16 from jwolak/feature/ut_for_ConsoleLogsProducer
+2026-04-10 08:32:46 +0200 | vunknown | Add EquinoxLoggerApiTest for API functionality verification
+2026-04-10 08:56:52 +0200 | vunknown | Refactor EquinoxLoggerApiTest to improve test naming conventions and assertions
+2026-04-10 09:00:48 +0200 | vunknown | Refactor FileLogsProducer and EquinoxLoggerApiTest to improve error handling and logging assertions
+2026-04-10 09:12:36 +0200 | vunknown | Add EquinoxLoggerTest for comprehensive logging functionality verification
+2026-04-10 09:13:54 +0200 | vunknown | Refactor EquinoxLoggerTest to use constant log prefix for setup
+2026-04-10 09:15:48 +0200 | vunknown | Merge branch 'main' into feature/ut_for_ConsoleLogsProducer
+2026-04-10 09:16:36 +0200 | vunknown | Merge pull request #17 from jwolak/feature/ut_for_ConsoleLogsProducer
+2026-04-13 09:32:54 +0200 | vunknown | Implement IEquinoxLoggerEngineImpl interface and update EquinoxLoggerEngineImpl for compliance
+2026-04-13 09:50:03 +0200 | vunknown | Refactor EquinoxLoggerEngine to use IEquinoxLoggerEngineImpl and add unit tests for EquinoxLoggerEngine
+2026-04-13 09:58:30 +0200 | vunknown | Refactor EquinoxLoggerEngine to remove processLogMessage method and streamline log message processing
+2026-04-13 10:16:28 +0200 | vunknown | Add unit tests for EquinoxLoggerEngine to verify singleton instance and setup parameters
+2026-04-13 10:24:02 +0200 | vunknown | Add unit tests for EquinoxLoggerEngine setup with various log levels and verify parameters
+2026-04-13 10:26:58 +0200 | vunknown | Add parameterized unit tests for EquinoxLoggerEngine setup with various log levels
+2026-04-13 10:31:17 +0200 | vunknown | Add unit tests for EquinoxLoggerEngine to verify setup failure and change level functionality
+2026-04-13 10:37:13 +0200 | vunknown | Add unit tests for EquinoxLoggerEngine to verify log output sink changes and flush functionality
+2026-04-13 10:40:00 +0200 | vunknown | Add unit test for EquinoxLoggerEngine to verify thread safety of log message calls
+2026-04-13 10:42:44 +0200 | vunknown | Merge pull request #18 from jwolak/feature/ut_for_EquinoxLoggerEngine
+2026-04-15 09:02:38 +0200 | vunknown | Add interface and mock for IFileLogsProducer to support logging functionality
+2026-04-15 09:11:27 +0200 | vunknown | Add IAsyncLogQueueEngine interface and mock for unit testing
+2026-04-15 09:13:11 +0200 | vunknown | Refactor EquinoxLoggerEngineImpl to use IAsyncLogQueueEngine interface and update access specifier in IAsyncLogQueueEngine
+2026-04-15 09:25:03 +0200 | vunknown | Implement constructor overload for EquinoxLoggerEngineImpl to support dependency injection
+2026-04-15 09:30:34 +0200 | vunknown | Add unit test for EquinoxLoggerEngineImpl in EquinoxLoggerEngineImplTest.cpp
+2026-04-15 09:39:23 +0200 | vunknown | Refactor EquinoxLoggerEngineImplTest to initialize mocks in the constructor
+2026-04-15 09:51:38 +0200 | vunknown | Add BSD 3-Clause License header to mock files and implement parameterized tests for log message processing in EquinoxLoggerEngineImplTest
+2026-04-15 09:58:00 +0200 | vunknown | Add getter methods for logging configuration in EquinoxLoggerEngineImpl
+2026-04-15 10:04:21 +0200 | vunknown | Add parameterized tests for logger setup in EquinoxLoggerEngineImplTest
+2026-04-15 10:09:49 +0200 | vunknown | Add parameterized tests for changing log levels in EquinoxLoggerEngineImplTest
+2026-04-15 10:18:59 +0200 | vunknown | Add parameterized tests for changing log output sinks in EquinoxLoggerEngineImplTest
+2026-04-15 10:22:08 +0200 | vunknown | Merge pull request #19 from jwolak/feature/ut_for_EquinoxLoggerEngineImpl
+2026-05-01 11:20:18 +0200 | vunknown | Add unit tests for FileLogsProducer
+2026-05-01 11:23:04 +0200 | vunknown | Refactor FileLogsProducer for testability by creating a derived testable class
+2026-05-01 11:29:01 +0200 | vunknown | Add accessors for testing purposes in FileLogsProducer
+2026-05-01 11:37:12 +0200 | vunknown | Add unit tests for setupFile method in FileLogsProducerTest
+2026-05-01 11:48:29 +0200 | vunknown | Add unit tests for log file operations and rotation in FileLogsProducerTest
+2026-05-01 11:50:32 +0200 | vunknown | Fix log message retrieval in FileLogsProducerTest by closing the log file stream before reading
+2026-05-01 12:03:08 +0200 | vunknown | Enhance FileLogsProducerTest by setting log file name before operations and adjusting timestamp mock expectations
+2026-05-01 12:20:01 +0200 | vunknown | Add coverage analysis script for unit test coverage measurement and reporting
+2026-05-01 12:31:19 +0200 | vunknown | Add test for logging with invalid format to ensure logMessage is not called
+2026-05-01 12:37:31 +0200 | vunknown | Add coverage exclusions for log file closure exceptions in FileLogsProducer
+2026-05-01 12:42:01 +0200 | vunknown | Add test for changing log output sink to console in EquinoxLoggerTest
+2026-05-01 12:44:02 +0200 | vunknown | Add coverage exclusions for log file exception handling in FileLogsProducer
+2026-05-01 12:50:01 +0200 | vunknown | Add unit test coverage section to README and include coverage report image
+2026-08-12 10:35:43 +0200 | v2.1.2 | Add git hooks for automated release notes generation and version management
