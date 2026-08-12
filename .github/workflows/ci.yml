@@ -57,7 +57,8 @@ jobs:
         run: |
           git fetch origin main --depth=1 || true
           TEST_BIN="$(find build-ci/${{ matrix.build_type }} -type f -name 'EquinoxLoggerTests.x86' | head -n 1)"
-          python3 scripts/run_performance_benchmark.sh \
+          chmod +x scripts/run_performance_benchmark.sh
+          bash scripts/run_performance_benchmark.sh \
             --binary "$TEST_BIN" \
             --output-dir "$GITHUB_WORKSPACE/docs/images" \
             --history-file "$GITHUB_WORKSPACE/benchmarks/performance-history.json" \
