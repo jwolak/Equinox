@@ -136,12 +136,19 @@ The benchmark is implemented in the `PerformanceBenchmark.LogPrintThroughput` Go
 ### Debug benchmark (additional comparison)
 ![Debug performance benchmark](docs/images/performance-benchmark-Debug.svg)
 
+The CI workflow publishes both charts as separate artifacts for each build type:
+- `performance-benchmark-Release.svg`
+- `performance-throughput-by-sink-Release.svg`
+- `performance-benchmark-Debug.svg`
+- `performance-throughput-by-sink-Debug.svg`
+
 To generate the charts locally:
 ```sh
 ./scripts/run_performance_benchmark.sh \
   --binary build/Debug/tests/EquinoxLoggerTests.x86 \
   --output-dir docs/images \
   --chart-name performance-benchmark-Release.svg \
+  --sink-chart-name performance-throughput-by-sink-Release.svg \
   --history-file benchmarks/performance-history-Release.json \
   --threshold 10
 
@@ -149,6 +156,7 @@ To generate the charts locally:
   --binary build/Debug/tests/EquinoxLoggerTests.x86 \
   --output-dir docs/images \
   --chart-name performance-benchmark-Debug.svg \
+  --sink-chart-name performance-throughput-by-sink-Debug.svg \
   --history-file benchmarks/performance-history-Debug.json \
   --threshold 10
 ```
@@ -161,14 +169,16 @@ The project also includes a second benchmark that measures how many log entries 
 
 For each combination of message length and sink (`console`, `file`, `console_and_file`) the test records the throughput in logs/sec and renders a grouped chart.
 
-![Throughput by message length and sink](docs/images/performance-throughput-by-sink.svg)
+Both benchmark charts are published as CI artifacts for every PR, so the throughput-by-sink result is kept alongside the main regression chart.
+
+![Throughput by message length and sink](docs/images/performance-throughput-by-sink-Release.svg)
 
 To generate this chart locally:
 ```sh
 ./scripts/run_performance_benchmark.sh \
   --binary build/Debug/tests/EquinoxLoggerTests.x86 \
   --output-dir docs/images \
-  --chart-name performance-throughput-by-sink.svg \
+  --chart-name performance-throughput-by-sink-Release.svg \
   --threshold 10
 ```
 
