@@ -38,6 +38,7 @@ set(EQUINOX_LOGGER_TESTS_SRC
 	${EQUINOX_LOGGER_TESTS_DIR}/EquinoxLoggerEngineTest.cpp
 	${EQUINOX_LOGGER_TESTS_DIR}/EquinoxLoggerEngineImplTest.cpp
 	${EQUINOX_LOGGER_TESTS_DIR}/FileLogsProducerTest.cpp
+	${EQUINOX_LOGGER_TESTS_DIR}/PerformanceBenchmarkTest.cpp
 )
 
 set(EQUINOX_LOGGER_MOCKS_INCLUDE_DIR
