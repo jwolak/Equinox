@@ -4,8 +4,9 @@ on:
   push:
     branches:
       - "main"
-      - "development"
   pull_request:
+    branches:
+      - "main"
 
 jobs:
   build-and-test:
@@ -18,11 +19,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build build-essential libgtest-dev libgmock-dev
+          sudo apt-get install -y cmake ninja-build build-essential libgtest-dev libgmock-dev python3
 
       - name: Configure
         run: >
@@ -47,3 +50,23 @@ jobs:
           chmod +x "$TEST_BIN"
           export LD_LIBRARY_PATH="$PWD:$PWD/tests:${LD_LIBRARY_PATH:-}"
           "$TEST_BIN" --gtest_color=yes
+
+      - name: Run performance benchmark
+        env:
+          THRESHOLD_PERCENT: 10
+        run: |
+          git fetch origin main --depth=1 || true
+          TEST_BIN="$(find build-ci/${{ matrix.build_type }} -type f -name 'EquinoxLoggerTests.x86' | head -n 1)"
+          python3 scripts/run_performance_benchmark.sh \
+            --binary "$TEST_BIN" \
+            --output-dir "$GITHUB_WORKSPACE/docs/images" \
+            --history-file "$GITHUB_WORKSPACE/benchmarks/performance-history.json" \
+            --threshold "$THRESHOLD_PERCENT"
+
+      - name: Upload performance chart
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-chart-${{ matrix.build_type }}
+          path: docs/images/performance-benchmark.svg
+          if-no-files-found: error
