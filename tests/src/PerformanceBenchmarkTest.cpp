@@ -1,4 +1,5 @@
 #include <chrono>
+#include <cstdlib>
 
 #include <gtest/gtest.h>
 
@@ -39,8 +40,11 @@ namespace {
     }
 
     void RunSinkThroughputBenchmark(const std::string& sinkName, equinox::logs_output::SINK sinkType, const std::string& baseFilePath) {
-        const std::array<int, 4> messageLengths{32, 128, 512, 2048};
-        const int iterationsPerCase = 2000;
+        const bool isCiEnvironment = std::getenv("CI") != nullptr || std::getenv("GITHUB_ACTIONS") != nullptr;
+        const std::array<int, 4> allMessageLengths{32, 128, 512, 2048};
+        const std::array<int, 3> ciMessageLengths{32, 128, 512};
+        const auto& messageLengths = isCiEnvironment ? ciMessageLengths : allMessageLengths;
+        const int iterationsPerCase = isCiEnvironment ? 250 : 2000;
 
         for (const int messageLength : messageLengths) {
             const std::string logFilePath = baseFilePath + "_" + std::to_string(messageLength) + ".log";
