@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="520" viewBox="0 0 920 520">
+<rect width="100%" height="100%" fill="#111827"/>
+<text x="460.0" y="28" text-anchor="middle" font-size="22" fill="#e5e7eb" font-family="Arial">Throughput by output sink and message length</text>
+<line x1="90" y1="420" x2="880" y2="420" stroke="#9ca3af" stroke-width="1.5"/>
+<line x1="90" y1="60" x2="90" y2="420" stroke="#9ca3af" stroke-width="1.5"/>
+<line x1="90" y1="420.0" x2="880" y2="420.0" stroke="#374151" stroke-width="1"/>
+<text x="78" y="424.0" text-anchor="end" font-size="11" fill="#cbd5e1" font-family="Arial">0</text>
+<line x1="90" y1="348.0" x2="880" y2="348.0" stroke="#374151" stroke-width="1"/>
+<text x="78" y="352.0" text-anchor="end" font-size="11" fill="#cbd5e1" font-family="Arial">203792</text>
+<line x1="90" y1="276.0" x2="880" y2="276.0" stroke="#374151" stroke-width="1"/>
+<text x="78" y="280.0" text-anchor="end" font-size="11" fill="#cbd5e1" font-family="Arial">407585</text>
+<line x1="90" y1="204.0" x2="880" y2="204.0" stroke="#374151" stroke-width="1"/>
+<text x="78" y="208.0" text-anchor="end" font-size="11" fill="#cbd5e1" font-family="Arial">611377</text>
+<line x1="90" y1="132.0" x2="880" y2="132.0" stroke="#374151" stroke-width="1"/>
+<text x="78" y="136.0" text-anchor="end" font-size="11" fill="#cbd5e1" font-family="Arial">815170</text>
+<line x1="90" y1="60.0" x2="880" y2="60.0" stroke="#374151" stroke-width="1"/>
+<text x="78" y="64.0" text-anchor="end" font-size="11" fill="#cbd5e1" font-family="Arial">1018962</text>
+<text x="196.75" y="442" text-anchor="middle" font-size="12" fill="#e5e7eb" font-family="Arial">32B</text>
+<rect x="116.0" y="141.29908671765975" width="41.375" height="278.70091328234025" fill="#7aa2f7" rx="4"/>
+<text x="135.6875" y="133.29908671765975" text-anchor="middle" font-size="10" fill="#f8fafc" font-family="Arial">788849</text>
+<rect x="165.375" y="263.52594110477133" width="41.375" height="156.47405889522867" fill="#34d399" rx="4"/>
+<text x="185.0625" y="255.52594110477133" text-anchor="middle" font-size="10" fill="#f8fafc" font-family="Arial">442892</text>
+<rect x="214.75" y="260.89385080110935" width="41.375" height="159.10614919889062" fill="#fbbf24" rx="4"/>
+<text x="234.4375" y="252.89385080110935" text-anchor="middle" font-size="10" fill="#f8fafc" font-family="Arial">450342</text>
+<text x="394.25" y="442" text-anchor="middle" font-size="12" fill="#e5e7eb" font-family="Arial">128B</text>
+<rect x="313.5" y="205.42669893479837" width="41.375" height="214.57330106520163" fill="#7aa2f7" rx="4"/>
+<text x="333.1875" y="197.42669893479837" text-anchor="middle" font-size="10" fill="#f8fafc" font-family="Arial">607339</text>
+<rect x="362.875" y="120.0" width="41.375" height="300.0" fill="#34d399" rx="4"/>
+<text x="382.5625" y="112.0" text-anchor="middle" font-size="10" fill="#f8fafc" font-family="Arial">849135</text>
+<rect x="412.25" y="247.42108145347913" width="41.375" height="172.57891854652087" fill="#fbbf24" rx="4"/>
+<text x="431.9375" y="239.42108145347913" text-anchor="middle" font-size="10" fill="#f8fafc" font-family="Arial">488476</text>
+<text x="591.75" y="442" text-anchor="middle" font-size="12" fill="#e5e7eb" font-family="Arial">512B</text>
+<rect x="511.0" y="329.6143722729601" width="41.375" height="90.38562772703987" fill="#7aa2f7" rx="4"/>
+<text x="530.6875" y="321.6143722729601" text-anchor="middle" font-size="10" fill="#f8fafc" font-family="Arial">255832</text>
+<rect x="560.375" y="246.922220848275" width="41.375" height="173.077779151725" fill="#34d399" rx="4"/>
+<text x="580.0625" y="238.922220848275" text-anchor="middle" font-size="10" fill="#f8fafc" font-family="Arial">489888</text>
+<rect x="609.75" y="243.12706460103516" width="41.375" height="176.87293539896484" fill="#fbbf24" rx="4"/>
+<text x="629.4375" y="235.12706460103516" text-anchor="middle" font-size="10" fill="#f8fafc" font-family="Arial">500630</text>
+<text x="789.25" y="442" text-anchor="middle" font-size="12" fill="#e5e7eb" font-family="Arial">2048B</text>
+<rect x="708.5" y="372.2528219894363" width="41.375" height="47.74717801056369" fill="#7aa2f7" rx="4"/>
+<text x="728.1875" y="364.2528219894363" text-anchor="middle" font-size="10" fill="#f8fafc" font-family="Arial">135146</text>
+<rect x="757.875" y="272.15319118868024" width="41.375" height="147.84680881131976" fill="#34d399" rx="4"/>
+<text x="777.5625" y="264.15319118868024" text-anchor="middle" font-size="10" fill="#f8fafc" font-family="Arial">418473</text>
+<rect x="807.25" y="283.505802964193" width="41.375" height="136.49419703580702" fill="#fbbf24" rx="4"/>
+<text x="826.9375" y="275.505802964193" text-anchor="middle" font-size="10" fill="#f8fafc" font-family="Arial">386340</text>
+<rect x="120" y="40" width="14" height="14" fill="#7aa2f7" rx="3"/>
+<text x="140" y="52" font-size="12" fill="#e5e7eb" font-family="Arial">console</text>
+<rect x="260" y="40" width="14" height="14" fill="#34d399" rx="3"/>
+<text x="280" y="52" font-size="12" fill="#e5e7eb" font-family="Arial">file</text>
+<rect x="400" y="40" width="14" height="14" fill="#fbbf24" rx="3"/>
+<text x="420" y="52" font-size="12" fill="#e5e7eb" font-family="Arial">console_and_file</text>
+</svg>
