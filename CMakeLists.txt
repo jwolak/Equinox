@@ -68,6 +68,20 @@ set(EQUINOX_LOGGER_INCLUDE
 	${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+set(EQUINOX_LOGGER_FMT_INCLUDE
+	${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/fmt/include
+)
+
+set(EQUINOX_LOGGER_FMT_LIB
+	${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/fmt/x64/libfmt.a
+)
+
+add_library(fmt STATIC IMPORTED GLOBAL)
+set_target_properties(fmt PROPERTIES
+	IMPORTED_LOCATION "${EQUINOX_LOGGER_FMT_LIB}"
+	INTERFACE_INCLUDE_DIRECTORIES "${EQUINOX_LOGGER_FMT_INCLUDE}"
+)
+
 #------------------------------------------------------------------------------------------
 #                                Project source
 #------------------------------------------------------------------------------------------
@@ -87,14 +101,32 @@ set(EQUINOX_LOGGER_SRC
 #                                Project target
 #------------------------------------------------------------------------------------------
 if (EQUINOX_LOGGER_BUILD_SHARED)
-	include_directories(EquinoxLogger PRIVATE  ${EQUINOX_LOGGER_INCLUDE} ${EQUINOX_LOGGER_API})
 	add_library(EquinoxLogger SHARED ${EQUINOX_LOGGER_SRC})
+	target_include_directories(EquinoxLogger
+		PUBLIC
+			${EQUINOX_LOGGER_INCLUDE}
+			${EQUINOX_LOGGER_API}
+			${EQUINOX_LOGGER_FMT_INCLUDE}
+		PRIVATE
+			${EQUINOX_LOGGER_INCLUDE}
+			${EQUINOX_LOGGER_API}
+	)
+	target_link_libraries(EquinoxLogger PUBLIC fmt)
 	target_compile_definitions(EquinoxLogger PUBLIC EQUINOX_SHARED_SHARED_LIB)
 endif()
 
 if (EQUINOX_LOGGER_BUILD_STATIC)
-	include_directories(EquinoxLogger PRIVATE  ${EQUINOX_LOGGER_INCLUDE} ${EQUINOX_LOGGER_API})
 	add_library(EquinoxLogger STATIC ${EQUINOX_LOGGER_SRC})
+	target_include_directories(EquinoxLogger
+		PUBLIC
+			${EQUINOX_LOGGER_INCLUDE}
+			${EQUINOX_LOGGER_API}
+			${EQUINOX_LOGGER_FMT_INCLUDE}
+		PRIVATE
+			${EQUINOX_LOGGER_INCLUDE}
+			${EQUINOX_LOGGER_API}
+	)
+	target_link_libraries(EquinoxLogger PUBLIC fmt)
 endif()
 
 #------------------------------------------------------------------------------------------

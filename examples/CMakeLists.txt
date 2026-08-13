@@ -23,7 +23,12 @@ set(EQUINOX_LOGGER_EXAMPLES_SRC
     ${EQUINOX_LOGGER_EXAMPLER_SRC_DIR}/EquinoxLoggerExamples.cpp
 )
 
-include_directories(${EQUINOX_LOGGER_PUBLIC_HEADERS})
 add_executable(${PROJECT_NAME} ${EQUINOX_LOGGER_EXAMPLES_SRC})
-add_dependencies (${PROJECT_NAME} EquinoxLogger)                 #to build libEquinoxLogger before try to link it
-target_link_libraries(${PROJECT_NAME} ${EQUINOX_LOGGER_LIB_DIR})
+target_include_directories(${PROJECT_NAME}
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/..
+        ${PROJECT_SOURCE_DIR}/../api
+        ${PROJECT_SOURCE_DIR}/../include
+)
+add_dependencies (${PROJECT_NAME} EquinoxLogger)
+target_link_libraries(${PROJECT_NAME} EquinoxLogger)

@@ -28,7 +28,7 @@
 # Compiled Static libraries
 *.lai
 *.la
-*.a
+#*.a
 *.lib
 
 # Executables
@@ -66,7 +66,6 @@ CMakeCache.txt
 CMakeFiles/*
 Makefile
 cmake_install.cmake
-*.a
 *.so.*
 *.so*
 *.so
