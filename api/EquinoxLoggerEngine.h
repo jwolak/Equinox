@@ -40,6 +40,8 @@
 #ifndef API_EQUINOXLOGGERENGINE_H_
 #define API_EQUINOXLOGGERENGINE_H_
 
+#include <fmt/format.h>
+
 #include <iostream>
 #include <memory>
 #include <mutex>
@@ -63,24 +65,15 @@ namespace equinox {
 
         template <typename... Args>
         void log(level::LOG_LEVEL msgLevel, const std::string& msgFormat, Args&&... args) {
-            constexpr size_t kMaxMessageSize = 4096;
-            char messageBuffer[kMaxMessageSize];
-
-            int written = std::snprintf(messageBuffer, kMaxMessageSize, msgFormat.c_str(), std::forward<Args>(args)...);
-
-            if (written < 0) {
-                std::cout << "[EquinoxLoggerEngine] Message formatting error" << std::endl;
-                return;
+            try {
+                std::string formattedMessage = fmt::vformat(fmt::string_view(msgFormat), fmt::make_format_args(args...));
+                std::lock_guard<std::mutex> lock(mEngineMutex_);
+                mEquinoxLoggerEngineImpl_->logMessage(msgLevel, formattedMessage);
+            } catch (const fmt::format_error& ex) {
+                std::cout << "[EquinoxLoggerEngine] Message formatting error: " << ex.what() << std::endl;
+            } catch (const std::exception& ex) {
+                std::cout << "[EquinoxLoggerEngine] Message formatting error: " << ex.what() << std::endl;
             }
-
-            if (static_cast<size_t>(written) >= kMaxMessageSize) {
-                std::cout << "[EquinoxLoggerEngine] Message truncated (exceeded " << kMaxMessageSize << " bytes)" << std::endl;
-                written = kMaxMessageSize - 1;
-            }
-
-            std::string mFormattedOutputMessage_(messageBuffer, static_cast<size_t>(written));
-            std::lock_guard<std::mutex> lock(mEngineMutex_);
-            mEquinoxLoggerEngineImpl_->logMessage(msgLevel, mFormattedOutputMessage_);
         }
 
         bool setup(equinox::level::LOG_LEVEL logLevel, const std::string& logPrefix, equinox::logs_output::SINK logsOutputSink,

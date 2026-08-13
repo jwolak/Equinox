@@ -29,8 +29,41 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(EQUINOX_LOGGER_TESTS         "Build tests"           ON)
 option(EQUINOX_LOGGER_EXAMPLES      "Build examples"        ON)
-option(EQUINOX_LOGGER_BUILD_SHARED  "Build shared lib"      ON)
-option(EQUINOX_LOGGER_BUILD_STATIC  "Build static lib"      OFF)
+option(EQUINOX_LOGGER_BUILD_SHARED  "Build shared lib"      OFF)
+option(EQUINOX_LOGGER_BUILD_STATIC  "Build static lib"      ON)
+
+if(EQUINOX_LOGGER_BUILD_SHARED)
+    set(EQUINOX_LOGGER_FMT_INCLUDE
+        ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/fmt/include
+    )
+    set(EQUINOX_LOGGER_FMT_LIB
+        ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/fmt/x64/libfmt.so
+    )
+    if(NOT EXISTS "${EQUINOX_LOGGER_FMT_LIB}")
+        message(FATAL_ERROR "Shared fmt library not found in ThirdParty/fmt/x64/libfmt.so. Build it first and copy it there.")
+    endif()
+    add_library(fmt SHARED IMPORTED GLOBAL)
+    set(EQUINOX_LOGGER_FMT_TARGET fmt)
+    message(STATUS "Using local shared fmt library from ThirdParty/fmt/x64")
+else()
+    set(EQUINOX_LOGGER_FMT_INCLUDE
+        ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/fmt/include
+    )
+    set(EQUINOX_LOGGER_FMT_LIB
+        ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/fmt/x64/libfmt.a
+    )
+    if(NOT EXISTS "${EQUINOX_LOGGER_FMT_LIB}")
+        message(FATAL_ERROR "Static fmt library not found in ThirdParty/fmt/x64/libfmt.a")
+    endif()
+    add_library(fmt STATIC IMPORTED GLOBAL)
+    set(EQUINOX_LOGGER_FMT_TARGET fmt)
+    message(STATUS "Using local static fmt library from ThirdParty/fmt/x64")
+endif()
+
+set_target_properties(fmt PROPERTIES
+    IMPORTED_LOCATION "${EQUINOX_LOGGER_FMT_LIB}"
+    INTERFACE_INCLUDE_DIRECTORIES "${EQUINOX_LOGGER_FMT_INCLUDE}"
+)
 
 #------------------------------------------------------------------------------------------
 #                                Compiler flags
@@ -68,20 +101,6 @@ set(EQUINOX_LOGGER_INCLUDE
 	${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-set(EQUINOX_LOGGER_FMT_INCLUDE
-	${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/fmt/include
-)
-
-set(EQUINOX_LOGGER_FMT_LIB
-	${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/fmt/x64/libfmt.a
-)
-
-add_library(fmt STATIC IMPORTED GLOBAL)
-set_target_properties(fmt PROPERTIES
-	IMPORTED_LOCATION "${EQUINOX_LOGGER_FMT_LIB}"
-	INTERFACE_INCLUDE_DIRECTORIES "${EQUINOX_LOGGER_FMT_INCLUDE}"
-)
-
 #------------------------------------------------------------------------------------------
 #                                Project source
 #------------------------------------------------------------------------------------------
@@ -111,7 +130,7 @@ if (EQUINOX_LOGGER_BUILD_SHARED)
 			${EQUINOX_LOGGER_INCLUDE}
 			${EQUINOX_LOGGER_API}
 	)
-	target_link_libraries(EquinoxLogger PUBLIC fmt)
+	target_link_libraries(EquinoxLogger PUBLIC ${EQUINOX_LOGGER_FMT_TARGET})
 	target_compile_definitions(EquinoxLogger PUBLIC EQUINOX_SHARED_SHARED_LIB)
 endif()
 
@@ -126,7 +145,7 @@ if (EQUINOX_LOGGER_BUILD_STATIC)
 			${EQUINOX_LOGGER_INCLUDE}
 			${EQUINOX_LOGGER_API}
 	)
-	target_link_libraries(EquinoxLogger PUBLIC fmt)
+	target_link_libraries(EquinoxLogger PUBLIC ${EQUINOX_LOGGER_FMT_TARGET})
 endif()
 
 #------------------------------------------------------------------------------------------

@@ -3,6 +3,23 @@
 .cproject
 .project
 
+# CMake / build artifacts
+build*/
+**/CMakeFiles/
+**/_deps/
+**/cmake_install.cmake
+**/CMakeCache.txt
+**/Makefile
+**/*.log
+**/*.stamp
+**/*.tmp
+**/*.bin
+**/*.a
+#**/*.so
+#**/*.so.*
+**/*.dylib
+**/*.dll
+
 # Prerequisites
 *.d
 
@@ -16,20 +33,9 @@
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
 # Fortran module files
 *.mod
 *.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-#*.a
-*.lib
 
 # Executables
 *.exe
@@ -66,9 +72,9 @@ CMakeCache.txt
 CMakeFiles/*
 Makefile
 cmake_install.cmake
-*.so.*
-*.so*
-*.so
+#*.so.*
+#*.so*
+#*.so
 *.log
 
 tests/CMakeCache.txt

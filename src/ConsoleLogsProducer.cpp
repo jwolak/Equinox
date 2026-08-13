@@ -37,6 +37,8 @@
  *
  */
 
+#include <fmt/format.h>
+
 #include <iostream>
 #include <string_view>
 
@@ -57,7 +59,7 @@ void equinox::ConsoleLogsProducer::logMessage(const std::string& messageToLog) {
     std::string_view color = mColorFormatter_->getColorForLevel(level);
 
     std::string coloredMessage = mColorFormatter_->applyConsoleColors(messageToLog, color);
-    buffer = mTimestampProducer_->getTimestamp() + mTimestampProducer_->getTimestampInUs() + coloredMessage;
+    buffer = fmt::format("{}{}{}", mTimestampProducer_->getTimestamp(), mTimestampProducer_->getTimestampInUs(), coloredMessage);
     std::cout << buffer << std::endl;
 }
 

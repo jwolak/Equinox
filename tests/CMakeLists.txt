@@ -52,6 +52,7 @@ add_executable(${PROJECT_NAME} ${EQUINOX_LOGGER_SRC} ${EQUINOX_LOGGER_TESTS_SRC}
 # Link to the EquinoxLogger target (automatically handles shared/static and Debug/Release)
 add_dependencies(${PROJECT_NAME} EquinoxLogger)
 target_link_libraries(${PROJECT_NAME} EquinoxLogger)
+target_link_libraries(${PROJECT_NAME} ${EQUINOX_LOGGER_FMT_TARGET})
 
 # Link GTest libraries
 target_link_libraries(${PROJECT_NAME} gmock gtest gtest_main pthread)

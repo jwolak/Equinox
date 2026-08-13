@@ -37,6 +37,8 @@
  *
  */
 
+#include <fmt/format.h>
+
 #include "EquinoxLoggerEngineImpl.h"
 
 equinox::EquinoxLoggerEngineImpl::EquinoxLoggerEngineImpl()
@@ -88,27 +90,27 @@ void equinox::EquinoxLoggerEngineImpl::logMessage(level::LOG_LEVEL msgLevel, con
 
         switch (msgLevel) {
             case level::LOG_LEVEL::critical:
-                outputMessage = mLogPrefix_ + std::string("[CRITICAL] ") + formatedOutputMessage;
+                outputMessage = fmt::format("{}[CRITICAL] {}", mLogPrefix_, formatedOutputMessage);
                 break;
 
             case level::LOG_LEVEL::debug:
-                outputMessage = mLogPrefix_ + std::string("[DEBUG] ") + formatedOutputMessage;
+                outputMessage = fmt::format("{}[DEBUG] {}", mLogPrefix_, formatedOutputMessage);
                 break;
 
             case level::LOG_LEVEL::error:
-                outputMessage = mLogPrefix_ + std::string("[ERROR] ") + formatedOutputMessage;
+                outputMessage = fmt::format("{}[ERROR] {}", mLogPrefix_, formatedOutputMessage);
                 break;
 
             case level::LOG_LEVEL::info:
-                outputMessage = mLogPrefix_ + std::string("[INFO] ") + formatedOutputMessage;
+                outputMessage = fmt::format("{}[INFO] {}", mLogPrefix_, formatedOutputMessage);
                 break;
 
             case level::LOG_LEVEL::trace:
-                outputMessage = mLogPrefix_ + std::string("[TRACE] ") + formatedOutputMessage;
+                outputMessage = fmt::format("{}[TRACE] {}", mLogPrefix_, formatedOutputMessage);
                 break;
 
             case level::LOG_LEVEL::warning:
-                outputMessage = mLogPrefix_ + std::string("[WARNING] ") + formatedOutputMessage;
+                outputMessage = fmt::format("{}[WARNING] {}", mLogPrefix_, formatedOutputMessage);
                 break;
 
             case level::LOG_LEVEL::off:
@@ -136,7 +138,7 @@ bool equinox::EquinoxLoggerEngineImpl::setup(level::LOG_LEVEL logLevel, const st
         try {
             mFileLogsProducer_->setupFile(mLogFileName_, mMaxLogFileSizeBytes_, mMaxLogFiles_);
         } catch (const std::exception& ex) {
-            std::cerr << "[EquinoxLogger] Failed to setup log file: " << ex.what() << std::endl;
+            std::cerr << fmt::format("[EquinoxLogger] Failed to setup log file: {}", ex.what()) << std::endl;
             return false;
         }
     }
@@ -157,7 +159,7 @@ bool equinox::EquinoxLoggerEngineImpl::changeLogsOutputSink(logs_output::SINK lo
         try {
             mFileLogsProducer_->setupFile(mLogFileName_, mMaxLogFileSizeBytes_, mMaxLogFiles_);
         } catch (const std::exception& ex) {
-            std::cerr << "[EquinoxLogger] Failed to switch to file output: " << ex.what() << std::endl;
+            std::cerr << fmt::format("[EquinoxLogger] Failed to switch to file output: {}", ex.what()) << std::endl;
             return false;
         }
     }
