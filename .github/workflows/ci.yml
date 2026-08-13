@@ -1,5 +1,8 @@
 name: CI
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
@@ -74,6 +77,25 @@ jobs:
             docs/images/performance-throughput-by-sink-Debug.svg
           if-no-files-found: error
 
+      - name: Commit generated performance charts
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add \
+            docs/images/performance-benchmark-Debug.svg \
+            docs/images/performance-throughput-by-sink-Debug.svg \
+            benchmarks/performance-history-Debug.json
+
+          if git diff --cached --quiet; then
+            echo "No performance artifact changes to commit for Debug build."
+          else
+            git commit -m "Update Debug performance charts"
+            BRANCH="${{ github.head_ref || github.ref_name }}"
+            git push origin "HEAD:${BRANCH}"
+          fi
+
   build-and-test-release:
     name: build-and-test (Release)
     runs-on: ubuntu-latest
@@ -138,3 +160,22 @@ jobs:
             docs/images/performance-benchmark-Release.svg
             docs/images/performance-throughput-by-sink-Release.svg
           if-no-files-found: error
+
+      - name: Commit generated performance charts
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add \
+            docs/images/performance-benchmark-Release.svg \
+            docs/images/performance-throughput-by-sink-Release.svg \
+            benchmarks/performance-history-Release.json
+
+          if git diff --cached --quiet; then
+            echo "No performance artifact changes to commit for Release build."
+          else
+            git commit -m "Update Release performance charts"
+            BRANCH="${{ github.head_ref || github.ref_name }}"
+            git push origin "HEAD:${BRANCH}"
+          fi
