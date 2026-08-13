@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Equinox Logger Benchmarks</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0b1220;
+            --card: #121b2a;
+            --text: #e5edf9;
+            --muted: #a9b6c8;
+            --link: #66b3ff;
+            --border: rgba(255, 255, 255, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+        }
+
+        .container {
+            width: min(960px, calc(100vw - 32px));
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 32px 28px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            margin: 0 0 20px;
+            font-size: clamp(1.8rem, 2vw, 2.5rem);
+        }
+
+        p {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .grid {
+            display: grid;
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        a {
+            color: var(--link);
+            text-decoration: none;
+        }
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #0d1725;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <h1>Equinox Logger benchmark charts</h1>
+        <p>
+            This page is refreshed after a successful merge to <strong>main</strong>.
+            Pull requests validate the benchmark and threshold checks without publishing the main Pages site.
+        </p>
+
+        <div class="grid">
+            <section class="card">
+                <h2>Release benchmark</h2>
+                <a href="./performance-benchmark-Release.svg">Open release benchmark chart</a>
+                <img src="./performance-benchmark-Release.svg" alt="Release benchmark chart" />
+            </section>
+
+            <section class="card">
+                <h2>Debug benchmark</h2>
+                <a href="./performance-benchmark-Debug.svg">Open debug benchmark chart</a>
+                <img src="./performance-benchmark-Debug.svg" alt="Debug benchmark chart" />
+            </section>
+
+            <section class="card">
+                <h2>Throughput by sink</h2>
+                <p>
+                    <a href="./performance-throughput-by-sink-Release.svg">Release throughput chart</a>
+                    &nbsp;|&nbsp;
+                    <a href="./performance-throughput-by-sink-Debug.svg">Debug throughput chart</a>
+                </p>
+                <img src="./performance-throughput-by-sink-Release.svg" alt="Release throughput chart" />
+            </section>
+        </div>
+    </main>
+</body>
+
+</html>
