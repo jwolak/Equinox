@@ -185,11 +185,13 @@ The project also includes a second benchmark that measures how many log entries 
 
 For each combination of message length and sink (`console`, `file`, `console_and_file`) the test records the throughput in logs/sec and renders a grouped chart.
 
-In CI, the noisy `console` and `console_and_file` variants are intentionally skipped to keep the job logs readable and to avoid flooding GitHub Actions output. The published CI chart therefore focuses on the `file` sink for the automated regression run, while the full local benchmark still includes all sink variants.
+The throughput-by-sink benchmark includes all three variants — `console`, `file`, and `console_and_file` — to match the full performance profile shown in the dashboard.
 
-Both benchmark charts are published as CI artifacts for every PR, so the throughput-by-sink result is kept alongside the main regression chart.
+Both benchmark charts are published as CI artifacts for every PR, and the live Release throughput chart is available at:
 
-![Throughput by message length and sink](docs/images/performance-throughput-by-sink.svg)
+https://jwolak.github.io/Equinox/performance-throughput-by-sink-Release.svg
+
+![Throughput by message length and sink](https://jwolak.github.io/Equinox/performance-throughput-by-sink-Release.svg)
 
 To generate this chart locally:
 ```sh
