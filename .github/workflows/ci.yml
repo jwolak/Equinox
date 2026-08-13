@@ -171,7 +171,49 @@ jobs:
       - name: Assemble GitHub Pages site
         run: |
           mkdir -p site
-          cp -f "$GITHUB_WORKSPACE/index.html" site/
+
+          cat > site/index.html <<'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <meta charset="UTF-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <title>Equinox Logger Benchmarks</title>
+              <style>
+                body { font-family: Arial, sans-serif; background: #0b1220; color: #e5edf9; margin: 0; padding: 32px; }
+                .wrap { max-width: 980px; margin: 0 auto; }
+                .card { background: #121b2a; border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+                img { width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12); margin-top: 12px; }
+                a { color: #66b3ff; }
+              </style>
+            </head>
+            <body>
+              <div class="wrap">
+                <h1>Equinox Logger benchmark charts</h1>
+                <p>This page is refreshed after a successful merge to <strong>main</strong>.</p>
+
+                <div class="card">
+                  <h2>Release benchmark</h2>
+                  <a href="./performance-benchmark-Release.svg">Open release benchmark chart</a>
+                  <img src="./performance-benchmark-Release.svg" alt="Release benchmark chart" />
+                </div>
+
+                <div class="card">
+                  <h2>Debug benchmark</h2>
+                  <a href="./performance-benchmark-Debug.svg">Open debug benchmark chart</a>
+                  <img src="./performance-benchmark-Debug.svg" alt="Debug benchmark chart" />
+                </div>
+
+                <div class="card">
+                  <h2>Throughput by sink</h2>
+                  <a href="./performance-throughput-by-sink-Release.svg">Release throughput chart</a>
+                  <img src="./performance-throughput-by-sink-Release.svg" alt="Release throughput chart" />
+                </div>
+              </div>
+            </body>
+          </html>
+          EOF
+
           cp -f site-release/performance-benchmark-Release.svg site/
           cp -f site-release/performance-throughput-by-sink-Release.svg site/
           cp -f site-debug/performance-benchmark-Debug.svg site/
