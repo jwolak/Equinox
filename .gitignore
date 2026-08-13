@@ -37,6 +37,10 @@ build*/
 *.mod
 *.smod
 
+# Python cache
+__pycache__/
+*.py[cod]
+
 # Executables
 *.exe
 *.out

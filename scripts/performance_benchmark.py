@@ -78,7 +78,7 @@ def git_history_baseline(repo_root: Path, history_path: Path):
     return None
 
 
-def build_svg_chart(output_path: Path, current_ms: float, baseline_ms: float | None, threshold_percent: float):
+def build_svg_chart(output_path: Path, current_ms: float, baseline_ms: float | None, threshold_percent: float, build_label: str = "Release"):
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     chart_height = 420
@@ -104,15 +104,16 @@ def build_svg_chart(output_path: Path, current_ms: float, baseline_ms: float | N
     ]
     values = [baseline_value, current_ms]
     color_map = ["#7aa2f7", "#bb9af7"]
+    threshold_text = f"{threshold_percent:.0f}% threshold"
 
     svg_lines = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{chart_width}" height="{chart_height}" viewBox="0 0 {chart_width} {chart_height}">',
         '<rect width="100%" height="100%" fill="#111827"/>',
-        f'<text x="{chart_width / 2}" y="26" text-anchor="middle" font-size="22" fill="#e5e7eb" font-family="Arial">Log print performance benchmark</text>',
+        f'<text x="{chart_width / 2}" y="26" text-anchor="middle" font-size="22" fill="#e5e7eb" font-family="Arial">Log print performance benchmark ({build_label})</text>',
         f'<line x1="{margin_left}" y1="{chart_height - margin_bottom}" x2="{chart_width - margin_right}" y2="{chart_height - margin_bottom}" stroke="#9ca3af" stroke-width="1.5"/>',
         f'<line x1="{margin_left}" y1="{margin_top}" x2="{margin_left}" y2="{chart_height - margin_bottom}" stroke="#9ca3af" stroke-width="1.5"/>',
         f'<line x1="{margin_left}" y1="{y_for(threshold_value)}" x2="{chart_width - margin_right}" y2="{y_for(threshold_value)}" stroke="#fbbf24" stroke-dasharray="7 5" stroke-width="1.5"/>',
-        f'<text x="{chart_width - margin_right}" y="{y_for(threshold_value) - 8}" text-anchor="end" font-size="12" fill="#fbbf24" font-family="Arial">10% threshold</text>',
+        f'<text x="{chart_width - margin_right}" y="{y_for(threshold_value) - 8}" text-anchor="end" font-size="12" fill="#fbbf24" font-family="Arial">{threshold_text}</text>',
     ]
 
     for idx, label in enumerate(labels):
@@ -210,6 +211,7 @@ def main():
     parser.add_argument("--sink-chart-name", type=str, default="performance-throughput-by-sink.svg", help="Output filename for the sink/message-length throughput SVG chart.")
     parser.add_argument("--history-file", type=Path, default=Path("benchmarks/performance-history.json"), help="Path to the JSON baseline history file.")
     parser.add_argument("--threshold", type=float, default=10.0, help="Maximum allowed slowdown percentage before the benchmark fails.")
+    parser.add_argument("--build-label", type=str, default="Release", help="Build name printed in the benchmark chart title (for example Release or Debug).")
     parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[1], help="Repository root used for Git baseline lookup.")
     args = parser.parse_args()
 
@@ -264,7 +266,7 @@ def main():
     threshold_value = baseline_ms * (1.0 + (args.threshold / 100.0))
 
     chart_path = output_dir / args.chart_name
-    build_svg_chart(chart_path, current_ms, baseline_ms, args.threshold)
+    build_svg_chart(chart_path, current_ms, baseline_ms, args.threshold, build_label=args.build_label)
 
     history_payload = {
         "baseline_ms": baseline_ms,
