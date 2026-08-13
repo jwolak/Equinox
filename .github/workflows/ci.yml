@@ -171,10 +171,12 @@ jobs:
       - name: Assemble GitHub Pages site
         run: |
           mkdir -p site
+          cp -f "$GITHUB_WORKSPACE/index.html" site/
           cp -f site-release/performance-benchmark-Release.svg site/
           cp -f site-release/performance-throughput-by-sink-Release.svg site/
           cp -f site-debug/performance-benchmark-Debug.svg site/
           cp -f site-debug/performance-throughput-by-sink-Debug.svg site/
+          touch site/.nojekyll
           echo "Benchmark pages assembled in site/"
           ls -l site
 

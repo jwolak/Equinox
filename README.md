@@ -136,6 +136,8 @@ Measured on the Release build. Threshold: 10%.
 
 The latest Release benchmark is published from GitHub Pages and refreshed on each successful main-branch CI run, without committing generated images to the repository.
 
+> This chart is regenerated only after a successful merge into `main`. Pull request runs validate the benchmark and threshold checks, but they do not publish the main Pages site.
+
 ![Performance benchmark chart](https://jwolak.github.io/Equinox-Logger-2/performance-benchmark-Release.svg)
 
 > This image reflects the latest successful build from the main branch. PR runs do not deploy the Pages site; they only validate the benchmark and test jobs.
