@@ -8,6 +8,11 @@ on:
     branches:
       - "main"
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build-and-test-debug:
     name: build-and-test (Debug)
@@ -57,7 +62,7 @@ jobs:
           chmod +x scripts/run_performance_benchmark.sh
           bash scripts/run_performance_benchmark.sh \
             --binary "$TEST_BIN" \
-            --output-dir "$GITHUB_WORKSPACE/docs/images" \
+            --output-dir "$GITHUB_WORKSPACE/site" \
             --chart-name "performance-benchmark-Debug.svg" \
             --sink-chart-name "performance-throughput-by-sink-Debug.svg" \
             --history-file "$GITHUB_WORKSPACE/benchmarks/performance-history-Debug.json" \
@@ -70,8 +75,8 @@ jobs:
         with:
           name: performance-chart-debug
           path: |
-            docs/images/performance-benchmark-Debug.svg
-            docs/images/performance-throughput-by-sink-Debug.svg
+            site/performance-benchmark-Debug.svg
+            site/performance-throughput-by-sink-Debug.svg
           if-no-files-found: error
 
   build-and-test-release:
@@ -122,7 +127,7 @@ jobs:
           chmod +x scripts/run_performance_benchmark.sh
           bash scripts/run_performance_benchmark.sh \
             --binary "$TEST_BIN" \
-            --output-dir "$GITHUB_WORKSPACE/docs/images" \
+            --output-dir "$GITHUB_WORKSPACE/site" \
             --chart-name "performance-benchmark-Release.svg" \
             --sink-chart-name "performance-throughput-by-sink-Release.svg" \
             --history-file "$GITHUB_WORKSPACE/benchmarks/performance-history-Release.json" \
@@ -135,6 +140,52 @@ jobs:
         with:
           name: performance-chart-release
           path: |
-            docs/images/performance-benchmark-Release.svg
-            docs/images/performance-throughput-by-sink-Release.svg
+            site/performance-benchmark-Release.svg
+            site/performance-throughput-by-sink-Release.svg
           if-no-files-found: error
+
+  deploy-pages:
+    name: Deploy benchmark pages
+    needs:
+      - build-and-test-debug
+      - build-and-test-release
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Download Release charts
+        uses: actions/download-artifact@v4
+        with:
+          name: performance-chart-release
+          path: site-release
+
+      - name: Download Debug charts
+        uses: actions/download-artifact@v4
+        with:
+          name: performance-chart-debug
+          path: site-debug
+
+      - name: Assemble GitHub Pages site
+        run: |
+          mkdir -p site
+          cp -f site-release/performance-benchmark-Release.svg site/
+          cp -f site-release/performance-throughput-by-sink-Release.svg site/
+          cp -f site-debug/performance-benchmark-Debug.svg site/
+          cp -f site-debug/performance-throughput-by-sink-Debug.svg site/
+          echo "Benchmark pages assembled in site/"
+          ls -l site
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
