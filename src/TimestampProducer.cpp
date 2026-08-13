@@ -37,26 +37,26 @@
  *
  */
 
-#include "TimestampProducer.h"
-
 #include <chrono>
 #include <ctime>
 
+#include <fmt/format.h>
+
+#include "TimestampProducer.h"
+
 std::string equinox::TimestampProducer::getTimestamp() const {
-  std::chrono::system_clock::time_point sys_clock_time_point;
+    std::chrono::system_clock::time_point sys_clock_time_point;
 
-  sys_clock_time_point = std::chrono::system_clock::now();
-  std::time_t t = std::chrono::system_clock::to_time_t(sys_clock_time_point);
-  std::string timestamp_ = std::ctime(&t);
-  timestamp_.resize(timestamp_.size() - 1);
-  timestamp_ = std::string("[" + timestamp_ + "]");
-
-  return timestamp_;
+    sys_clock_time_point = std::chrono::system_clock::now();
+    std::time_t t = std::chrono::system_clock::to_time_t(sys_clock_time_point);
+    std::string timestamp_ = std::ctime(&t);
+    timestamp_.resize(timestamp_.size() - 1);
+    return fmt::format("[{}]", timestamp_);
 }
 
 std::string equinox::TimestampProducer::getTimestampInUs() {
-  uint64_t timestampInUs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-  mTimestamp_ = std::string("[" + std::to_string(timestampInUs) + "]");
+    uint64_t timestampInUs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    mTimestamp_ = fmt::format("[{}]", timestampInUs);
 
-  return mTimestamp_;
+    return mTimestamp_;
 }

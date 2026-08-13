@@ -179,3 +179,7 @@
 2026-08-12 15:31:58 +0200 | v2.1.13 | Add EXPECT_CALL for stopWorker in parameterized tests to ensure proper worker management
 2026-08-12 15:35:35 +0200 | v2.1.14 | Refactor benchmark result parsing to handle skipped tests and remove unnecessary error raising
 2026-08-13 10:05:34 +0200 | v2.1.15 | Add wchar_t support and update examples CMakeLists
+2026-08-13 12:11:01 +0200 | v2.1.16 | Integrate fmt library for improved message formatting and logging consistency
+2026-08-13 12:16:50 +0200 | v2.1.17 | Update .gitignore to include shared object files and clean up commented entries
+2026-08-13 12:53:51 +0200 | v2.1.18 | Update logging format to use fmt::sprintf and limit message size
+2026-08-13 13:12:48 +0200 | v2.1.19 | Update CI configuration and documentation for performance benchmarks

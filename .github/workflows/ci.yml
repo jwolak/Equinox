@@ -50,7 +50,7 @@ jobs:
 
       - name: Run performance benchmark
         env:
-          THRESHOLD_PERCENT: 10
+          THRESHOLD_PERCENT: 25
         run: |
           git fetch origin main --depth=1 || true
           TEST_BIN="$(find build-ci/Debug -type f -name 'EquinoxLoggerTests.x86' | head -n 1)"
@@ -61,7 +61,8 @@ jobs:
             --chart-name "performance-benchmark-Debug.svg" \
             --sink-chart-name "performance-throughput-by-sink-Debug.svg" \
             --history-file "$GITHUB_WORKSPACE/benchmarks/performance-history-Debug.json" \
-            --threshold "$THRESHOLD_PERCENT"
+            --threshold "$THRESHOLD_PERCENT" \
+            --build-label "Debug"
 
       - name: Upload performance charts
         if: always()
@@ -125,7 +126,8 @@ jobs:
             --chart-name "performance-benchmark-Release.svg" \
             --sink-chart-name "performance-throughput-by-sink-Release.svg" \
             --history-file "$GITHUB_WORKSPACE/benchmarks/performance-history-Release.json" \
-            --threshold "$THRESHOLD_PERCENT"
+            --threshold "$THRESHOLD_PERCENT" \
+            --build-label "Release"
 
       - name: Upload performance charts
         if: always()

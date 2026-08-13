@@ -37,6 +37,8 @@
  *
  */
 
+#include <fmt/format.h>
+
 #include <filesystem>
 #include <iostream>
 #include <stdexcept>
@@ -52,8 +54,8 @@ void equinox::FileLogsProducer::setupFile(const std::string& logFileName, std::s
     if (mFdLogFile_.is_open()) {
         try {
             mFdLogFile_.close();
-        } catch (std::ofstream::failure& ex) {  // LCOV_EXCL_LINE
-            std::cerr << "[EquinoxLogger] Exception when closing file: " << ex.what() << std::endl;  // LCOV_EXCL_LINE
+        } catch (std::ofstream::failure& ex) {                                                                    // LCOV_EXCL_LINE
+            std::cerr << fmt::format("[EquinoxLogger] Exception when closing file: {}", ex.what()) << std::endl;  // LCOV_EXCL_LINE
         }  // LCOV_EXCL_LINE
     }
 
@@ -74,7 +76,7 @@ void equinox::FileLogsProducer::openLogFileAppend() {
     try {
         mFdLogFile_.open(mLogFileName_, std::ofstream::out | std::ofstream::app);
     } catch (std::ofstream::failure& ex) {
-        std::cerr << "[EquinoxLogger] Failed to open log file: " << mLogFileName_ << " - " << ex.what() << std::endl;
+        std::cerr << fmt::format("[EquinoxLogger] Failed to open log file: {} - {}", mLogFileName_, ex.what()) << std::endl;
         mFdLogFile_.clear();
     }
 }
@@ -89,7 +91,7 @@ void equinox::FileLogsProducer::openLogFileTruncate() {
     try {
         mFdLogFile_.open(mLogFileName_, std::ofstream::out | std::ofstream::trunc);
     } catch (std::ofstream::failure& ex) {
-        std::cerr << "[EquinoxLogger] Failed to open log file: " << mLogFileName_ << " - " << ex.what() << std::endl;
+        std::cerr << fmt::format("[EquinoxLogger] Failed to open log file: {} - {}", mLogFileName_, ex.what()) << std::endl;
         mFdLogFile_.clear();
     }
 }
@@ -112,7 +114,7 @@ void equinox::FileLogsProducer::rotateIfNeeded() {
     std::error_code errorCode;
     std::uintmax_t fileSize = std::filesystem::file_size(mLogFileName_, errorCode);
     if (errorCode) {
-        std::cerr << "[EquinoxLogger] Failed to check file size: " << errorCode.message() << std::endl;
+        std::cerr << fmt::format("[EquinoxLogger] Failed to check file size: {}", errorCode.message()) << std::endl;
         return;
     }
 
@@ -122,8 +124,8 @@ void equinox::FileLogsProducer::rotateIfNeeded() {
 
     try {
         mFdLogFile_.close();
-    } catch (std::ofstream::failure& ex) {  // LCOV_EXCL_LINE
-        std::cerr << "[EquinoxLogger] Exception when closing file during rotation: " << ex.what() << std::endl;  // LCOV_EXCL_LINE
+    } catch (std::ofstream::failure& ex) {                                                                                    // LCOV_EXCL_LINE
+        std::cerr << fmt::format("[EquinoxLogger] Exception when closing file during rotation: {}", ex.what()) << std::endl;  // LCOV_EXCL_LINE
     }  // LCOV_EXCL_LINE
 
     std::string rotatedFileName = buildRotatedFileName(mNextRotationIndex_);
@@ -132,7 +134,7 @@ void equinox::FileLogsProducer::rotateIfNeeded() {
     std::filesystem::rename(mLogFileName_, rotatedFileName, errorCode);
 
     if (errorCode) {
-        std::cerr << "[EquinoxLogger] Failed to rotate log file: " << errorCode.message() << std::endl;
+        std::cerr << fmt::format("[EquinoxLogger] Failed to rotate log file: {}", errorCode.message()) << std::endl;
         openLogFileAppend();
         return;
     }
@@ -159,9 +161,9 @@ void equinox::FileLogsProducer::logMessage(const std::string& messageToLog) {
     try {
         mFdLogFile_ << buffer << std::endl;
         mFdLogFile_.flush();
-    } catch (std::ofstream::failure& ex) {  // LCOV_EXCL_LINE
-        std::cerr << "[EquinoxLogger] Failed to write to log file: " << ex.what() << std::endl;  // LCOV_EXCL_LINE
-        return;  // LCOV_EXCL_LINE
+    } catch (std::ofstream::failure& ex) {                                                                    // LCOV_EXCL_LINE
+        std::cerr << fmt::format("[EquinoxLogger] Failed to write to log file: {}", ex.what()) << std::endl;  // LCOV_EXCL_LINE
+        return;                                                                                               // LCOV_EXCL_LINE
     }  // LCOV_EXCL_LINE
 
     rotateIfNeeded();
@@ -172,30 +174,29 @@ void equinox::FileLogsProducer::flush() {
     if (mFdLogFile_.is_open()) {
         try {
             mFdLogFile_.flush();
-        } catch (std::ofstream::failure& ex) {  // LCOV_EXCL_LINE
-            std::cerr << "[EquinoxLogger] Failed to flush log file: " << ex.what() << std::endl;  // LCOV_EXCL_LINE
+        } catch (std::ofstream::failure& ex) {                                                                 // LCOV_EXCL_LINE
+            std::cerr << fmt::format("[EquinoxLogger] Failed to flush log file: {}", ex.what()) << std::endl;  // LCOV_EXCL_LINE
         }  // LCOV_EXCL_LINE
     }
 }
 
 // for testing purposes only
-std::ofstream& equinox::FileLogsProducer::GetLogFileStream(){
+std::ofstream& equinox::FileLogsProducer::GetLogFileStream() {
     return mFdLogFile_;
 }
 
-std::string& equinox::FileLogsProducer::GetLogFileName(){
+std::string& equinox::FileLogsProducer::GetLogFileName() {
     return mLogFileName_;
 }
 
-std::size_t& equinox::FileLogsProducer::GetMaxLogFileSizeBytes(){
+std::size_t& equinox::FileLogsProducer::GetMaxLogFileSizeBytes() {
     return mMaxLogFileSizeBytes_;
 }
 
-std::size_t& equinox::FileLogsProducer::GetMaxLogFiles(){
+std::size_t& equinox::FileLogsProducer::GetMaxLogFiles() {
     return mMaxLogFiles_;
 }
 
-std::size_t& equinox::FileLogsProducer::GetNextRotationIndex(){
+std::size_t& equinox::FileLogsProducer::GetNextRotationIndex() {
     return mNextRotationIndex_;
 }
-

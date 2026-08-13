@@ -32,3 +32,4 @@ target_include_directories(${PROJECT_NAME}
 )
 add_dependencies (${PROJECT_NAME} EquinoxLogger)
 target_link_libraries(${PROJECT_NAME} EquinoxLogger)
+target_link_libraries(${PROJECT_NAME} ${EQUINOX_LOGGER_FMT_TARGET})

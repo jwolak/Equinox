@@ -328,9 +328,11 @@ run_tests() {
     
     cd "$build_dir"
     
-    # Run the tests
-    if ./tests/EquinoxLoggerTests.x86; then
-        print_success "All tests passed"
+    # Performance benchmark tests are intentionally excluded from the default
+    # build.sh test run so that regular CI/local validation stays focused on
+    # correctness checks and avoids noisy throughput benchmarks.
+    if ./tests/EquinoxLoggerTests.x86 --gtest_filter=-PerformanceBenchmark.*; then
+        print_success "All non-performance tests passed"
         return 0
     else
         print_error "Some tests failed"
