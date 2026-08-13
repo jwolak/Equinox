@@ -40,7 +40,7 @@
 #ifndef API_EQUINOXLOGGERENGINE_H_
 #define API_EQUINOXLOGGERENGINE_H_
 
-#include <fmt/format.h>
+#include <fmt/printf.h>
 
 #include <iostream>
 #include <memory>
@@ -66,7 +66,10 @@ namespace equinox {
         template <typename... Args>
         void log(level::LOG_LEVEL msgLevel, const std::string& msgFormat, Args&&... args) {
             try {
-                std::string formattedMessage = fmt::vformat(fmt::string_view(msgFormat), fmt::make_format_args(args...));
+                std::string formattedMessage = fmt::sprintf(msgFormat, std::forward<Args>(args)...);
+                if (formattedMessage.size() > 4095U) {
+                    formattedMessage.resize(4095U);
+                }
                 std::lock_guard<std::mutex> lock(mEngineMutex_);
                 mEquinoxLoggerEngineImpl_->logMessage(msgLevel, formattedMessage);
             } catch (const fmt::format_error& ex) {
