@@ -15,8 +15,8 @@ build*/
 **/*.tmp
 **/*.bin
 **/*.a
-#**/*.so
-#**/*.so.*
+**/*.so
+**/*.so.*
 **/*.dylib
 **/*.dll
 
@@ -72,9 +72,9 @@ CMakeCache.txt
 CMakeFiles/*
 Makefile
 cmake_install.cmake
-#*.so.*
-#*.so*
-#*.so
+*.so.*
+*.so*
+*.so
 *.log
 
 tests/CMakeCache.txt
