@@ -134,18 +134,23 @@ The benchmark is implemented in the `PerformanceBenchmark.LogPrintThroughput` Go
 ### Release benchmark (main chart)
 Measured on the Release build. Threshold: 10%.
 
-![Performance benchmark chart](docs/images/performance-benchmark.svg)
+The latest Release benchmark is published from GitHub Pages and refreshed on each successful main-branch CI run, without committing generated images to the repository.
+
+![Performance benchmark chart](https://jwolak.github.io/Equinox-Logger-2/performance-benchmark-Release.svg)
+
+> If the image is not visible yet, the GitHub Pages deployment is still warming up; the chart is refreshed automatically after the next successful main-branch workflow run.
 
 ### Debug benchmark (additional comparison)
 Measured on the Debug build. Threshold: 25%.
 
-![Debug performance benchmark](docs/images/performance-benchmark-Debug.svg)
+![Debug performance benchmark](https://jwolak.github.io/Equinox-Logger-2/performance-benchmark-Debug.svg)
 
-The CI workflow publishes both charts as separate artifacts for each build type:
-- `performance-benchmark-Release.svg`
-- `performance-throughput-by-sink-Release.svg`
-- `performance-benchmark-Debug.svg`
-- `performance-throughput-by-sink-Debug.svg`
+> The benchmark charts are published as temporary CI artifacts and also deployed to the GitHub Pages site for the latest successful build.
+>
+> - `performance-benchmark-Release.svg`
+> - `performance-throughput-by-sink-Release.svg`
+> - `performance-benchmark-Debug.svg`
+> - `performance-throughput-by-sink-Debug.svg`
 
 To generate the charts locally:
 ```sh
