@@ -138,7 +138,7 @@ The latest Release benchmark is published from GitHub Pages and refreshed on eac
 
 ![Performance benchmark chart](https://jwolak.github.io/Equinox-Logger-2/performance-benchmark-Release.svg)
 
-> If the image is not visible yet, the GitHub Pages deployment is still warming up; the chart is refreshed automatically after the next successful main-branch workflow run.
+> This image reflects the latest successful build from the main branch. PR runs do not deploy the Pages site; they only validate the benchmark and test jobs.
 
 ### Debug benchmark (additional comparison)
 Measured on the Debug build. Threshold: 25%.
