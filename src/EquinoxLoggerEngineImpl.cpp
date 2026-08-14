@@ -71,6 +71,10 @@ equinox::level::LOG_LEVEL equinox::EquinoxLoggerEngineImpl::getLogLevel() const 
     return mLogLevel_;
 }
 
+bool equinox::EquinoxLoggerEngineImpl::shouldLog(level::LOG_LEVEL msgLevel) const {
+    return (msgLevel != level::LOG_LEVEL::off) && (msgLevel >= mLogLevel_);
+}
+
 const std::string& equinox::EquinoxLoggerEngineImpl::getLogFileName() const {
     return mLogFileName_;
 }
@@ -84,43 +88,41 @@ std::size_t equinox::EquinoxLoggerEngineImpl::getMaxLogFiles() const {
 }
 
 void equinox::EquinoxLoggerEngineImpl::logMessage(level::LOG_LEVEL msgLevel, const std::string& formatedOutputMessage) {
-    if ((msgLevel != level::LOG_LEVEL::off) and (msgLevel >= mLogLevel_)) {
-        thread_local std::string outputMessage;
-        outputMessage.clear();
+    thread_local std::string outputMessage;
+    outputMessage.clear();
 
-        switch (msgLevel) {
-            case level::LOG_LEVEL::critical:
-                outputMessage = fmt::format("{}[CRITICAL] {}", mLogPrefix_, formatedOutputMessage);
-                break;
+    switch (msgLevel) {
+        case level::LOG_LEVEL::critical:
+            outputMessage = fmt::format("{}[CRITICAL] {}", mLogPrefix_, formatedOutputMessage);
+            break;
 
-            case level::LOG_LEVEL::debug:
-                outputMessage = fmt::format("{}[DEBUG] {}", mLogPrefix_, formatedOutputMessage);
-                break;
+        case level::LOG_LEVEL::debug:
+            outputMessage = fmt::format("{}[DEBUG] {}", mLogPrefix_, formatedOutputMessage);
+            break;
 
-            case level::LOG_LEVEL::error:
-                outputMessage = fmt::format("{}[ERROR] {}", mLogPrefix_, formatedOutputMessage);
-                break;
+        case level::LOG_LEVEL::error:
+            outputMessage = fmt::format("{}[ERROR] {}", mLogPrefix_, formatedOutputMessage);
+            break;
 
-            case level::LOG_LEVEL::info:
-                outputMessage = fmt::format("{}[INFO] {}", mLogPrefix_, formatedOutputMessage);
-                break;
+        case level::LOG_LEVEL::info:
+            outputMessage = fmt::format("{}[INFO] {}", mLogPrefix_, formatedOutputMessage);
+            break;
 
-            case level::LOG_LEVEL::trace:
-                outputMessage = fmt::format("{}[TRACE] {}", mLogPrefix_, formatedOutputMessage);
-                break;
+        case level::LOG_LEVEL::trace:
+            outputMessage = fmt::format("{}[TRACE] {}", mLogPrefix_, formatedOutputMessage);
+            break;
 
-            case level::LOG_LEVEL::warning:
-                outputMessage = fmt::format("{}[WARNING] {}", mLogPrefix_, formatedOutputMessage);
-                break;
+        case level::LOG_LEVEL::warning:
+            outputMessage = fmt::format("{}[WARNING] {}", mLogPrefix_, formatedOutputMessage);
+            break;
 
-            case level::LOG_LEVEL::off:
-                // Should not reach here due to the check above, but included for completeness
-                break;
-        }
-
-        mAsyncLogQueueEngine_->startWorkerIfNeeded();
-        mAsyncLogQueueEngine_->processLogMessage(outputMessage);
+        case level::LOG_LEVEL::off:
+            // Should not reach here due to the check above, but included for completeness
+            break;
     }
+
+    mAsyncLogQueueEngine_->startWorkerIfNeeded();
+    mAsyncLogQueueEngine_->processLogMessage(outputMessage);
 }
 
 bool equinox::EquinoxLoggerEngineImpl::setup(level::LOG_LEVEL logLevel, const std::string& logPrefix, logs_output::SINK logsOutputSink,
