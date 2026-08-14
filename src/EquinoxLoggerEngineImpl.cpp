@@ -72,7 +72,11 @@ equinox::level::LOG_LEVEL equinox::EquinoxLoggerEngineImpl::getLogLevel() const 
 }
 
 bool equinox::EquinoxLoggerEngineImpl::shouldLog(level::LOG_LEVEL msgLevel) const {
-    return (msgLevel != level::LOG_LEVEL::off) && (msgLevel >= mLogLevel_);
+    if (msgLevel == level::LOG_LEVEL::off) {
+        return false;
+    }
+
+    return msgLevel >= mLogLevel_;
 }
 
 const std::string& equinox::EquinoxLoggerEngineImpl::getLogFileName() const {
@@ -88,6 +92,10 @@ std::size_t equinox::EquinoxLoggerEngineImpl::getMaxLogFiles() const {
 }
 
 void equinox::EquinoxLoggerEngineImpl::logMessage(level::LOG_LEVEL msgLevel, const std::string& formatedOutputMessage) {
+    if (!shouldLog(msgLevel)) {
+        return;
+    }
+
     thread_local std::string outputMessage;
     outputMessage.clear();
 
