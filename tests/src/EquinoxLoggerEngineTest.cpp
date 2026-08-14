@@ -67,11 +67,13 @@ namespace equinox_logger_engine_impl_test {
 
     TEST_F(EquinoxLoggerEngineTest, Call_Log_With_Format_Arguments_And_Verify_LogMessage_Called_With_Formatted_Text) {
         EXPECT_CALL(*equinox_logger_engine_impl_mock, logMessage(level::LOG_LEVEL::info, "Test value: 42")).Times(1);
+        EXPECT_CALL(*equinox_logger_engine_impl_mock, shouldLog(level::LOG_LEVEL::info)).WillOnce(Return(true));
 
         equinox_logger_engine.log(level::LOG_LEVEL::info, "Test %s: %d", "value", 42);
     }
 
     TEST_F(EquinoxLoggerEngineTest, Call_Log_With_Invalid_Format_And_Verify_LogMessage_Is_Not_Called) {
+        EXPECT_CALL(*equinox_logger_engine_impl_mock, shouldLog(level::LOG_LEVEL::error)).WillOnce(Return(true));
         EXPECT_CALL(*equinox_logger_engine_impl_mock, logMessage(_, _)).Times(0);
 
         equinox_logger_engine.log(level::LOG_LEVEL::error, "%");
@@ -80,6 +82,7 @@ namespace equinox_logger_engine_impl_test {
     TEST_F(EquinoxLoggerEngineTest, Call_Log_With_Message_Exceeding_Buffer_Size_And_Verify_Message_Is_Truncated_And_LogMessage_Is_Called) {
         const std::string veryLongMessage(5000, 'A');
 
+        EXPECT_CALL(*equinox_logger_engine_impl_mock, shouldLog(level::LOG_LEVEL::warning)).WillOnce(Return(true));
         EXPECT_CALL(*equinox_logger_engine_impl_mock, logMessage(level::LOG_LEVEL::warning, Truly([](const std::string& msg) {
                                                                      return msg.size() == 4095 &&
                                                                          std::all_of(msg.begin(), msg.end(), [](char c) { return c == 'A'; });
@@ -94,6 +97,7 @@ namespace equinox_logger_engine_impl_test {
         std::atomic<int> activeCalls{0};
         std::atomic<int> maxActiveCalls{0};
 
+        EXPECT_CALL(*equinox_logger_engine_impl_mock, shouldLog(level::LOG_LEVEL::info)).Times(kThreadCount).WillRepeatedly(Return(true));
         EXPECT_CALL(*equinox_logger_engine_impl_mock, logMessage(level::LOG_LEVEL::info, _))
             .Times(kThreadCount)
             .WillRepeatedly(Invoke([&](level::LOG_LEVEL, const std::string&) {
@@ -165,6 +169,13 @@ namespace equinox_logger_engine_impl_test {
         EXPECT_CALL(*equinox_logger_engine_impl_mock, flush()).Times(1);
 
         equinox_logger_engine.flush();
+    }
+
+    TEST_F(EquinoxLoggerEngineTest, Call_Log_Below_Threshold_And_Verify_LogMessage_Is_Not_Formatted_Or_Called) {
+        EXPECT_CALL(*equinox_logger_engine_impl_mock, shouldLog(level::LOG_LEVEL::trace)).WillOnce(Return(false));
+        EXPECT_CALL(*equinox_logger_engine_impl_mock, logMessage(_, _)).Times(0);
+
+        equinox_logger_engine.log(level::LOG_LEVEL::trace, "Test %s: %d", "value", 42);
     }
 
 }  // namespace equinox_logger_engine_impl_test

@@ -65,6 +65,11 @@ namespace equinox {
 
         template <typename... Args>
         void log(level::LOG_LEVEL msgLevel, const std::string& msgFormat, Args&&... args) {
+            if (!mEquinoxLoggerEngineImpl_->shouldLog(msgLevel)) {
+                // If the message level is below the current log level, do not format or log the message
+                return;
+            }
+
             try {
                 std::string formattedMessage = fmt::sprintf(msgFormat, std::forward<Args>(args)...);
                 if (formattedMessage.size() > 4095U) {

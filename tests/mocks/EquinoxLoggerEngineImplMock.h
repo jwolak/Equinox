@@ -40,6 +40,7 @@ namespace mocks {
     class EquinoxLoggerEngineImplMock : public equinox::IEquinoxLoggerEngineImpl {
        public:
         MOCK_METHOD(void, logMessage, (equinox::level::LOG_LEVEL msgLevel, const std::string& formatedOutputMessage), (override));
+        MOCK_METHOD(bool, shouldLog, (equinox::level::LOG_LEVEL msgLevel), (const, override));
         MOCK_METHOD(bool, setup,
                     (equinox::level::LOG_LEVEL logLevel, const std::string& logPrefix, equinox::logs_output::SINK logsOutputSink,
                      const std::string& logFileName, std::size_t maxLogFileSizeBytes, std::size_t maxLogFiles),
