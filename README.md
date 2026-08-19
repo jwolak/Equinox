@@ -1,5 +1,4 @@
-# Equinox logging engine 2.1.34
-**Thread safety C++ logger version 2.1.33
+# Equinox logging engine 2.1.35
 
 **Logger with support logging to file, console or both. Six levels available:**
 - Trace 
