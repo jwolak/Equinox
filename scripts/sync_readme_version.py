@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import re
 from pathlib import Path
 
 repo_root = Path(__file__).resolve().parent.parent
@@ -12,7 +13,20 @@ with package_path.open('r', encoding='utf-8') as f:
 version = pkg.get('version', '')
 
 readme = readme_path.read_text(encoding='utf-8')
-updated = readme.replace('__VERSION_SHORT__', version).replace('__VERSION_FULL__', version)
+updated = readme
+updated = re.sub(
+    r'^(# Equinox logging engine )\d+\.\d+\.\d+$',
+    lambda match: match.group(1) + version,
+    updated,
+    flags=re.MULTILINE,
+)
+updated = re.sub(
+    r'^(\*\*Thread safety C\+\+ logger version )\d+\.\d+\.\d+\*\*$',
+    lambda match: match.group(1) + version,
+    updated,
+    flags=re.MULTILINE,
+)
+updated = updated.replace('__VERSION_SHORT__', version).replace('__VERSION_FULL__', version)
 
 if updated != readme:
     readme_path.write_text(updated, encoding='utf-8')
