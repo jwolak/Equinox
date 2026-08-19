@@ -1,5 +1,4 @@
-# Equinox logging engine 2.1
-**Thread safety C++ logger version 2.1**
+# Equinox logging engine 2.1.35
 
 **Logger with support logging to file, console or both. Six levels available:**
 - Trace 
@@ -27,42 +26,77 @@ $ sudo make install (Ubuntu)
 or
 # make install
 ```
+## Logging macros and `NDEBUG`
+
+The project also provides convenience macros in `EquinoxLoggerMacros.h`:
+
+```cpp
+#include "EquinoxLoggerMacros.h"
+
+EQUINOX_TRACE("trace message %d", 1);
+EQUINOX_DEBUG("debug message %d", 2);
+EQUINOX_INFO("info message %d", 3);
+EQUINOX_WARNING("warning message %d", 4);
+EQUINOX_ERROR("error message %d", 5);
+EQUINOX_CRITICAL("critical message %d", 6);
+```
+
+The macro behavior depends on the standard `NDEBUG` flag:
+
+- If the build is a Debug configuration, `NDEBUG` is not defined, so `EQUINOX_TRACE(...)` and `EQUINOX_DEBUG(...)` call the normal logging API.
+- If the build is a Release configuration, `NDEBUG` is typically defined by the compiler or by a build flag such as `-DNDEBUG` or the CMake Release preset, so those two macros compile to empty `do { } while (0)` statements.
+- This removes the runtime cost of trace/debug formatting and evaluation in Release builds while keeping higher-priority logs available according to the configured logger level.
+
+In other words, `trace` and `debug` are stripped out before formatting when `NDEBUG` is active, which gives a zero-cost path for these two levels in Release builds.
+
 ## Example:
 
 Include "EquinoxLogger.hpp" to your source code:
 ```sh
 See: examples/src/EquinoxLoggerExamples.cpp
 ```
-```sh
+```cpp
+#include <iostream>
+
 #include "EquinoxLogger.hpp"
 
 int main(void) {
+    equinox::setup(equinox::level::LOG_LEVEL::trace, std::string("equinox-test"), equinox::logs_output::SINK::console_and_file, std::string("equinox.log"),
+                   3U * 1024U * 1024U, 5U);
 
-  equinox::setup(equinox::level::LOG_LEVEL::trace,
-                 std::string("equinox-test"),
-                 equinox::logs_output::SINK::console_and_file,
-                 std::string("equinox.log"),
-                 3U * 1024U * 1024U,
-                 5U);
+    equinox::trace("Example trace log no:    [%d]", 1);
+    equinox::debug("Example debug log no:    [%d]", 2);
+    equinox::info("Example info log no:     [%d]", 3);
+    equinox::warning("Example warning log no:  [%d]", 4);
+    equinox::error("Example error log no:    [%d]", 5);
+    equinox::critical("Example critical log no: [%d]", 6);
 
-  equinox::trace(   "Example trace log no:    [%d]" , 1);
-  equinox::debug(   "Example debug log no:    [%d]" , 2);
-  equinox::info(    "Example info log no:     [%d]" , 3);
-  equinox::warning( "Example warning log no:  [%d]" , 4);
-  equinox::error(   "Example error log no:    [%d]" , 5);
-  equinox::critical("Example critical log no: [%d]" , 6);
+    EQUINOX_TRACE("Example MACRO trace log no:    [%d]", 1);
+    EQUINOX_DEBUG("Example MACRO debug log no:    [%d]", 2);
+    EQUINOX_INFO("Example MACRO info log no:     [%d]", 3);
+    EQUINOX_WARNING("Example MACRO warning log no:  [%d]", 4);
+    EQUINOX_ERROR("Example MACRO error log no:    [%d]", 5);
+    EQUINOX_CRITICAL("Example MACRO critical log no: [%d]", 6);
 
-  return 0;
+    return 0;
 }
-
+```
+```
 Output:
  
-[Mon Apr  3 15:43:39 2023][1680529419785][equinox-test][TRACE] Example trace log no:    [1]
-[Mon Apr  3 15:43:39 2023][1680529419787][equinox-test][DEBUG] Example debug log no:    [2]
-[Mon Apr  3 15:43:39 2023][1680529419787][equinox-test][INFO] Example info log no:     [3]
-[Mon Apr  3 15:43:39 2023][1680529419788][equinox-test][WARNING] Example warning log no:  [4]
-[Mon Apr  3 15:43:39 2023][1680529419788][equinox-test][ERROR] Example error log no:    [5]
-[Mon Apr  3 15:43:39 2023][1680529419788][equinox-test][CRITICAL] Example critical log no: [6]
+[Wed Aug 19 16:04:22 2026][1787148262892][equinox-test][TRACE] Example trace log no:    [1]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][DEBUG] Example debug log no:    [2]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][INFO] Example info log no:     [3]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][WARNING] Example warning log no:  [4]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][ERROR] Example error log no:    [5]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][CRITICAL] Example critical log no: [6]
+
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][TRACE] Example MACRO trace log no:    [1]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][DEBUG] Example MACRO debug log no:    [2]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][INFO] Example MACRO info log no:     [3]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][WARNING] Example MACRO warning log no:  [4]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][ERROR] Example MACRO error log no:    [5]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][CRITICAL] Example MACRO critical log no: [6]
 
 ```
 
