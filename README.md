@@ -33,36 +33,48 @@ Include "EquinoxLogger.hpp" to your source code:
 ```sh
 See: examples/src/EquinoxLoggerExamples.cpp
 ```
-```sh
+```cpp
+#include <iostream>
+
 #include "EquinoxLogger.hpp"
 
 int main(void) {
+    equinox::setup(equinox::level::LOG_LEVEL::trace, std::string("equinox-test"), equinox::logs_output::SINK::console_and_file, std::string("equinox.log"),
+                   3U * 1024U * 1024U, 5U);
 
-  equinox::setup(equinox::level::LOG_LEVEL::trace,
-                 std::string("equinox-test"),
-                 equinox::logs_output::SINK::console_and_file,
-                 std::string("equinox.log"),
-                 3U * 1024U * 1024U,
-                 5U);
+    equinox::trace("Example trace log no:    [%d]", 1);
+    equinox::debug("Example debug log no:    [%d]", 2);
+    equinox::info("Example info log no:     [%d]", 3);
+    equinox::warning("Example warning log no:  [%d]", 4);
+    equinox::error("Example error log no:    [%d]", 5);
+    equinox::critical("Example critical log no: [%d]", 6);
 
-  equinox::trace(   "Example trace log no:    [%d]" , 1);
-  equinox::debug(   "Example debug log no:    [%d]" , 2);
-  equinox::info(    "Example info log no:     [%d]" , 3);
-  equinox::warning( "Example warning log no:  [%d]" , 4);
-  equinox::error(   "Example error log no:    [%d]" , 5);
-  equinox::critical("Example critical log no: [%d]" , 6);
+    EQUINOX_TRACE("Example MACRO trace log no:    [%d]", 1);
+    EQUINOX_DEBUG("Example MACRO debug log no:    [%d]", 2);
+    EQUINOX_INFO("Example MACRO info log no:     [%d]", 3);
+    EQUINOX_WARNING("Example MACRO warning log no:  [%d]", 4);
+    EQUINOX_ERROR("Example MACRO error log no:    [%d]", 5);
+    EQUINOX_CRITICAL("Example MACRO critical log no: [%d]", 6);
 
-  return 0;
+    return 0;
 }
-
+```
+```
 Output:
  
-[Mon Apr  3 15:43:39 2023][1680529419785][equinox-test][TRACE] Example trace log no:    [1]
-[Mon Apr  3 15:43:39 2023][1680529419787][equinox-test][DEBUG] Example debug log no:    [2]
-[Mon Apr  3 15:43:39 2023][1680529419787][equinox-test][INFO] Example info log no:     [3]
-[Mon Apr  3 15:43:39 2023][1680529419788][equinox-test][WARNING] Example warning log no:  [4]
-[Mon Apr  3 15:43:39 2023][1680529419788][equinox-test][ERROR] Example error log no:    [5]
-[Mon Apr  3 15:43:39 2023][1680529419788][equinox-test][CRITICAL] Example critical log no: [6]
+[Wed Aug 19 16:04:22 2026][1787148262892][equinox-test][TRACE] Example trace log no:    [1]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][DEBUG] Example debug log no:    [2]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][INFO] Example info log no:     [3]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][WARNING] Example warning log no:  [4]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][ERROR] Example error log no:    [5]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][CRITICAL] Example critical log no: [6]
+
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][TRACE] Example MACRO trace log no:    [1]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][DEBUG] Example MACRO debug log no:    [2]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][INFO] Example MACRO info log no:     [3]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][WARNING] Example MACRO warning log no:  [4]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][ERROR] Example MACRO error log no:    [5]
+[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][CRITICAL] Example MACRO critical log no: [6]
 
 ```
 
