@@ -1,4 +1,4 @@
-# Equinox logging engine 2.1.35
+# Equinox logging engine 2.1.36
 
 **Logger with support logging to file, console or both. Six levels available:**
 - Trace 
@@ -8,6 +8,17 @@
 - Error
 - Critical
 - Off
+
+## Table of contents
+
+- [Features](#features)
+- [Building for source](#building-for-source)
+- [Install](#install)
+- [Logging macros and `NDEBUG`](#logging-macros-and-ndebug)
+- [Example](#example)
+- [Colored logs preview](#colored-logs-preview-github-friendly)
+- [Performance benchmark](#performance-benchmark)
+- [Unit Test Coverage](#unit-test-coverage)
 
 ## Features
 
@@ -20,12 +31,18 @@
 cmake CMakeLists.txt
 make
 ```
+
+[Back to table of contents](#table-of-contents)
+
 ## Install
 ```sh
 $ sudo make install (Ubuntu)
 or
 # make install
 ```
+
+[Back to table of contents](#table-of-contents)
+
 ## Logging macros and `NDEBUG`
 
 The project also provides convenience macros in `EquinoxLoggerMacros.h`:
@@ -48,6 +65,8 @@ The macro behavior depends on the standard `NDEBUG` flag:
 - This removes the runtime cost of trace/debug formatting and evaluation in Release builds while keeping higher-priority logs available according to the configured logger level.
 
 In other words, `trace` and `debug` are stripped out before formatting when `NDEBUG` is active, which gives a zero-cost path for these two levels in Release builds.
+
+[Back to table of contents](#table-of-contents)
 
 ## Example:
 
@@ -100,7 +119,7 @@ Output:
 
 ```
 
-### Colored logs preview (GitHub-friendly)
+[Back to table of contents](#table-of-contents)
 
 GitHub README does not render terminal ANSI colors inside code blocks, so this preview uses colored badges for each level:
 
@@ -110,6 +129,8 @@ GitHub README does not render terminal ANSI colors inside code blocks, so this p
 - ![WARNING](https://img.shields.io/badge/WARNING-DAA520) `[Mon Apr 3 15:43:39 2023][1680529419788][equinox-test][WARNING] Example warning log no: [4]`
 - ![ERROR](https://img.shields.io/badge/ERROR-B22222) `[Mon Apr 3 15:43:39 2023][1680529419788][equinox-test][ERROR] Example error log no: [5]`
 - ![CRITICAL](https://img.shields.io/badge/CRITICAL-8B0000) `[Mon Apr 3 15:43:39 2023][1680529419788][equinox-test][CRITICAL] Example critical log no: [6]`
+
+[Back to table of contents](#table-of-contents)
 
 ## Performance benchmark
 
@@ -246,6 +267,8 @@ The benchmark suite is intentionally a bit different in CI than on a developer m
 
 This keeps the PR checks readable while still measuring the most important performance path under automation.
 
+[Back to table of contents](#table-of-contents)
+
 ## Unit Test Coverage
 
 Coverage measured with [LCOV](https://github.com/linux-test-project/lcov) on 2026-05-01:
@@ -258,6 +281,8 @@ Coverage measured with [LCOV](https://github.com/linux-test-project/lcov) on 202
 ![Unit Test Coverage Report](docs/images/equinox-logger-ut-coverage.PNG)
 
 To regenerate the report:
+
+[Back to table of contents](#table-of-contents)
 ```sh
 ./scripts/coverage.sh -o
 ```
