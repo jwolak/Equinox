@@ -8,8 +8,29 @@ if [ ! -f "package.json" ]; then
     exit 0
 fi
 
+python3 - "package.json" <<'PY'
+import json
+import pathlib
+import sys
+
+path = pathlib.Path(sys.argv[1])
+data = json.loads(path.read_text(encoding='utf-8'))
+version = data.get('version', '')
+
+if not version:
+    raise SystemExit('Cannot find version in package.json')
+
+parts = version.split('.')
+if len(parts) != 3 or not all(part.isdigit() for part in parts):
+    raise SystemExit(f'Invalid semantic version: {version}')
+
+major, minor, patch = parts
+new_version = f'{major}.{minor}.{int(patch) + 1}'
+data['version'] = new_version
+path.write_text(json.dumps(data, indent=2) + '\n', encoding='utf-8')
+print(f'package.json version bumped to {new_version}')
+PY
+
 python3 ./scripts/sync_readme_version.py
 
-if ! git diff --quiet -- README.md; then
-    git add README.md
-fi
+git add package.json README.md

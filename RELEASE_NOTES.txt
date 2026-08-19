@@ -194,4 +194,5 @@
 2026-08-19 15:55:00 +0200 | v2.1.28 | Add EquinoxLoggerMacros.h for logging macros implementation
 2026-08-19 16:05:45 +0200 | v2.1.29 | Add logging macros to EquinoxLoggerMacros.h and update examples to use them
 2026-08-19 16:25:45 +0200 | v2.1.30 | Update README.md examples to use logging macros and improve formatting
-2026-08-19 16:38:46 +0200 | v2.1.30 | Refactor pre-commit hook to sync README version from package.json and add sync script
+2026-08-19 16:38:46 +0200 | v2.1.31 | Refactor pre-commit hook to bump package.json and sync README version from package.json
+2026-08-19 16:41:48 +0200 | v2.1.32 | Refactor pre-commit hook to bump package.json version and sync README version
