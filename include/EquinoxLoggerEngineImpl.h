@@ -63,6 +63,7 @@ namespace equinox {
         bool shouldLog(level::LOG_LEVEL msgLevel) const override;
         bool setup(level::LOG_LEVEL logLevel, const std::string& logPrefix, equinox::logs_output::SINK logsOutputSink, const std::string& logFileName,
                    std::size_t maxLogFileSizeBytes, std::size_t maxLogFiles) override;
+        bool setupFromConfigFile(const std::string& configFilePath) override;
         void changeLevel(level::LOG_LEVEL logLevel) override;
         bool changeLogsOutputSink(logs_output::SINK logsOutputSink) override;
         void flush() override;

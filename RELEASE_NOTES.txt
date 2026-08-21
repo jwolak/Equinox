@@ -204,3 +204,4 @@
 2026-08-21 06:19:35 +0200 | v2.1.38 | Update threshold argument in performance benchmark to allow disabling regression checks
 2026-08-21 06:42:40 +0200 | v2.1.39 | Refactor logging macros to standardize naming and improve setup in examples
 2026-08-21 06:48:58 +0200 | v2.1.40 | Add VSCode settings for C/C++ formatting and update SVG chart rendering based on threshold percentage
+2026-08-21 07:25:52 +0200 | v2.1.41 | Add setupFromConfigFile function to initialize logger from a configuration file

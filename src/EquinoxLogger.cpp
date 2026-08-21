@@ -44,6 +44,10 @@ bool equinox::setup(equinox::level::LOG_LEVEL logLevel, const std::string& logPr
   return equinox::EquinoxLoggerEngine::getInstance().setup(logLevel, logPrefix, logsOutputSink, logFileName, maxLogFileSizeBytes, maxLogFiles);
 }
 
+bool equinox::setupFromConfigFile(const std::string& configFilePath) {
+  return equinox::EquinoxLoggerEngine::getInstance().setupFromConfigFile(configFilePath);
+}
+
 void equinox::changeLevel(equinox::level::LOG_LEVEL logLevel) {
   equinox::EquinoxLoggerEngine::getInstance().changeLevel(logLevel);
 }

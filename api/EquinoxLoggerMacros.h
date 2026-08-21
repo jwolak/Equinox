@@ -19,3 +19,5 @@
 
 #define SETUP_LOGGER(logLevel, logPrefix, logsOutputSink, logFileName, maxLogFileSizeBytes, maxLogFiles) \
     equinox::setup(logLevel, logPrefix, logsOutputSink, logFileName, maxLogFileSizeBytes, maxLogFiles)
+
+#define SETUP_FROM_CONFIG_FILE(configFilePath) equinox::setupFromConfigFile(configFilePath)

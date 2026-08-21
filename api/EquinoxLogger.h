@@ -126,6 +126,14 @@ EQUINOX_API bool setup(level::LOG_LEVEL logLevel, const std::string& logPrefix, 
                        std::size_t maxLogFileSizeBytes = kDefaultMaxLogFileSizeBytes, std::size_t maxLogFiles = kDefaultMaxLogFiles);
 
 /**
+ * @brief setup() function to setup logger from configuration file
+ *
+ * @param configFilePath  path to the configuration file
+ * @return true if setup succeeded, false if file setup failed
+ */                       
+EQUINOX_API bool setupFromConfigFile(const std::string& configFilePath);
+
+/**
  * @brief changeLevel() function to change level of logged messages
  *
  * @param logLevel  level of the messages that will be (trace, debug, info, warning, error or critical)
