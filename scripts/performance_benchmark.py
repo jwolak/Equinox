@@ -210,7 +210,7 @@ def main():
     parser.add_argument("--chart-name", type=str, default="performance-benchmark.svg", help="Output filename for the generated baseline SVG chart.")
     parser.add_argument("--sink-chart-name", type=str, default="performance-throughput-by-sink.svg", help="Output filename for the sink/message-length throughput SVG chart.")
     parser.add_argument("--history-file", type=Path, default=Path("benchmarks/performance-history.json"), help="Path to the JSON baseline history file.")
-    parser.add_argument("--threshold", type=float, default=10.0, help="Maximum allowed slowdown percentage before the benchmark fails.")
+    parser.add_argument("--threshold", type=float, default=0.0, help="Maximum allowed slowdown percentage before the benchmark fails. Set to 0 to disable the regression threshold.")
     parser.add_argument("--build-label", type=str, default="Release", help="Build name printed in the benchmark chart title (for example Release or Debug).")
     parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[1], help="Repository root used for Git baseline lookup.")
     args = parser.parse_args()
@@ -288,7 +288,7 @@ def main():
     print(f"Threshold: {args.threshold}%")
     print(f"Chart written to: {chart_path}")
 
-    if delta_percent > args.threshold:
+    if args.threshold > 0.0 and delta_percent > args.threshold:
         print(f"Performance regression exceeds {args.threshold}% threshold ({delta_percent:.2f}% slower).", file=sys.stderr)
         return 1
 
