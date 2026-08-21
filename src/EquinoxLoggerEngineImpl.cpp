@@ -163,6 +163,15 @@ bool equinox::EquinoxLoggerEngineImpl::setupFromConfigFile(const std::string& co
         return false;
     }
 
+    if (equinox::logs_output::SINK::file == mLoggerConfig_.logsOutputSink or equinox::logs_output::SINK::console_and_file == mLoggerConfig_.logsOutputSink) {
+        try {
+            mFileLogsProducer_->setupFile(mLoggerConfig_.logFileName, mLoggerConfig_.maxLogFileSizeBytes, mLoggerConfig_.maxLogFiles);
+        } catch (const std::exception& ex) {
+            std::cerr << fmt::format("[EquinoxLogger] Failed to setup log file: {}", ex.what()) << std::endl;
+            return false;
+        }
+    }
+
     mAsyncLogQueueEngine_->startWorkerIfNeeded();
     return true;
 }
