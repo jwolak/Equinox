@@ -39,7 +39,15 @@ namespace equinox {
         return std::nullopt;
     }
 
-    std::string ConfigFileProvider::trim(const std::string& string_to_trimmed) {}
+    std::string ConfigFileProvider::trim(const std::string& string_to_trimmed) {
+        const std::size_t first = string_to_trimmed.find_first_not_of(" \t\r\n");
+        if (first == std::string::npos)
+            return "";
+
+        const std::size_t last = string_to_trimmed.find_last_not_of(" \t\r\n");
+
+        return string_to_trimmed.substr(first, last - first + 1);
+    }
 
     std::unordered_map<std::string, std::string> ConfigFileProvider::loadConfig(const std::string& file_path) {}
 }  // namespace equinox
