@@ -53,6 +53,7 @@
 #include "EquinoxLoggerCommon.h"
 #include "FileLogsProducer.h"
 #include "IEquinoxLoggerEngineImpl.h"
+#include "LoggerConfig.h"
 #include "TimestampProducer.h"
 
 namespace equinox {
@@ -79,11 +80,7 @@ namespace equinox {
         std::size_t getMaxLogFiles() const;
 
        private:
-        std::string mLogPrefix_;
-        level::LOG_LEVEL mLogLevel_;
-        std::string mLogFileName_;
-        std::size_t mMaxLogFileSizeBytes_;
-        std::size_t mMaxLogFiles_;
+        LoggerConfig mLoggerConfig_;
         std::shared_ptr<ITimestampProducer> mTimestampProducer_;
         std::shared_ptr<IFileLogsProducer> mFileLogsProducer_;
         std::unique_ptr<IAsyncLogQueueEngine> mAsyncLogQueueEngine_;
