@@ -32,11 +32,14 @@
 
 #pragma once
 
+#include <optional>
+
 #include "IConfigFileProvider.h"
 
 namespace equinox {
     class ConfigFileProvider : public IConfigFileProvider {
        public:
         ConfigFileProvider();
+        std::optional<LoggerConfig> loadConfigFromFile(const std::string& configFilePath) override;
     };
 }  // namespace equinox

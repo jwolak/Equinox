@@ -153,6 +153,17 @@ bool equinox::EquinoxLoggerEngineImpl::setup(level::LOG_LEVEL logLevel, const st
 }
 
 bool equinox::EquinoxLoggerEngineImpl::setupFromConfigFile(const std::string& configFilePath) {
+    mAsyncLogQueueEngine_->stopWorker();
+
+    std::optional<LoggerConfig> logger_config = mConfigFileProvider_->loadConfigFromFile(configFilePath);
+    if (logger_config.has_value()) {
+        mLoggerConfig_ = logger_config.value();
+    } else {
+        std::cerr << fmt::format("[EquinoxLogger] Failed to load configuration from file: {}. Default settings applied.", configFilePath) << std::endl;
+        return false;
+    }
+
+    mAsyncLogQueueEngine_->startWorkerIfNeeded();
     return true;
 }
 

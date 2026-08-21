@@ -34,4 +34,8 @@
 
 namespace equinox {
     ConfigFileProvider::ConfigFileProvider() {}
+
+    std::optional<LoggerConfig> ConfigFileProvider::loadConfigFromFile(const std::string& configFilePath) {
+        return std::nullopt;
+    }
 }
