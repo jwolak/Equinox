@@ -1,0 +1,8 @@
+# logger configuration file example
+
+logLevel = 2
+logPrefix = APP
+logsOutputSink = console
+logFileName = /tmp/app.log
+maxLogFileSizeBytes = 10485760
+maxLogFiles = 5

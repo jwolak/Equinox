@@ -33,6 +33,8 @@
 #pragma once
 
 #include <optional>
+#include <string>
+#include <unordered_map>
 
 #include "IConfigFileProvider.h"
 
@@ -41,5 +43,9 @@ namespace equinox {
        public:
         ConfigFileProvider();
         std::optional<LoggerConfig> loadConfigFromFile(const std::string& configFilePath) override;
+
+       protected:
+        std::string trim(const std::string& string_to_trimmed);
+        std::unordered_map<std::string, std::string> loadConfig(const std::string& file_path);
     };
 }  // namespace equinox

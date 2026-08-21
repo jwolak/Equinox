@@ -38,4 +38,8 @@ namespace equinox {
     std::optional<LoggerConfig> ConfigFileProvider::loadConfigFromFile(const std::string& configFilePath) {
         return std::nullopt;
     }
-}
+
+    std::string ConfigFileProvider::trim(const std::string& string_to_trimmed) {}
+
+    std::unordered_map<std::string, std::string> ConfigFileProvider::loadConfig(const std::string& file_path) {}
+}  // namespace equinox
