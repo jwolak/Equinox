@@ -30,4 +30,8 @@
  *
  */
 
-namespace equinox {}
+#include "ConfigFileProvider.h"
+
+namespace equinox {
+    ConfigFileProvider::ConfigFileProvider() {}
+}

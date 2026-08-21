@@ -206,3 +206,4 @@
 2026-08-21 06:48:58 +0200 | v2.1.40 | Add VSCode settings for C/C++ formatting and update SVG chart rendering based on threshold percentage
 2026-08-21 07:25:52 +0200 | v2.1.41 | Add setupFromConfigFile function to initialize logger from a configuration file
 2026-08-21 07:41:51 +0200 | v2.1.42 | Add ConfigFileProvider header and implementation files for configuration loading
+2026-08-21 07:47:43 +0200 | v2.1.43 | Implement ConfigFileProvider and integrate it into EquinoxLoggerEngineImpl

@@ -49,11 +49,13 @@ equinox::EquinoxLoggerEngineImpl::EquinoxLoggerEngineImpl()
       mMaxLogFiles_{kDefaultMaxLogFiles},
       mTimestampProducer_{std::make_shared<TimestampProducer>()},
       mFileLogsProducer_{std::make_shared<FileLogsProducer>(mTimestampProducer_)},
-      mAsyncLogQueueEngine_{std::make_unique<AsyncLogQueueEngine>(mTimestampProducer_, mFileLogsProducer_, logs_output::SINK::console)} {}
+      mAsyncLogQueueEngine_{std::make_unique<AsyncLogQueueEngine>(mTimestampProducer_, mFileLogsProducer_, logs_output::SINK::console)},
+      mConfigFileProvider_{std::make_unique<ConfigFileProvider>()} {}
 
 equinox::EquinoxLoggerEngineImpl::EquinoxLoggerEngineImpl(std::shared_ptr<ITimestampProducer> mTimestampProducer,
                                                           std::shared_ptr<IFileLogsProducer> mFileLogsProducer,
-                                                          std::unique_ptr<IAsyncLogQueueEngine> mAsyncLogQueueEngine)
+                                                          std::unique_ptr<IAsyncLogQueueEngine> mAsyncLogQueueEngine,
+                                                          std::unique_ptr<IConfigFileProvider> mConfigFileProvider)
     : mLogPrefix_{},
       mLogLevel_{},
       mLogFileName_{},
@@ -61,7 +63,8 @@ equinox::EquinoxLoggerEngineImpl::EquinoxLoggerEngineImpl(std::shared_ptr<ITimes
       mMaxLogFiles_{kDefaultMaxLogFiles},
       mTimestampProducer_{mTimestampProducer},
       mFileLogsProducer_{mFileLogsProducer},
-      mAsyncLogQueueEngine_{std::move(mAsyncLogQueueEngine)} {}
+      mAsyncLogQueueEngine_{std::move(mAsyncLogQueueEngine)},
+      mConfigFileProvider_{std::move(mConfigFileProvider)} {}
 
 const std::string& equinox::EquinoxLoggerEngineImpl::getLogPrefix() const {
     return mLogPrefix_;
@@ -157,10 +160,9 @@ bool equinox::EquinoxLoggerEngineImpl::setup(level::LOG_LEVEL logLevel, const st
     return true;
 }
 
-    bool equinox::EquinoxLoggerEngineImpl::setupFromConfigFile(const std::string& configFilePath) {
-
-        return true;
-    }
+bool equinox::EquinoxLoggerEngineImpl::setupFromConfigFile(const std::string& configFilePath) {
+    return true;
+}
 
 void equinox::EquinoxLoggerEngineImpl::changeLevel(level::LOG_LEVEL logLevel) {
     mLogLevel_ = logLevel;

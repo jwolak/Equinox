@@ -32,4 +32,9 @@
 
 #pragma once
 
-namespace equinox {}
+namespace equinox {
+    class IConfigFileProvider {
+       public:
+        virtual ~IConfigFileProvider() = default;
+    };
+}  // namespace equinox

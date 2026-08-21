@@ -48,6 +48,7 @@
 #include "AsyncLogQueue.h"
 #include "AsyncLogQueueEngine.h"
 #include "ColorFormatter.h"
+#include "ConfigFileProvider.h"
 #include "ConsoleLogsProducer.h"
 #include "EquinoxLoggerCommon.h"
 #include "FileLogsProducer.h"
@@ -70,7 +71,7 @@ namespace equinox {
 
        protected:
         EquinoxLoggerEngineImpl(std::shared_ptr<ITimestampProducer> mTimestampProducer, std::shared_ptr<IFileLogsProducer> mFileLogsProducer,
-                                std::unique_ptr<IAsyncLogQueueEngine> mAsyncLogQueueEngine);
+                                std::unique_ptr<IAsyncLogQueueEngine> mAsyncLogQueueEngine, std::unique_ptr<IConfigFileProvider> mConfigFileProvider);
         const std::string& getLogPrefix() const;
         level::LOG_LEVEL getLogLevel() const;
         const std::string& getLogFileName() const;
@@ -86,6 +87,7 @@ namespace equinox {
         std::shared_ptr<ITimestampProducer> mTimestampProducer_;
         std::shared_ptr<IFileLogsProducer> mFileLogsProducer_;
         std::unique_ptr<IAsyncLogQueueEngine> mAsyncLogQueueEngine_;
+        std::unique_ptr<IConfigFileProvider> mConfigFileProvider_;
     };
 
 } /*namespace equinox*/

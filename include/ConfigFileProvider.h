@@ -32,4 +32,11 @@
 
 #pragma once
 
-namespace equinox {}
+#include "IConfigFileProvider.h"
+
+namespace equinox {
+    class ConfigFileProvider : public IConfigFileProvider {
+       public:
+        ConfigFileProvider();
+    };
+}  // namespace equinox
