@@ -112,9 +112,13 @@ def build_svg_chart(output_path: Path, current_ms: float, baseline_ms: float | N
         f'<text x="{chart_width / 2}" y="26" text-anchor="middle" font-size="22" fill="#e5e7eb" font-family="Arial">Log print performance benchmark ({build_label})</text>',
         f'<line x1="{margin_left}" y1="{chart_height - margin_bottom}" x2="{chart_width - margin_right}" y2="{chart_height - margin_bottom}" stroke="#9ca3af" stroke-width="1.5"/>',
         f'<line x1="{margin_left}" y1="{margin_top}" x2="{margin_left}" y2="{chart_height - margin_bottom}" stroke="#9ca3af" stroke-width="1.5"/>',
-        f'<line x1="{margin_left}" y1="{y_for(threshold_value)}" x2="{chart_width - margin_right}" y2="{y_for(threshold_value)}" stroke="#fbbf24" stroke-dasharray="7 5" stroke-width="1.5"/>',
-        f'<text x="{chart_width - margin_right}" y="{y_for(threshold_value) - 8}" text-anchor="end" font-size="12" fill="#fbbf24" font-family="Arial">{threshold_text}</text>',
     ]
+
+    if threshold_percent > 0.0:
+        svg_lines.extend([
+            f'<line x1="{margin_left}" y1="{y_for(threshold_value)}" x2="{chart_width - margin_right}" y2="{y_for(threshold_value)}" stroke="#fbbf24" stroke-dasharray="7 5" stroke-width="1.5"/>',
+            f'<text x="{chart_width - margin_right}" y="{y_for(threshold_value) - 8}" text-anchor="end" font-size="12" fill="#fbbf24" font-family="Arial">{threshold_text}</text>',
+        ])
 
     for idx, label in enumerate(labels):
         x = margin_left + idx * (plot_width / 2) + 50

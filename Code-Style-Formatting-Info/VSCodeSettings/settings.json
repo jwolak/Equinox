@@ -1,0 +1,22 @@
+{
+  "editor.formatOnSave": true,
+  "[cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+    "editor.formatOnSave": true,
+    "editor.renderWhitespace": "all",
+    "code-eol.newlineCharacter": "↵",
+    "code-eol.highlightNonDefault": true,
+  },
+  "[c]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+    "editor.formatOnSave": true,
+    "editor.renderWhitespace": "all",
+    "code-eol.newlineCharacter": "↵",
+    "code-eol.highlightNonDefault": true
+  },
+  "C_Cpp.formatting": "clangFormat",
+  "C_Cpp.clang_format_style": "file",
+  "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 0 }",
+  "code-eol.newlineCharacter": "↵",
+  "code-eol.highlightNonDefault": true
+}
