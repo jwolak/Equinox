@@ -305,31 +305,57 @@ namespace config_file_provider_test {
         RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
     }
 
-    TEST_F(ConfigFileProviderTest, Trim_Empty_String_And_Empty_String_Returned) {}
+    TEST_F(ConfigFileProviderTest, Trim_Empty_String_And_Empty_String_Returned) {
+        EXPECT_EQ(config_file_provider.trim(""), "");
+    }
 
-    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_And_Trailing_Whitespace_And_Trimmed_String_Returned) {}
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_And_Trailing_Whitespace_And_Trimmed_String_Returned) {
+        EXPECT_EQ(config_file_provider.trim("  example  "), "example");
+    }
 
-    TEST_F(ConfigFileProviderTest, Trim_String_With_No_Leading_Or_Trailing_Whitespace_And_Original_String_Returned) {}
+    TEST_F(ConfigFileProviderTest, Trim_String_With_No_Leading_Or_Trailing_Whitespace_And_Original_String_Returned) {
+        EXPECT_EQ(config_file_provider.trim("example"), "example");
+    }
 
-    TEST_F(ConfigFileProviderTest, Trim_String_With_Only_Whitespace_And_Empty_String_Returned) {}
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Only_Whitespace_And_Empty_String_Returned) {
+        EXPECT_EQ(config_file_provider.trim("   "), "");
+    }
 
-    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_Whitespace_Only_And_Trimmed_String_Returned) {}
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_Whitespace_Only_And_Trimmed_String_Returned) {
+        EXPECT_EQ(config_file_provider.trim("   example"), "example");
+    }
 
-    TEST_F(ConfigFileProviderTest, Trim_String_With_Trailing_Whitespace_Only_And_Trimmed_String_Returned) {}
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Trailing_Whitespace_Only_And_Trimmed_String_Returned) {
+        EXPECT_EQ(config_file_provider.trim("example   "), "example");
+    }
 
-    TEST_F(ConfigFileProviderTest, Trim_String_With_Internal_Whitespace_And_Original_String_Returned) {}
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Internal_Whitespace_And_Original_String_Returned) {
+        EXPECT_EQ(config_file_provider.trim("ex ample"), "ex ample");
+    }
 
-    TEST_F(ConfigFileProviderTest, Trim_String_With_Mixed_Whitespace_And_Trimmed_String_Returned) {}
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Mixed_Whitespace_And_Trimmed_String_Returned) {
+        EXPECT_EQ(config_file_provider.trim("  ex ample  "), "ex ample");
+    }
 
-    TEST_F(ConfigFileProviderTest, Trim_String_With_No_Whitespace_And_Original_String_Returned) {}
+    TEST_F(ConfigFileProviderTest, Trim_String_With_No_Whitespace_And_Original_String_Returned) {
+        EXPECT_EQ(config_file_provider.trim("example"), "example");
+    }
 
-    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_And_Internal_Whitespace_And_Trimmed_String_Returned) {}
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_And_Internal_Whitespace_And_Trimmed_String_Returned) {
+        EXPECT_EQ(config_file_provider.trim("   ex ample"), "ex ample");
+    }
 
-    TEST_F(ConfigFileProviderTest, Trim_String_With_Trailing_And_Internal_Whitespace_And_Trimmed_String_Returned) {}
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Trailing_And_Internal_Whitespace_And_Trimmed_String_Returned) {
+        EXPECT_EQ(config_file_provider.trim("ex ample   "), "ex ample");
+    }
 
-    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_Trailing_And_Internal_Whitespace_And_Trimmed_String_Returned) {}
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_Trailing_And_Internal_Whitespace_And_Trimmed_String_Returned) {
+        EXPECT_EQ(config_file_provider.trim("   ex ample   "), "ex ample");
+    }
 
-    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_And_Trailing_Whitespace_Only_And_Trimmed_String_Returned) {}
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_And_Trailing_Whitespace_Only_And_Trimmed_String_Returned) {
+        EXPECT_EQ(config_file_provider.trim("   example   "), "example");
+    }
 
     TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_Cannot_Open_File_And_Exception_Thrown) {}
 
