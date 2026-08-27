@@ -61,5 +61,13 @@ int main(void) {
     LOG_ERROR("Example MACRO error log no:    [%d]", 5);
     LOG_CRITICAL("Example MACRO critical log no: [%d]", 6);
 
+    SETUP_FROM_CONFIG_FILE(std::string("config_file_example.txt"));
+    LOG_TRACE("Example MACRO trace log no:    [%d]", 1);
+    LOG_DEBUG("Example MACRO debug log no:    [%d]", 2);
+    LOG_INFO("Example MACRO info log no:     [%d]", 3);
+    LOG_WARNING("Example MACRO warning log no:  [%d]", 4);
+    LOG_ERROR("Example MACRO error log no:    [%d]", 5);
+    LOG_CRITICAL("Example MACRO critical log no: [%d]", 6);
+
     return 0;
 }

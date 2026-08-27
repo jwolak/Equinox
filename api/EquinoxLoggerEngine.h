@@ -87,6 +87,7 @@ namespace equinox {
         bool setup(equinox::level::LOG_LEVEL logLevel, const std::string& logPrefix, equinox::logs_output::SINK logsOutputSink,
                    const std::string& logFileName = kLogFileName, std::size_t maxLogFileSizeBytes = kDefaultMaxLogFileSizeBytes,
                    std::size_t maxLogFiles = kDefaultMaxLogFiles);
+        bool setupFromConfigFile(const std::string& configFilePath);
         void changeLevel(level::LOG_LEVEL logLevel);
         bool changeLogsOutputSink(logs_output::SINK logsOutputSink);
         void flush();

@@ -48,10 +48,12 @@
 #include "AsyncLogQueue.h"
 #include "AsyncLogQueueEngine.h"
 #include "ColorFormatter.h"
+#include "ConfigFileProvider.h"
 #include "ConsoleLogsProducer.h"
 #include "EquinoxLoggerCommon.h"
 #include "FileLogsProducer.h"
 #include "IEquinoxLoggerEngineImpl.h"
+#include "LoggerConfig.h"
 #include "TimestampProducer.h"
 
 namespace equinox {
@@ -63,13 +65,14 @@ namespace equinox {
         bool shouldLog(level::LOG_LEVEL msgLevel) const override;
         bool setup(level::LOG_LEVEL logLevel, const std::string& logPrefix, equinox::logs_output::SINK logsOutputSink, const std::string& logFileName,
                    std::size_t maxLogFileSizeBytes, std::size_t maxLogFiles) override;
+        bool setupFromConfigFile(const std::string& configFilePath) override;
         void changeLevel(level::LOG_LEVEL logLevel) override;
         bool changeLogsOutputSink(logs_output::SINK logsOutputSink) override;
         void flush() override;
 
        protected:
         EquinoxLoggerEngineImpl(std::shared_ptr<ITimestampProducer> mTimestampProducer, std::shared_ptr<IFileLogsProducer> mFileLogsProducer,
-                                std::unique_ptr<IAsyncLogQueueEngine> mAsyncLogQueueEngine);
+                                std::unique_ptr<IAsyncLogQueueEngine> mAsyncLogQueueEngine, std::unique_ptr<IConfigFileProvider> mConfigFileProvider);
         const std::string& getLogPrefix() const;
         level::LOG_LEVEL getLogLevel() const;
         const std::string& getLogFileName() const;
@@ -77,14 +80,11 @@ namespace equinox {
         std::size_t getMaxLogFiles() const;
 
        private:
-        std::string mLogPrefix_;
-        level::LOG_LEVEL mLogLevel_;
-        std::string mLogFileName_;
-        std::size_t mMaxLogFileSizeBytes_;
-        std::size_t mMaxLogFiles_;
+        LoggerConfig mLoggerConfig_;
         std::shared_ptr<ITimestampProducer> mTimestampProducer_;
         std::shared_ptr<IFileLogsProducer> mFileLogsProducer_;
         std::unique_ptr<IAsyncLogQueueEngine> mAsyncLogQueueEngine_;
+        std::unique_ptr<IConfigFileProvider> mConfigFileProvider_;
     };
 
 } /*namespace equinox*/

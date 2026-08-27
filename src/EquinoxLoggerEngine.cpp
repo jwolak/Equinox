@@ -56,6 +56,11 @@ bool equinox::EquinoxLoggerEngine::setup(equinox::level::LOG_LEVEL logLevel, con
     return mEquinoxLoggerEngineImpl_->setup(logLevel, logPrefix, logsOutputSink, logFileName, maxLogFileSizeBytes, maxLogFiles);
 }
 
+bool equinox::EquinoxLoggerEngine::setupFromConfigFile(const std::string& configFilePath) {
+    std::lock_guard<std::mutex> lock(mEngineMutex_);
+    return mEquinoxLoggerEngineImpl_->setupFromConfigFile(configFilePath);
+}
+
 void equinox::EquinoxLoggerEngine::changeLevel(level::LOG_LEVEL logLevel) {
     std::lock_guard<std::mutex> lock(mEngineMutex_);
     mEquinoxLoggerEngineImpl_->changeLevel(logLevel);

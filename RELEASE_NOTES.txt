@@ -204,3 +204,34 @@
 2026-08-21 06:19:35 +0200 | v2.1.38 | Update threshold argument in performance benchmark to allow disabling regression checks
 2026-08-21 06:42:40 +0200 | v2.1.39 | Refactor logging macros to standardize naming and improve setup in examples
 2026-08-21 06:48:58 +0200 | v2.1.40 | Add VSCode settings for C/C++ formatting and update SVG chart rendering based on threshold percentage
+2026-08-21 07:25:52 +0200 | v2.1.41 | Add setupFromConfigFile function to initialize logger from a configuration file
+2026-08-21 07:41:51 +0200 | v2.1.42 | Add ConfigFileProvider header and implementation files for configuration loading
+2026-08-21 07:47:43 +0200 | v2.1.43 | Implement ConfigFileProvider and integrate it into EquinoxLoggerEngineImpl
+2026-08-21 08:01:47 +0200 | v2.1.44 | Add LoggerConfig structure and refactor EquinoxLoggerEngineImpl to use it for configuration management
+2026-08-21 08:15:35 +0200 | v2.1.45 | Add loadConfigFromFile method to IConfigFileProvider and ConfigFileProvider for configuration loading
+2026-08-21 08:20:36 +0200 | v2.1.46 | Add file log setup in setupFromConfigFile for enhanced logging configuration
+2026-08-21 12:11:28 +0200 | v2.1.47 | Add example logger configuration file and implement trim and loadConfig methods in ConfigFileProvider
+2026-08-21 12:18:01 +0200 | v2.1.48 | Implement trim method in ConfigFileProvider for string trimming functionality
+2026-08-27 07:05:58 +0200 | v2.1.49 | Add configuration loading functionality in ConfigFileProvider and LoggerConfig
+2026-08-27 07:12:12 +0200 | v2.1.50 | Refactor LoggerConfig methods for setting log level and output sink; update ConfigFileProvider to use new methods for improved clarity and error handling
+2026-08-27 07:18:46 +0200 | v2.1.51 | Enhance configuration handling by updating LoggerConfig methods and integrating ConfigFileProvider; add error handling for empty config file path
+2026-08-27 07:26:30 +0200 | v2.1.52 | Add mock implementation for ConfigFileProvider and update tests to integrate it
+2026-08-27 07:34:19 +0200 | v2.1.53 | Add changeLevel call in parameterized test to set log level to trace
+2026-08-27 07:40:10 +0200 | v2.1.54 | Add ConfigFileProviderTest to unit tests
+2026-08-27 07:52:21 +0200 | v2.1.55 | Enhance ConfigFileProvider to handle exceptions and return nullopt for invalid configurations; update tests to use a testable subclass
+2026-08-27 08:01:52 +0200 | v2.1.56 | Add unit tests for ConfigFileProvider to validate exception handling and configuration loading scenarios
+2026-08-27 08:14:37 +0200 | v2.1.57 | Add unit tests for ConfigFileProvider to cover various loading and trimming scenarios
+2026-08-27 08:36:18 +0200 | v2.1.58 | Add tests to ConfigFileProviderTest for loading configurations from files
+2026-08-27 10:07:17 +0200 | v2.1.59 | Add default log prefix and enhance config loading with error handling
+2026-08-27 10:11:37 +0200 | v2.1.60 | Rename tests in ConfigFileProviderTest to reflect default values when loading fails
+2026-08-27 11:44:42 +0200 | v2.1.61 | Fix log prefix handling in tests to ensure default prefix is used when loading fails
+2026-08-27 12:09:46 +0200 | v2.1.62 | Enhance error logging in config loading by adding error prefixes to messages
+2026-08-27 12:21:51 +0200 | v2.1.63 | Update LoggerConfig to default to file output sink and enhance config loading tests
+2026-08-27 12:42:01 +0200 | v2.1.64 | Refactor config loading to return LoggerConfig directly and set defaults on failure
+2026-08-27 13:01:50 +0200 | v2.1.65 | Update config example and enhance tests for log prefix and output sink handling
+2026-08-27 13:44:45 +0200 | v2.1.66 | Refactor config loading to use local variables for log prefix, file name, and max log files; enhance tests for default values on failure
+2026-08-27 14:02:33 +0200 | v2.1.67 | Add unit tests for string trimming functionality in ConfigFileProvider
+2026-08-27 14:21:54 +0200 | v2.1.68 | Enhance ConfigFileProvider tests with additional scenarios for loading configurations, including handling of malformed files, permission issues, symbolic links, and empty lines.
+2026-08-27 14:41:58 +0200 | v2.1.69 | Add parameterized tests for setupFromConfigFile with various sink configurations
+2026-08-27 15:03:59 +0200 | v2.1.70 | Add example configuration file and update logger setup to include log prefix
+2026-08-27 15:05:31 +0200 | v2.2.71 | Bump version to 2.2.70 in package.json
