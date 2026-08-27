@@ -1,7 +1,7 @@
 # logger configuration file example
 
 logLevel = 2
-logPrefix = APP
+logPrefix = config-file-prefix
 logsOutputSink = 0  #console
 logFileName = /tmp/app.log
 maxLogFileSizeBytes = 10485760
