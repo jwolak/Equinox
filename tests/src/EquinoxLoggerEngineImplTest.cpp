@@ -116,6 +116,8 @@ namespace equinox_logger_engine_impl_test {
     TEST_P(EquinoxLoggerEngineImplParameterizedTest, Log_Message_For_All_Log_Levels_Is_Processed_According_To_Level) {
         const LogLevelTestCase testCase = GetParam();
 
+        equinox_Logger_engine_impl.changeLevel(level::LOG_LEVEL::trace);
+
         if (testCase.shouldProcess) {
             EXPECT_CALL(*async_log_queue_engine_mock, startWorkerIfNeeded()).Times(1);
             EXPECT_CALL(*async_log_queue_engine_mock, processLogMessage(testCase.expectedMessage)).Times(1);
