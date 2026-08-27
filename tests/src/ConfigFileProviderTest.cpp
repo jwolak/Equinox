@@ -108,7 +108,7 @@ namespace config_file_provider_test {
     }
 
     TEST_F(ConfigFileProviderTest, Try_Read_Log_Prefix_From_Config_File_But_It_Fails_And_Default_Log_Prefix_Is_Set) {
-        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath, std::string(kLogLevelKey) + "=\n" + std::string(kLogPrefixKey) + "=\n");
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath, std::string(kLogLevelKey) + "=\n");
 
         std::optional<LoggerConfig> logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
         ASSERT_TRUE(logger_config.has_value());
@@ -117,7 +117,27 @@ namespace config_file_provider_test {
         RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
     }
 
-    TEST_F(ConfigFileProviderTest, Try_Read_Logs_Output_Sink_From_Config_File_But_It_Fails_And_Default_Logs_Output_Sink_Is_Set) {}
+    TEST_F(ConfigFileProviderTest, Try_Read_Log_Prefix_From_Config_File_But_Is_Empty_And_Default_Log_Prefix_Is_Set) {
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath, std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "=\n");
+
+        std::optional<LoggerConfig> logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        ASSERT_TRUE(logger_config.has_value());
+        EXPECT_EQ(logger_config->logPrefix, kLogDefaultPrefix);
+
+        RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Try_Read_Logs_Output_Sink_From_Config_File_But_It_Fails_And_Default_Logs_Output_Sink_Is_Set) {
+        CreateConfigFileWithProvidedContent(
+            kConfigFileWithNoLogPrefixPath,
+            std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "= prefix\n" + std::string(kLogsOutputSinkKey) + "=\n");
+
+        std::optional<LoggerConfig> logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        ASSERT_TRUE(logger_config.has_value());
+        EXPECT_EQ(logger_config->logsOutputSink, logs_output::SINK::file);
+
+        RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
+    }
 
     TEST_F(ConfigFileProviderTest, Try_Read_Log_File_Name_From_Config_File_But_It_Fails_And_Default_Log_File_Name_Is_Set) {}
 

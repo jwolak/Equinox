@@ -43,7 +43,7 @@ namespace equinox {
     struct LoggerConfig {
         level::LOG_LEVEL logLevel = level::LOG_LEVEL::info;
         std::string logPrefix = kLogDefaultPrefix;
-        logs_output::SINK logsOutputSink = logs_output::SINK::console;
+        logs_output::SINK logsOutputSink = logs_output::SINK::file;
         std::string logFileName = kLogFileName;
         std::size_t maxLogFileSizeBytes = kDefaultMaxLogFileSizeBytes;
         std::size_t maxLogFiles = kDefaultMaxLogFiles;

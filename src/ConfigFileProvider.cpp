@@ -70,6 +70,8 @@ namespace equinox {
         }
 
         LoggerConfig loggerConfig;
+        loggerConfig.SetDefaults();
+
         try {
             loggerConfig.SetLogLevelFromInt(std::stoi(loadConfigMap.at(kLogLevelKey)));
         } catch (const std::exception&) {
