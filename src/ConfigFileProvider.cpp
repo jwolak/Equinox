@@ -52,21 +52,16 @@ namespace equinox {
         std::unordered_map<std::string, std::string> loadConfigMap = loadConfig(configFilePath);
 
         if (loadConfigMap.empty()) {
+            throw std::runtime_error("Config file is empty or missing required keys: " + configFilePath);
             return std::nullopt;
         }
 
         LoggerConfig loggerConfig;
-
-        loggerConfig.logLevel = std::stoi(loadConfigMap.at("logLevel"));
-
+        loggerConfig.SetLogLevel(std::stoi(loadConfigMap.at("logLevel")));
         loggerConfig.logPrefix = loadConfigMap.at("logPrefix");
-
-        loggerConfig.logsOutputSink = loadConfigMap.at("logsOutputSink");
-
+        loggerConfig.SetLogsOutputSink(std::stoi(loadConfigMap.at("logsOutputSink")));
         loggerConfig.logFileName = loadConfigMap.at("logFileName");
-
         loggerConfig.maxLogFileSizeBytes = std::stoll(loadConfigMap.at("maxLogFileSizeBytes"));
-
         loggerConfig.maxLogFiles = std::stoi(loadConfigMap.at("maxLogFiles"));
 
         return loggerConfig;
@@ -96,16 +91,19 @@ namespace equinox {
         while (std::getline(file, line)) {
             line = trim(line);
 
-            if (line.empty())
+            if (line.empty()) {
                 continue;
+            }
 
-            if (line[0] == kCommentChar)
+            if (line[0] == kCommentChar) {
                 continue;
+            }
 
             const auto separator = line.find(kKeyValueSeparator);
 
-            if (separator == std::string::npos)
+            if (separator == std::string::npos) {
                 continue;
+            }
 
             std::string key = trim(line.substr(0, separator));
             std::string value = trim(line.substr(separator + 1));
