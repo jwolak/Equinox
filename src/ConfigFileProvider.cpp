@@ -30,13 +30,46 @@
  *
  */
 
+#include <cctype>
+
+#include <algorithm>
+#include <fstream>
+#include <string>
+#include <unordered_map>
+
 #include "ConfigFileProvider.h"
 
 namespace equinox {
+
+    namespace {
+        constexpr const char kCommentChar = '#';
+        constexpr const char kKeyValueSeparator = '=';
+    }  // namespace
+
     ConfigFileProvider::ConfigFileProvider() {}
 
     std::optional<LoggerConfig> ConfigFileProvider::loadConfigFromFile(const std::string& configFilePath) {
-        return std::nullopt;
+        std::unordered_map<std::string, std::string> loadConfigMap = loadConfig(configFilePath);
+
+        if (loadConfigMap.empty()) {
+            return std::nullopt;
+        }
+
+        LoggerConfig loggerConfig;
+
+        loggerConfig.logLevel = std::stoi(loadConfigMap.at("logLevel"));
+
+        loggerConfig.logPrefix = loadConfigMap.at("logPrefix");
+
+        loggerConfig.logsOutputSink = loadConfigMap.at("logsOutputSink");
+
+        loggerConfig.logFileName = loadConfigMap.at("logFileName");
+
+        loggerConfig.maxLogFileSizeBytes = std::stoll(loadConfigMap.at("maxLogFileSizeBytes"));
+
+        loggerConfig.maxLogFiles = std::stoi(loadConfigMap.at("maxLogFiles"));
+
+        return loggerConfig;
     }
 
     std::string ConfigFileProvider::trim(const std::string& string_to_trimmed) {
@@ -49,5 +82,37 @@ namespace equinox {
         return string_to_trimmed.substr(first, last - first + 1);
     }
 
-    std::unordered_map<std::string, std::string> ConfigFileProvider::loadConfig(const std::string& file_path) {}
+    std::unordered_map<std::string, std::string> ConfigFileProvider::loadConfig(const std::string& file_path) {
+        std::unordered_map<std::string, std::string> config;
+
+        std::ifstream file(file_path);
+
+        if (!file.is_open()) {
+            throw std::runtime_error("Cannot open config file: " + file_path);
+        }
+
+        std::string line;
+
+        while (std::getline(file, line)) {
+            line = trim(line);
+
+            if (line.empty())
+                continue;
+
+            if (line[0] == kCommentChar)
+                continue;
+
+            const auto separator = line.find(kKeyValueSeparator);
+
+            if (separator == std::string::npos)
+                continue;
+
+            std::string key = trim(line.substr(0, separator));
+            std::string value = trim(line.substr(separator + 1));
+
+            config[key] = value;
+        }
+
+        return config;
+    }
 }  // namespace equinox

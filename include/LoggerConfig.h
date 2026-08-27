@@ -33,6 +33,7 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
 
 #include <string>
 
@@ -46,5 +47,33 @@ namespace equinox {
         std::string logFileName = kLogFileName;
         std::size_t maxLogFileSizeBytes = kDefaultMaxLogFileSizeBytes;
         std::size_t maxLogFiles = kDefaultMaxLogFiles;
+
+        void operator=(int32_t logLevel) {
+            switch (logLevel) {
+                case 0:
+                    this->logLevel = level::LOG_LEVEL::trace;
+                    break;
+
+                case 1:
+                    this->logLevel = level::LOG_LEVEL::debug;
+                    break;
+
+                case 2:
+                    this->logLevel = level::LOG_LEVEL::info;
+                    break;
+
+                case 3:
+                    this->logLevel = level::LOG_LEVEL::warning;
+                    break;
+
+                case 4:
+                    this->logLevel = level::LOG_LEVEL::error;
+                    break;
+
+                case 5:
+                    this->logLevel = level::LOG_LEVEL::critical;
+                    break;
+            }
+        }
     };
 }  // namespace equinox
