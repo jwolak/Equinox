@@ -41,6 +41,6 @@ namespace mocks {
 
     class ConfigFileProviderMock : public equinox::IConfigFileProvider {
        public:
-        MOCK_METHOD(std::optional<LoggerConfig>, loadConfigFromFile, (const std::string& configFilePath), (override));
+        MOCK_METHOD(LoggerConfig, loadConfigFromFile, (const std::string& configFilePath), (override));
     };
 }  // namespace mocks

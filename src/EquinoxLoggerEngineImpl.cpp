@@ -160,16 +160,8 @@ bool equinox::EquinoxLoggerEngineImpl::setupFromConfigFile(const std::string& co
         return false;
     }
 
-    std::optional<LoggerConfig> logger_config {LoggerConfig{}};
-    logger_config->SetDefaults();
-
-    logger_config = mConfigFileProvider_->loadConfigFromFile(configFilePath);
-    if (logger_config.has_value()) {
-        mLoggerConfig_ = logger_config.value();
-    } else {
-        std::cerr << fmt::format("[EquinoxLogger] Failed to load configuration from file: {}. Default settings applied.", configFilePath) << std::endl;
-        return false;
-    }
+    LoggerConfig logger_config{LoggerConfig{}};
+    mLoggerConfig_ = mConfigFileProvider_->loadConfigFromFile(configFilePath);
 
     if (equinox::logs_output::SINK::file == mLoggerConfig_.logsOutputSink or equinox::logs_output::SINK::console_and_file == mLoggerConfig_.logsOutputSink) {
         try {

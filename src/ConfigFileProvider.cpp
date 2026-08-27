@@ -56,21 +56,20 @@ namespace equinox {
 
     ConfigFileProvider::ConfigFileProvider() {}
 
-    std::optional<LoggerConfig> ConfigFileProvider::loadConfigFromFile(const std::string& configFilePath) {
+    LoggerConfig ConfigFileProvider::loadConfigFromFile(const std::string& configFilePath) {
         std::unordered_map<std::string, std::string> loadConfigMap;
+        LoggerConfig loggerConfig;
+        loggerConfig.SetDefaults();
 
         try {
             loadConfigMap = loadConfig(configFilePath);
         } catch (const std::exception&) {
-            return std::nullopt;
+            return loggerConfig;
         }
 
         if (loadConfigMap.empty()) {
-            return std::nullopt;
+            return loggerConfig;
         }
-
-        LoggerConfig loggerConfig;
-        loggerConfig.SetDefaults();
 
         try {
             loggerConfig.SetLogLevelFromInt(std::stoi(loadConfigMap.at(kLogLevelKey)));

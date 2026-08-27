@@ -227,3 +227,4 @@
 2026-08-27 11:44:42 +0200 | v2.1.61 | Fix log prefix handling in tests to ensure default prefix is used when loading fails
 2026-08-27 12:09:46 +0200 | v2.1.62 | Enhance error logging in config loading by adding error prefixes to messages
 2026-08-27 12:21:51 +0200 | v2.1.63 | Update LoggerConfig to default to file output sink and enhance config loading tests
+2026-08-27 12:42:01 +0200 | v2.1.64 | Refactor config loading to return LoggerConfig directly and set defaults on failure

@@ -41,12 +41,16 @@
 
 namespace equinox {
     struct LoggerConfig {
-        level::LOG_LEVEL logLevel = level::LOG_LEVEL::info;
-        std::string logPrefix = kLogDefaultPrefix;
-        logs_output::SINK logsOutputSink = logs_output::SINK::file;
-        std::string logFileName = kLogFileName;
-        std::size_t maxLogFileSizeBytes = kDefaultMaxLogFileSizeBytes;
-        std::size_t maxLogFiles = kDefaultMaxLogFiles;
+        LoggerConfig() {
+            SetDefaults();
+        }
+
+        level::LOG_LEVEL logLevel;
+        std::string logPrefix;
+        logs_output::SINK logsOutputSink;
+        std::string logFileName;
+        std::size_t maxLogFileSizeBytes;
+        std::size_t maxLogFiles;
 
         void SetDefaults() {
             logLevel = level::LOG_LEVEL::info;
@@ -55,6 +59,11 @@ namespace equinox {
             logFileName = kLogFileName;
             maxLogFileSizeBytes = kDefaultMaxLogFileSizeBytes;
             maxLogFiles = kDefaultMaxLogFiles;
+        }
+
+        bool operator==(const LoggerConfig& other) const {
+            return logLevel == other.logLevel && logPrefix == other.logPrefix && logsOutputSink == other.logsOutputSink && logFileName == other.logFileName &&
+                maxLogFileSizeBytes == other.maxLogFileSizeBytes && maxLogFiles == other.maxLogFiles;
         }
 
         void SetLogLevelFromInt(int32_t logLevel) {

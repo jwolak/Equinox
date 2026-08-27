@@ -42,7 +42,7 @@ namespace equinox {
     class ConfigFileProvider : public IConfigFileProvider {
        public:
         ConfigFileProvider();
-        std::optional<LoggerConfig> loadConfigFromFile(const std::string& configFilePath) override;
+        LoggerConfig loadConfigFromFile(const std::string& configFilePath) override;
 
        protected:
         std::string trim(const std::string& string_to_trimmed);

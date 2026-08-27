@@ -67,7 +67,7 @@ namespace config_file_provider_test {
 
     class ConfigFileProviderTest : public Test {
        public:
-        ConfigFileProviderTest() {}
+        ConfigFileProviderTest() : default_logger_config{} {}
 
         ConfigFileProviderTestable config_file_provider;
 
@@ -83,26 +83,44 @@ namespace config_file_provider_test {
             std::ofstream file(file_path);
             file << content;
         }
+
+        const LoggerConfig default_logger_config;
     };
 
-    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_Load_Config_Map_An_Exception_Thrown_And_Nullopt_Returned) {
-        EXPECT_FALSE(config_file_provider.loadConfigFromFile(kNonExistentConfigFilePath).has_value());
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_Load_Config_Map_An_Exception_Thrown_And_Default_Settings_Returned) {
+        EXPECT_EQ(config_file_provider.loadConfigFromFile(kNonExistentConfigFilePath), default_logger_config);
     }
 
-    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_Loaded_Config_Map_Is_Empty_And_Nullopt_Returned) {
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_Loaded_Config_Map_Is_Empty_And_Default_Settings_Returned) {
         CreateEmptyConfigFile(kEmptyConfigFilePath);
 
-        EXPECT_FALSE(config_file_provider.loadConfigFromFile(kEmptyConfigFilePath).has_value());
+        EXPECT_EQ(config_file_provider.loadConfigFromFile(kEmptyConfigFilePath), default_logger_config);
+
+        RemoveConfigFile(kEmptyConfigFilePath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Is_Empty_And_Defaults_Settings_Returned) {
+        CreateEmptyConfigFile(kEmptyConfigFilePath);
+
+        EXPECT_EQ(config_file_provider.loadConfigFromFile(kEmptyConfigFilePath), default_logger_config);
 
         RemoveConfigFile(kEmptyConfigFilePath);
     }
 
     TEST_F(ConfigFileProviderTest, Try_Read_Log_Level_From_Config_File_But_It_Fails_And_Default_Log_Level_Is_Set) {
-        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogLevelPath, std::string(kLogLevelKey) + "=");
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogLevelPath, std::string(kLogLevelKey) + "=\n");
 
-        std::optional<LoggerConfig> logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogLevelPath);
-        ASSERT_TRUE(logger_config.has_value());
-        EXPECT_EQ(logger_config->logLevel, level::LOG_LEVEL::info);
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogLevelPath);
+        EXPECT_EQ(logger_config.logLevel, default_logger_config.logLevel);
+
+        RemoveConfigFile(kConfigFileWithNoLogLevelPath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Read_Log_Level_Debug_From_Config_File_And_Log_Level_Debug_Is_Set) {
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogLevelPath, std::string(kLogLevelKey) + "= 1\n");
+
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogLevelPath);
+        EXPECT_EQ(logger_config.logLevel, level::LOG_LEVEL::debug);
 
         RemoveConfigFile(kConfigFileWithNoLogLevelPath);
     }
@@ -110,9 +128,8 @@ namespace config_file_provider_test {
     TEST_F(ConfigFileProviderTest, Try_Read_Log_Prefix_From_Config_File_But_It_Fails_And_Default_Log_Prefix_Is_Set) {
         CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath, std::string(kLogLevelKey) + "=\n");
 
-        std::optional<LoggerConfig> logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
-        ASSERT_TRUE(logger_config.has_value());
-        EXPECT_EQ(logger_config->logPrefix, kLogDefaultPrefix);
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        EXPECT_EQ(logger_config.logPrefix, kLogDefaultPrefix);
 
         RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
     }
@@ -120,9 +137,8 @@ namespace config_file_provider_test {
     TEST_F(ConfigFileProviderTest, Try_Read_Log_Prefix_From_Config_File_But_Is_Empty_And_Default_Log_Prefix_Is_Set) {
         CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath, std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "=\n");
 
-        std::optional<LoggerConfig> logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
-        ASSERT_TRUE(logger_config.has_value());
-        EXPECT_EQ(logger_config->logPrefix, kLogDefaultPrefix);
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        EXPECT_EQ(logger_config.logPrefix, kLogDefaultPrefix);
 
         RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
     }
@@ -132,9 +148,8 @@ namespace config_file_provider_test {
             kConfigFileWithNoLogPrefixPath,
             std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "= prefix\n" + std::string(kLogsOutputSinkKey) + "=\n");
 
-        std::optional<LoggerConfig> logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
-        ASSERT_TRUE(logger_config.has_value());
-        EXPECT_EQ(logger_config->logsOutputSink, logs_output::SINK::file);
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        EXPECT_EQ(logger_config.logsOutputSink, logs_output::SINK::file);
 
         RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
     }
