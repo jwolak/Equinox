@@ -1,4 +1,4 @@
-# Equinox logging engine 2.1.68
+# Equinox logging engine 2.1.69
 
 **Logger with support logging to file, console or both. Six levels available:**
 - Trace 

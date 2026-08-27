@@ -160,7 +160,7 @@ bool equinox::EquinoxLoggerEngineImpl::setupFromConfigFile(const std::string& co
         return false;
     }
 
-    LoggerConfig logger_config{LoggerConfig{}};
+    LoggerConfig logger_config{};
     mLoggerConfig_ = mConfigFileProvider_->loadConfigFromFile(configFilePath);
 
     if (equinox::logs_output::SINK::file == mLoggerConfig_.logsOutputSink or equinox::logs_output::SINK::console_and_file == mLoggerConfig_.logsOutputSink) {
