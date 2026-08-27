@@ -38,10 +38,18 @@ namespace config_file_provider_test {
     using namespace ::testing;
     using namespace equinox;
 
+    class ConfigFileProviderTestable : public ConfigFileProvider {
+       public:
+        ConfigFileProviderTestable() : ConfigFileProvider() {}
+
+        using ConfigFileProvider::loadConfig;
+        using ConfigFileProvider::trim;
+    };
+
     class ConfigFileProviderTest : public Test {
        public:
         ConfigFileProviderTest() {}
 
-        ConfigFileProvider config_file_provider;
+        ConfigFileProviderTestable config_file_provider;
     };
 }  // namespace config_file_provider_test

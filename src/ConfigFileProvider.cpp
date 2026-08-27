@@ -50,22 +50,25 @@ namespace equinox {
     ConfigFileProvider::ConfigFileProvider() {}
 
     std::optional<LoggerConfig> ConfigFileProvider::loadConfigFromFile(const std::string& configFilePath) {
-        std::unordered_map<std::string, std::string> loadConfigMap = loadConfig(configFilePath);
+        try {
+            std::unordered_map<std::string, std::string> loadConfigMap = loadConfig(configFilePath);
 
-        if (loadConfigMap.empty()) {
-            throw std::runtime_error("Config file is empty or missing required keys: " + configFilePath);
+            if (loadConfigMap.empty()) {
+                return std::nullopt;
+            }
+
+            LoggerConfig loggerConfig;
+            loggerConfig.SetLogLevelFromInt(std::stoi(loadConfigMap.at("logLevel")));
+            loggerConfig.logPrefix = loadConfigMap.at("logPrefix");
+            loggerConfig.SetLogsOutputSinkFromInt(std::stoi(loadConfigMap.at("logsOutputSink")));
+            loggerConfig.logFileName = loadConfigMap.at("logFileName");
+            loggerConfig.maxLogFileSizeBytes = std::stoll(loadConfigMap.at("maxLogFileSizeBytes"));
+            loggerConfig.maxLogFiles = std::stoi(loadConfigMap.at("maxLogFiles"));
+
+            return loggerConfig;
+        } catch (const std::exception&) {
             return std::nullopt;
         }
-
-        LoggerConfig loggerConfig;
-        loggerConfig.SetLogLevelFromInt(std::stoi(loadConfigMap.at("logLevel")));
-        loggerConfig.logPrefix = loadConfigMap.at("logPrefix");
-        loggerConfig.SetLogsOutputSinkFromInt(std::stoi(loadConfigMap.at("logsOutputSink")));
-        loggerConfig.logFileName = loadConfigMap.at("logFileName");
-        loggerConfig.maxLogFileSizeBytes = std::stoll(loadConfigMap.at("maxLogFileSizeBytes"));
-        loggerConfig.maxLogFiles = std::stoi(loadConfigMap.at("maxLogFiles"));
-
-        return loggerConfig;
     }
 
     std::string ConfigFileProvider::trim(const std::string& string_to_trimmed) {
