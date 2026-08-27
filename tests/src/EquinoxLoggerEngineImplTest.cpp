@@ -117,10 +117,11 @@ namespace equinox_logger_engine_impl_test {
         const LogLevelTestCase testCase = GetParam();
 
         equinox_Logger_engine_impl.changeLevel(level::LOG_LEVEL::trace);
+        const std::string expectedMessage = std::string(kLogDefaultPrefix) + testCase.expectedMessage;
 
         if (testCase.shouldProcess) {
             EXPECT_CALL(*async_log_queue_engine_mock, startWorkerIfNeeded()).Times(1);
-            EXPECT_CALL(*async_log_queue_engine_mock, processLogMessage(testCase.expectedMessage)).Times(1);
+            EXPECT_CALL(*async_log_queue_engine_mock, processLogMessage(expectedMessage)).Times(1);
         } else {
             EXPECT_CALL(*async_log_queue_engine_mock, startWorkerIfNeeded()).Times(0);
             EXPECT_CALL(*async_log_queue_engine_mock, processLogMessage(_)).Times(0);

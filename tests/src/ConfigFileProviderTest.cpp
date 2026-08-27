@@ -108,7 +108,7 @@ namespace config_file_provider_test {
     }
 
     TEST_F(ConfigFileProviderTest, Try_Read_Log_Prefix_From_Config_File_But_It_Fails_And_Default_Log_Prefix_Is_Set) {
-        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath, std::string(kLogLevelKey) + "=\n" + std::string(kLogPrefixKey) + "=");
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath, std::string(kLogLevelKey) + "=\n" + std::string(kLogPrefixKey) + "=\n");
 
         std::optional<LoggerConfig> logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
         ASSERT_TRUE(logger_config.has_value());
