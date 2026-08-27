@@ -30,7 +30,12 @@
  *
  */
 
+#include <cstdio>
+
 #include <gtest/gtest.h>
+
+#include <fstream>
+#include <string>
 
 #include "ConfigFileProvider.h"
 
@@ -53,9 +58,20 @@ namespace config_file_provider_test {
         ConfigFileProviderTestable config_file_provider;
     };
 
-    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_Load_Config_Map_An_Exception_Thrown_And_Nullopt_Returned) {}
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_Load_Config_Map_An_Exception_Thrown_And_Nullopt_Returned) {
+        EXPECT_FALSE(config_file_provider.loadConfigFromFile("non_existent_config_file.txt").has_value());
+    }
 
-    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_Loaded_Config_Map_Is_Empty_And_Nullopt_Returned) {}
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_Loaded_Config_Map_Is_Empty_And_Nullopt_Returned) {
+        const std::string emptyConfigFilePath = "empty_config_file.txt";
+        {
+            std::ofstream emptyConfigFile(emptyConfigFilePath);
+        }
+
+        EXPECT_FALSE(config_file_provider.loadConfigFromFile(emptyConfigFilePath).has_value());
+
+        std::remove(emptyConfigFilePath.c_str());
+    }
 
     TEST_F(ConfigFileProviderTest, Try_Read_Log_Level_From_Config_File_But_It_Fails_And_Nullopt_Returned) {}
 
