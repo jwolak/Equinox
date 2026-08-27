@@ -70,4 +70,59 @@ namespace config_file_provider_test {
     TEST_F(ConfigFileProviderTest, Try_Read_Max_Log_Files_From_Config_File_But_It_Fails_And_Nullopt_Returned) {}
 
     TEST_F(ConfigFileProviderTest, Load_Config_From_File_Successfull_And_Configuration_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Trim_Empty_String_And_Empty_String_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_And_Trailing_Whitespace_And_Trimmed_String_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Trim_String_With_No_Leading_Or_Trailing_Whitespace_And_Original_String_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Only_Whitespace_And_Empty_String_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_Whitespace_Only_And_Trimmed_String_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Trailing_Whitespace_Only_And_Trimmed_String_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Internal_Whitespace_And_Original_String_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Mixed_Whitespace_And_Trimmed_String_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Trim_String_With_No_Whitespace_And_Original_String_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_And_Internal_Whitespace_And_Trimmed_String_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Trailing_And_Internal_Whitespace_And_Trimmed_String_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_Trailing_And_Internal_Whitespace_And_Trimmed_String_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Trim_String_With_Leading_And_Trailing_Whitespace_Only_And_Trimmed_String_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_Cannot_Open_File_And_Exception_Thrown) {}
+
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Does_Not_Exist_And_Exception_Thrown) {}
+
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Is_Empty_And_Exception_Thrown) {}
+
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Invalid_Format_And_Exception_Thrown) {}
+
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Missing_Required_Fields_And_Exception_Thrown) {}
+
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Extra_Unexpected_Fields_And_Exception_Thrown) {}
+
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Permission_Issues_And_Exception_Thrown) {}
+
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Symbolic_Link_And_Exception_Thrown) {}
+
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Circular_Symbolic_Link_And_Exception_Thrown) {}
+
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Unsupported_Encoding_And_Exception_Thrown) {}
+
+    TEST_F(ConfigFileProviderTest, Load_Config_From_File_With_Empty_Lines_And_Configuration_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Load_Config_From_File_With_Commented_Lines_And_Configuration_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Load_Config_From_File_With_Separator_At_Start_Of_Line_And_Configuration_Returned) {}
+
+    TEST_F(ConfigFileProviderTest, Load_Config_From_File_With_Valid_Config_And_Configuration_Returned) {}
+
 }  // namespace config_file_provider_test
