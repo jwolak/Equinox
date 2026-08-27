@@ -155,6 +155,11 @@ bool equinox::EquinoxLoggerEngineImpl::setup(level::LOG_LEVEL logLevel, const st
 bool equinox::EquinoxLoggerEngineImpl::setupFromConfigFile(const std::string& configFilePath) {
     mAsyncLogQueueEngine_->stopWorker();
 
+    if (configFilePath.empty()) {
+        std::cerr << "[EquinoxLogger] Configuration file path is empty. Default settings applied." << std::endl;
+        return false;
+    }
+
     std::optional<LoggerConfig> logger_config = mConfigFileProvider_->loadConfigFromFile(configFilePath);
     if (logger_config.has_value()) {
         mLoggerConfig_ = logger_config.value();

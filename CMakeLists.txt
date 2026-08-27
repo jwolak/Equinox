@@ -114,6 +114,7 @@ set(EQUINOX_LOGGER_SRC
 	${CMAKE_CURRENT_SOURCE_DIR}/src/FileLogsProducer.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/AsyncLogQueueEngine.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ColorFormatter.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/ConfigFileProvider.cpp
 )
 
 #------------------------------------------------------------------------------------------

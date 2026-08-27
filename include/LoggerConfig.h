@@ -48,7 +48,7 @@ namespace equinox {
         std::size_t maxLogFileSizeBytes = kDefaultMaxLogFileSizeBytes;
         std::size_t maxLogFiles = kDefaultMaxLogFiles;
 
-        void SetLogLevel(int32_t logLevel) {
+        void SetLogLevelFromInt(int32_t logLevel) {
             switch (logLevel) {
                 case 0:
                     this->logLevel = level::LOG_LEVEL::trace;
@@ -76,7 +76,7 @@ namespace equinox {
             }
         }
 
-        void SetLogsOutputSink(int32_t logsOutputSink) {
+        void SetLogsOutputSinkFromInt(int32_t logsOutputSink) {
             switch (logsOutputSink) {
                 case 0:
                     this->logsOutputSink = logs_output::SINK::console;

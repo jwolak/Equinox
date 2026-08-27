@@ -214,3 +214,4 @@
 2026-08-21 12:18:01 +0200 | v2.1.48 | Implement trim method in ConfigFileProvider for string trimming functionality
 2026-08-27 07:05:58 +0200 | v2.1.49 | Add configuration loading functionality in ConfigFileProvider and LoggerConfig
 2026-08-27 07:12:12 +0200 | v2.1.50 | Refactor LoggerConfig methods for setting log level and output sink; update ConfigFileProvider to use new methods for improved clarity and error handling
+2026-08-27 07:18:46 +0200 | v2.1.51 | Enhance configuration handling by updating LoggerConfig methods and integrating ConfigFileProvider; add error handling for empty config file path

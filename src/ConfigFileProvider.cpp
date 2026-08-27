@@ -44,6 +44,7 @@ namespace equinox {
     namespace {
         constexpr const char kCommentChar = '#';
         constexpr const char kKeyValueSeparator = '=';
+        constexpr const char kWhitespaceChars[] = " \t\r\n";
     }  // namespace
 
     ConfigFileProvider::ConfigFileProvider() {}
@@ -57,9 +58,9 @@ namespace equinox {
         }
 
         LoggerConfig loggerConfig;
-        loggerConfig.SetLogLevel(std::stoi(loadConfigMap.at("logLevel")));
+        loggerConfig.SetLogLevelFromInt(std::stoi(loadConfigMap.at("logLevel")));
         loggerConfig.logPrefix = loadConfigMap.at("logPrefix");
-        loggerConfig.SetLogsOutputSink(std::stoi(loadConfigMap.at("logsOutputSink")));
+        loggerConfig.SetLogsOutputSinkFromInt(std::stoi(loadConfigMap.at("logsOutputSink")));
         loggerConfig.logFileName = loadConfigMap.at("logFileName");
         loggerConfig.maxLogFileSizeBytes = std::stoll(loadConfigMap.at("maxLogFileSizeBytes"));
         loggerConfig.maxLogFiles = std::stoi(loadConfigMap.at("maxLogFiles"));
@@ -68,11 +69,11 @@ namespace equinox {
     }
 
     std::string ConfigFileProvider::trim(const std::string& string_to_trimmed) {
-        const std::size_t first = string_to_trimmed.find_first_not_of(" \t\r\n");
+        const std::size_t first = string_to_trimmed.find_first_not_of(kWhitespaceChars);
         if (first == std::string::npos)
-            return "";
+            return std::string();
 
-        const std::size_t last = string_to_trimmed.find_last_not_of(" \t\r\n");
+        const std::size_t last = string_to_trimmed.find_last_not_of(kWhitespaceChars);
 
         return string_to_trimmed.substr(first, last - first + 1);
     }
@@ -80,33 +81,33 @@ namespace equinox {
     std::unordered_map<std::string, std::string> ConfigFileProvider::loadConfig(const std::string& file_path) {
         std::unordered_map<std::string, std::string> config;
 
-        std::ifstream file(file_path);
+        std::ifstream config_file(file_path);
 
-        if (!file.is_open()) {
+        if (!config_file.is_open()) {
             throw std::runtime_error("Cannot open config file: " + file_path);
         }
 
-        std::string line;
+        std::string read_line;
 
-        while (std::getline(file, line)) {
-            line = trim(line);
+        while (std::getline(config_file, read_line)) {
+            read_line = trim(read_line);
 
-            if (line.empty()) {
+            if (read_line.empty()) {
                 continue;
             }
 
-            if (line[0] == kCommentChar) {
+            if (read_line[0] == kCommentChar) {
                 continue;
             }
 
-            const auto separator = line.find(kKeyValueSeparator);
+            std::size_t separator = read_line.find(kKeyValueSeparator);
 
             if (separator == std::string::npos) {
                 continue;
             }
 
-            std::string key = trim(line.substr(0, separator));
-            std::string value = trim(line.substr(separator + 1));
+            std::string key = trim(read_line.substr(0, separator));
+            std::string value = trim(read_line.substr(separator + 1));
 
             config[key] = value;
         }
