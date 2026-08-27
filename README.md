@@ -1,4 +1,4 @@
-# Equinox logging engine 2.2.71
+# Equinox logging engine 2.2.72
 
 **Logger with support logging to file, console or both. Six levels available:**
 - Trace 
@@ -16,6 +16,7 @@
 - [Install](#install)
 - [Logging macros and `NDEBUG`](#logging-macros-and-ndebug)
 - [Example](#example)
+- [Configuration from a file](#configuration-from-a-file)
 - [Colored logs preview](#colored-logs-preview-github-friendly)
 - [Performance benchmark](#performance-benchmark)
 - [Unit Test Coverage](#unit-test-coverage)
@@ -90,12 +91,22 @@ int main(void) {
     equinox::error("Example error log no:    [%d]", 5);
     equinox::critical("Example critical log no: [%d]", 6);
 
-    EQUINOX_TRACE("Example MACRO trace log no:    [%d]", 1);
-    EQUINOX_DEBUG("Example MACRO debug log no:    [%d]", 2);
-    EQUINOX_INFO("Example MACRO info log no:     [%d]", 3);
-    EQUINOX_WARNING("Example MACRO warning log no:  [%d]", 4);
-    EQUINOX_ERROR("Example MACRO error log no:    [%d]", 5);
-    EQUINOX_CRITICAL("Example MACRO critical log no: [%d]", 6);
+    SETUP_LOGGER(equinox::level::LOG_LEVEL::trace, std::string("equinox-macro_test"), equinox::logs_output::SINK::console_and_file, std::string("equinox.log"),
+                 3U * 1024U * 1024U, 5U);
+    LOG_TRACE("Example MACRO trace log no:    [%d]", 1);
+    LOG_DEBUG("Example MACRO debug log no:    [%d]", 2);
+    LOG_INFO("Example MACRO info log no:     [%d]", 3);
+    LOG_WARNING("Example MACRO warning log no:  [%d]", 4);
+    LOG_ERROR("Example MACRO error log no:    [%d]", 5);
+    LOG_CRITICAL("Example MACRO critical log no: [%d]", 6);
+
+    SETUP_FROM_CONFIG_FILE(std::string("config_file_example.txt"));
+    LOG_TRACE("Example MACRO trace log no:    [%d]", 1);
+    LOG_DEBUG("Example MACRO debug log no:    [%d]", 2);
+    LOG_INFO("Example MACRO info log no:     [%d]", 3);
+    LOG_WARNING("Example MACRO warning log no:  [%d]", 4);
+    LOG_ERROR("Example MACRO error log no:    [%d]", 5);
+    LOG_CRITICAL("Example MACRO critical log no: [%d]", 6);
 
     return 0;
 }
@@ -103,21 +114,69 @@ int main(void) {
 ```
 Output:
  
-[Wed Aug 19 16:04:22 2026][1787148262892][equinox-test][TRACE] Example trace log no:    [1]
-[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][DEBUG] Example debug log no:    [2]
-[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][INFO] Example info log no:     [3]
-[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][WARNING] Example warning log no:  [4]
-[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][ERROR] Example error log no:    [5]
-[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][CRITICAL] Example critical log no: [6]
+[Thu Aug 27 15:14:31 2026][1787836471950][equinox-test][TRACE] Example trace log no:    [1]
+[Thu Aug 27 15:14:31 2026][1787836471950][equinox-test][DEBUG] Example debug log no:    [2]
+[Thu Aug 27 15:14:31 2026][1787836471950][equinox-test][INFO] Example info log no:     [3]
+[Thu Aug 27 15:14:31 2026][1787836471950][equinox-test][WARNING] Example warning log no:  [4]
+[Thu Aug 27 15:14:31 2026][1787836471951][equinox-test][ERROR] Example error log no:    [5]
+[Thu Aug 27 15:14:31 2026][1787836471951][equinox-test][CRITICAL] Example critical log no: [6]
 
-[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][TRACE] Example MACRO trace log no:    [1]
-[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][DEBUG] Example MACRO debug log no:    [2]
-[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][INFO] Example MACRO info log no:     [3]
-[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][WARNING] Example MACRO warning log no:  [4]
-[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][ERROR] Example MACRO error log no:    [5]
-[Wed Aug 19 16:04:22 2026][1787148262893][equinox-test][CRITICAL] Example MACRO critical log no: [6]
+[Thu Aug 27 15:14:31 2026][1787836471951][equinox-macro_test][TRACE] Example MACRO trace log no:    [1]
+[Thu Aug 27 15:14:31 2026][1787836471951][equinox-macro_test][DEBUG] Example MACRO debug log no:    [2]
+[Thu Aug 27 15:14:31 2026][1787836471951][equinox-macro_test][INFO] Example MACRO info log no:     [3]
+[Thu Aug 27 15:14:31 2026][1787836471951][equinox-macro_test][WARNING] Example MACRO warning log no:  [4]
+[Thu Aug 27 15:14:31 2026][1787836471951][equinox-macro_test][ERROR] Example MACRO error log no:    [5]
+[Thu Aug 27 15:14:31 2026][1787836471951][equinox-macro_test][CRITICAL] Example MACRO critical log no: [6]
+
+[Thu Aug 27 15:14:31 2026][1787836471951][config-file-prefix][INFO] Example MACRO info log no:     [3]
+[Thu Aug 27 15:14:31 2026][1787836471951][config-file-prefix][WARNING] Example MACRO warning log no:  [4]
+[Thu Aug 27 15:14:31 2026][1787836471951][config-file-prefix][ERROR] Example MACRO error log no:    [5]
+[Thu Aug 27 15:14:31 2026][1787836471951][config-file-prefix][CRITICAL] Example MACRO critical log no: [6]
 
 ```
+
+[Back to table of contents](#table-of-contents)
+
+## Configuration from a file
+
+Instead of passing all setup parameters explicitly, the logger can be configured from a plain `key = value` text file using `equinox::setupFromConfigFile(configFilePath)` or the `SETUP_FROM_CONFIG_FILE(configFilePath)` macro.
+
+```sh
+See: examples/config_file_example.txt
+```
+```ini
+# logger configuration file example
+
+logLevel = 2
+logPrefix = config-file-prefix
+logsOutputSink = 0  #console
+logFileName = /tmp/app.log
+maxLogFileSizeBytes = 10485760
+maxLogFiles = 5
+```
+
+```cpp
+#include "EquinoxLogger.hpp"
+
+SETUP_FROM_CONFIG_FILE(std::string("config_file_example.txt"));
+// or: equinox::setupFromConfigFile("config_file_example.txt");
+```
+
+Supported keys:
+
+| Key | Description | Values |
+| --- | --- | --- |
+| `logLevel` | minimal severity of logged messages | `0` trace, `1` debug, `2` info, `3` warning, `4` error, `5` critical, `6` off |
+| `logPrefix` | prefix added to each log line | any string, without quotes |
+| `logsOutputSink` | where logs are printed | `0` console, `1` file, `2` console and file |
+| `logFileName` | path to the log file | any file path, without quotes |
+| `maxLogFileSizeBytes` | max size of a single log file in bytes | positive integer |
+| `maxLogFiles` | max number of rotated log files | positive integer |
+
+Notes:
+- Lines starting with `#` are treated as comments and ignored.
+- Values are not quoted — `logPrefix = "name"` would keep the quotes as part of the prefix.
+- If a key is missing, empty, or has an invalid value, the corresponding default value is used instead and the rest of the configuration is still applied.
 
 [Back to table of contents](#table-of-contents)
 
