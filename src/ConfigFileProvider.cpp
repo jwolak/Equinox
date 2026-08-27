@@ -34,6 +34,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <unordered_map>
 
@@ -45,30 +46,66 @@ namespace equinox {
         constexpr const char kCommentChar = '#';
         constexpr const char kKeyValueSeparator = '=';
         constexpr const char kWhitespaceChars[] = " \t\r\n";
+        constexpr const char kLogLevelKey[] = "logLevel";
+        constexpr const char kLogPrefixKey[] = "logPrefix";
+        constexpr const char kLogsOutputSinkKey[] = "logsOutputSink";
+        constexpr const char kLogFileNameKey[] = "logFileName";
+        constexpr const char kMaxLogFileSizeBytesKey[] = "maxLogFileSizeBytes";
+        constexpr const char kMaxLogFilesKey[] = "maxLogFiles";
     }  // namespace
 
     ConfigFileProvider::ConfigFileProvider() {}
 
     std::optional<LoggerConfig> ConfigFileProvider::loadConfigFromFile(const std::string& configFilePath) {
+        std::unordered_map<std::string, std::string> loadConfigMap;
+
         try {
-            std::unordered_map<std::string, std::string> loadConfigMap = loadConfig(configFilePath);
-
-            if (loadConfigMap.empty()) {
-                return std::nullopt;
-            }
-
-            LoggerConfig loggerConfig;
-            loggerConfig.SetLogLevelFromInt(std::stoi(loadConfigMap.at("logLevel")));
-            loggerConfig.logPrefix = loadConfigMap.at("logPrefix");
-            loggerConfig.SetLogsOutputSinkFromInt(std::stoi(loadConfigMap.at("logsOutputSink")));
-            loggerConfig.logFileName = loadConfigMap.at("logFileName");
-            loggerConfig.maxLogFileSizeBytes = std::stoll(loadConfigMap.at("maxLogFileSizeBytes"));
-            loggerConfig.maxLogFiles = std::stoi(loadConfigMap.at("maxLogFiles"));
-
-            return loggerConfig;
+            loadConfigMap = loadConfig(configFilePath);
         } catch (const std::exception&) {
             return std::nullopt;
         }
+
+        if (loadConfigMap.empty()) {
+            return std::nullopt;
+        }
+
+        LoggerConfig loggerConfig;
+        try {
+            loggerConfig.SetLogLevelFromInt(std::stoi(loadConfigMap.at(kLogLevelKey)));
+        } catch (const std::exception&) {
+            std::cerr << "Failed to parse log level from config file." << std::endl;
+        }
+
+        try {
+            loggerConfig.logPrefix = loadConfigMap.at(kLogPrefixKey);
+        } catch (const std::exception&) {
+            std::cerr << "Failed to parse log prefix from config file." << std::endl;
+        }
+
+        try {
+            loggerConfig.SetLogsOutputSinkFromInt(std::stoi(loadConfigMap.at(kLogsOutputSinkKey)));
+        } catch (const std::exception&) {
+            std::cerr << "Failed to parse logs output sink from config file." << std::endl;
+        }
+
+        try {
+            loggerConfig.logFileName = loadConfigMap.at(kLogFileNameKey);
+        } catch (const std::exception&) {
+            std::cerr << "Failed to parse log file name from config file." << std::endl;
+        }
+        try {
+            loggerConfig.maxLogFileSizeBytes = std::stoll(loadConfigMap.at(kMaxLogFileSizeBytesKey));
+        } catch (const std::exception&) {
+            std::cerr << "Failed to parse max log file size from config file." << std::endl;
+        }
+
+        try {
+            loggerConfig.maxLogFiles = std::stoi(loadConfigMap.at(kMaxLogFilesKey));
+        } catch (const std::exception&) {
+            std::cerr << "Failed to parse max log files from config file." << std::endl;
+        }
+
+        return loggerConfig;
     }
 
     std::string ConfigFileProvider::trim(const std::string& string_to_trimmed) {

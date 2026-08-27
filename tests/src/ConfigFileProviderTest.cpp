@@ -43,6 +43,20 @@ namespace config_file_provider_test {
     using namespace ::testing;
     using namespace equinox;
 
+    namespace {
+        constexpr const char* kEmptyConfigFilePath = "empty_config_file.txt";
+        constexpr const char* kNonExistentConfigFilePath = "non_existent_config_file.txt";
+        constexpr const char* kConfigFileWithNoLogLevelPath = "config_file_with_no_log_level.txt";
+        constexpr const char* kConfigFileWithNoLogPrefixPath = "config_file_with_no_log_prefix.txt";
+
+        constexpr const char kLogLevelKey[] = "logLevel";
+        constexpr const char kLogPrefixKey[] = "logPrefix";
+        constexpr const char kLogsOutputSinkKey[] = "logsOutputSink";
+        constexpr const char kLogFileNameKey[] = "logFileName";
+        constexpr const char kMaxLogFileSizeBytesKey[] = "maxLogFileSizeBytes";
+        constexpr const char kMaxLogFilesKey[] = "maxLogFiles";
+    }  // namespace
+
     class ConfigFileProviderTestable : public ConfigFileProvider {
        public:
         ConfigFileProviderTestable() : ConfigFileProvider() {}
@@ -56,26 +70,48 @@ namespace config_file_provider_test {
         ConfigFileProviderTest() {}
 
         ConfigFileProviderTestable config_file_provider;
+
+        void CreateEmptyConfigFile(const std::string& file_path) {
+            std::ofstream file(file_path);
+        }
+
+        void RemoveConfigFile(const std::string& file_path) {
+            std::remove(file_path.c_str());
+        }
+
+        void CreateConfigFileWithProvidedContent(const std::string& file_path, const std::string& content) {
+            std::ofstream file(file_path);
+            file << content;
+        }
     };
 
     TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_Load_Config_Map_An_Exception_Thrown_And_Nullopt_Returned) {
-        EXPECT_FALSE(config_file_provider.loadConfigFromFile("non_existent_config_file.txt").has_value());
+        EXPECT_FALSE(config_file_provider.loadConfigFromFile(kNonExistentConfigFilePath).has_value());
     }
 
     TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_Loaded_Config_Map_Is_Empty_And_Nullopt_Returned) {
-        const std::string emptyConfigFilePath = "empty_config_file.txt";
-        {
-            std::ofstream emptyConfigFile(emptyConfigFilePath);
-        }
+        CreateEmptyConfigFile(kEmptyConfigFilePath);
 
-        EXPECT_FALSE(config_file_provider.loadConfigFromFile(emptyConfigFilePath).has_value());
+        EXPECT_FALSE(config_file_provider.loadConfigFromFile(kEmptyConfigFilePath).has_value());
 
-        std::remove(emptyConfigFilePath.c_str());
+        RemoveConfigFile(kEmptyConfigFilePath);
     }
 
-    TEST_F(ConfigFileProviderTest, Try_Read_Log_Level_From_Config_File_But_It_Fails_And_Nullopt_Returned) {}
+    TEST_F(ConfigFileProviderTest, Try_Read_Log_Level_From_Config_File_But_It_Fails_And_Nullopt_Returned) {
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogLevelPath, std::string(kLogLevelKey) + "=");
 
-    TEST_F(ConfigFileProviderTest, Try_Read_Log_Prefix_From_Config_File_But_It_Fails_And_Nullopt_Returned) {}
+        EXPECT_FALSE(config_file_provider.loadConfigFromFile(kConfigFileWithNoLogLevelPath).has_value());
+
+        RemoveConfigFile(kConfigFileWithNoLogLevelPath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Try_Read_Log_Prefix_From_Config_File_But_It_Fails_And_Nullopt_Returned) {
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath, std::string(kLogLevelKey) + "=\n" + std::string(kLogPrefixKey) + "=");
+
+        EXPECT_FALSE(config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath).has_value());
+
+        RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
+    }
 
     TEST_F(ConfigFileProviderTest, Try_Read_Logs_Output_Sink_From_Config_File_But_It_Fails_And_Nullopt_Returned) {}
 

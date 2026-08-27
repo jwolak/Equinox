@@ -70,6 +70,7 @@
 namespace equinox {
 
 const std::string kLogFileName = "logs.log";
+const std::string kLogDefaultPrefix = "log_prefix_not_set";
 const std::size_t kDefaultMaxLogFileSizeBytes = 3U * 1024U * 1024U;
 const std::size_t kDefaultMaxLogFiles = 5U;
 
