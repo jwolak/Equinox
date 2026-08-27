@@ -73,36 +73,39 @@ namespace equinox {
         try {
             loggerConfig.SetLogLevelFromInt(std::stoi(loadConfigMap.at(kLogLevelKey)));
         } catch (const std::exception&) {
-            std::cerr << "Failed to parse log level from config file." << std::endl;
+            std::cerr << "[EQUINOX LOGGER] [ERROR] Failed to parse log level from config file." << std::endl;
         }
 
         try {
-            loggerConfig.logPrefix = loadConfigMap.at(kLogPrefixKey);
+            const std::string& logPrefixValue = loadConfigMap.at(kLogPrefixKey);
+            if (!logPrefixValue.empty()) {
+                loggerConfig.logPrefix = logPrefixValue;
+            }
         } catch (const std::exception&) {
-            std::cerr << "Failed to parse log prefix from config file." << std::endl;
+            std::cerr << "[EQUINOX LOGGER] [ERROR] Failed to parse log prefix from config file." << std::endl;
         }
 
         try {
             loggerConfig.SetLogsOutputSinkFromInt(std::stoi(loadConfigMap.at(kLogsOutputSinkKey)));
         } catch (const std::exception&) {
-            std::cerr << "Failed to parse logs output sink from config file." << std::endl;
+            std::cerr << "[EQUINOX LOGGER] [ERROR] Failed to parse logs output sink from config file." << std::endl;
         }
 
         try {
             loggerConfig.logFileName = loadConfigMap.at(kLogFileNameKey);
         } catch (const std::exception&) {
-            std::cerr << "Failed to parse log file name from config file." << std::endl;
+            std::cerr << "[EQUINOX LOGGER] [ERROR] Failed to parse log file name from config file." << std::endl;
         }
         try {
             loggerConfig.maxLogFileSizeBytes = std::stoll(loadConfigMap.at(kMaxLogFileSizeBytesKey));
         } catch (const std::exception&) {
-            std::cerr << "Failed to parse max log file size from config file." << std::endl;
+            std::cerr << "[EQUINOX LOGGER] [ERROR] Failed to parse max log file size from config file." << std::endl;
         }
 
         try {
             loggerConfig.maxLogFiles = std::stoi(loadConfigMap.at(kMaxLogFilesKey));
         } catch (const std::exception&) {
-            std::cerr << "Failed to parse max log files from config file." << std::endl;
+            std::cerr << "[EQUINOX LOGGER] [ERROR] Failed to parse max log files from config file." << std::endl;
         }
 
         return loggerConfig;
