@@ -97,29 +97,33 @@ namespace config_file_provider_test {
         RemoveConfigFile(kEmptyConfigFilePath);
     }
 
-    TEST_F(ConfigFileProviderTest, Try_Read_Log_Level_From_Config_File_But_It_Fails_And_Nullopt_Returned) {
+    TEST_F(ConfigFileProviderTest, Try_Read_Log_Level_From_Config_File_But_It_Fails_And_Default_Log_Level_Is_Set) {
         CreateConfigFileWithProvidedContent(kConfigFileWithNoLogLevelPath, std::string(kLogLevelKey) + "=");
 
-        EXPECT_FALSE(config_file_provider.loadConfigFromFile(kConfigFileWithNoLogLevelPath).has_value());
+        std::optional<LoggerConfig> logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogLevelPath);
+        ASSERT_TRUE(logger_config.has_value());
+        EXPECT_EQ(logger_config->logLevel, level::LOG_LEVEL::info);
 
         RemoveConfigFile(kConfigFileWithNoLogLevelPath);
     }
 
-    TEST_F(ConfigFileProviderTest, Try_Read_Log_Prefix_From_Config_File_But_It_Fails_And_Nullopt_Returned) {
+    TEST_F(ConfigFileProviderTest, Try_Read_Log_Prefix_From_Config_File_But_It_Fails_And_Default_Log_Prefix_Is_Set) {
         CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath, std::string(kLogLevelKey) + "=\n" + std::string(kLogPrefixKey) + "=");
 
-        EXPECT_FALSE(config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath).has_value());
+        std::optional<LoggerConfig> logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        ASSERT_TRUE(logger_config.has_value());
+        EXPECT_EQ(logger_config->logPrefix, kLogDefaultPrefix);
 
         RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
     }
 
-    TEST_F(ConfigFileProviderTest, Try_Read_Logs_Output_Sink_From_Config_File_But_It_Fails_And_Nullopt_Returned) {}
+    TEST_F(ConfigFileProviderTest, Try_Read_Logs_Output_Sink_From_Config_File_But_It_Fails_And_Default_Logs_Output_Sink_Is_Set) {}
 
-    TEST_F(ConfigFileProviderTest, Try_Read_Log_File_Name_From_Config_File_But_It_Fails_And_Nullopt_Returned) {}
+    TEST_F(ConfigFileProviderTest, Try_Read_Log_File_Name_From_Config_File_But_It_Fails_And_Default_Log_File_Name_Is_Set) {}
 
-    TEST_F(ConfigFileProviderTest, Try_Read_Max_Log_File_Size_Bytes_From_Config_File_But_It_Fails_And_Nullopt_Returned) {}
+    TEST_F(ConfigFileProviderTest, Try_Read_Max_Log_File_Size_Bytes_From_Config_File_But_It_Fails_And_Default_Max_Log_File_Size_Bytes_Is_Set) {}
 
-    TEST_F(ConfigFileProviderTest, Try_Read_Max_Log_Files_From_Config_File_But_It_Fails_And_Nullopt_Returned) {}
+    TEST_F(ConfigFileProviderTest, Try_Read_Max_Log_Files_From_Config_File_But_It_Fails_And_Default_Max_Log_Files_Is_Set) {}
 
     TEST_F(ConfigFileProviderTest, Load_Config_From_File_Successfull_And_Configuration_Returned) {}
 
