@@ -32,10 +32,14 @@
 
 #include <cstdio>
 
+#include <sys/stat.h>
 #include <gtest/gtest.h>
+#include <unistd.h>
 
+#include <filesystem>
 #include <fstream>
 #include <string>
+#include <unordered_map>
 
 #include "ConfigFileProvider.h"
 
@@ -48,6 +52,15 @@ namespace config_file_provider_test {
         constexpr const char* kNonExistentConfigFilePath = "non_existent_config_file.txt";
         constexpr const char* kConfigFileWithNoLogLevelPath = "config_file_with_no_log_level.txt";
         constexpr const char* kConfigFileWithNoLogPrefixPath = "config_file_with_no_log_prefix.txt";
+        constexpr const char* kMalformedConfigFilePath = "malformed_config_file.txt";
+        constexpr const char* kPermissionDeniedConfigFilePath = "permission_denied_config_file.txt";
+        constexpr const char* kDanglingSymlinkPath = "dangling_config_symlink.txt";
+        constexpr const char* kCircularSymlinkAPath = "circular_config_symlink_a.txt";
+        constexpr const char* kCircularSymlinkBPath = "circular_config_symlink_b.txt";
+        constexpr const char* kEmptyLinesConfigFilePath = "config_file_with_empty_lines.txt";
+        constexpr const char* kCommentedConfigFilePath = "config_file_with_comments.txt";
+        constexpr const char* kSeparatorAtStartConfigFilePath = "config_file_with_separator_at_start.txt";
+        constexpr const char* kValidConfigFilePath = "valid_config_file.txt";
 
         constexpr const char kLogLevelKey[] = "logLevel";
         constexpr const char kLogPrefixKey[] = "logPrefix";
@@ -357,32 +370,121 @@ namespace config_file_provider_test {
         EXPECT_EQ(config_file_provider.trim("   example   "), "example");
     }
 
-    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_Cannot_Open_File_And_Exception_Thrown) {}
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Does_Not_Exist_And_Exception_Thrown) {
+        EXPECT_THROW(config_file_provider.loadConfig(kNonExistentConfigFilePath), std::runtime_error);
+    }
 
-    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Does_Not_Exist_And_Exception_Thrown) {}
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Is_Empty_And_Exception_Thrown) {
+        CreateEmptyConfigFile(kEmptyConfigFilePath);
 
-    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Is_Empty_And_Exception_Thrown) {}
+        // an existing, empty file can be opened without error, it just yields an empty map
+        EXPECT_TRUE(config_file_provider.loadConfig(kEmptyConfigFilePath).empty());
 
-    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Invalid_Format_And_Exception_Thrown) {}
+        RemoveConfigFile(kEmptyConfigFilePath);
+    }
 
-    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Missing_Required_Fields_And_Exception_Thrown) {}
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Invalid_Format_And_Exception_Thrown) {
+        CreateConfigFileWithProvidedContent(kMalformedConfigFilePath, "this line has no separator\n");
 
-    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Extra_Unexpected_Fields_And_Exception_Thrown) {}
+        EXPECT_TRUE(config_file_provider.loadConfig(kMalformedConfigFilePath).empty());
 
-    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Permission_Issues_And_Exception_Thrown) {}
+        RemoveConfigFile(kMalformedConfigFilePath);
+    }
 
-    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Symbolic_Link_And_Exception_Thrown) {}
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Missing_Required_Fields_And_Exception_Thrown) {
+        CreateConfigFileWithProvidedContent(kMalformedConfigFilePath, std::string(kLogLevelKey) + "= 1\n");
 
-    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Circular_Symbolic_Link_And_Exception_Thrown) {}
+        const std::unordered_map<std::string, std::string> config = config_file_provider.loadConfig(kMalformedConfigFilePath);
+        EXPECT_EQ(config.count(kLogPrefixKey), 0U);
 
-    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Unsupported_Encoding_And_Exception_Thrown) {}
+        RemoveConfigFile(kMalformedConfigFilePath);
+    }
 
-    TEST_F(ConfigFileProviderTest, Load_Config_From_File_With_Empty_Lines_And_Configuration_Returned) {}
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Extra_Unexpected_Fields_And_Exception_Thrown) {
+        CreateConfigFileWithProvidedContent(kMalformedConfigFilePath, std::string(kLogLevelKey) + "= 1\nunexpectedKey= value\n");
 
-    TEST_F(ConfigFileProviderTest, Load_Config_From_File_With_Commented_Lines_And_Configuration_Returned) {}
+        const std::unordered_map<std::string, std::string> config = config_file_provider.loadConfig(kMalformedConfigFilePath);
+        EXPECT_EQ(config.at("unexpectedKey"), "value");
 
-    TEST_F(ConfigFileProviderTest, Load_Config_From_File_With_Separator_At_Start_Of_Line_And_Configuration_Returned) {}
+        RemoveConfigFile(kMalformedConfigFilePath);
+    }
 
-    TEST_F(ConfigFileProviderTest, Load_Config_From_File_With_Valid_Config_And_Configuration_Returned) {}
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Permission_Issues_And_Exception_Thrown) {
+        if (geteuid() == 0) {
+            GTEST_SKIP() << "Running as root, file permissions are not enforced.";
+        }
+
+        CreateEmptyConfigFile(kPermissionDeniedConfigFilePath);
+        chmod(kPermissionDeniedConfigFilePath, 0);
+
+        EXPECT_THROW(config_file_provider.loadConfig(kPermissionDeniedConfigFilePath), std::runtime_error);
+
+        chmod(kPermissionDeniedConfigFilePath, S_IRUSR | S_IWUSR);
+        RemoveConfigFile(kPermissionDeniedConfigFilePath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Symbolic_Link_And_Exception_Thrown) {
+        std::filesystem::remove(kDanglingSymlinkPath);
+        std::filesystem::create_symlink(kNonExistentConfigFilePath, kDanglingSymlinkPath);
+
+        EXPECT_THROW(config_file_provider.loadConfig(kDanglingSymlinkPath), std::runtime_error);
+
+        std::filesystem::remove(kDanglingSymlinkPath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Circular_Symbolic_Link_And_Exception_Thrown) {
+        std::filesystem::remove(kCircularSymlinkAPath);
+        std::filesystem::remove(kCircularSymlinkBPath);
+        std::filesystem::create_symlink(kCircularSymlinkBPath, kCircularSymlinkAPath);
+        std::filesystem::create_symlink(kCircularSymlinkAPath, kCircularSymlinkBPath);
+
+        EXPECT_THROW(config_file_provider.loadConfig(kCircularSymlinkAPath), std::runtime_error);
+
+        std::filesystem::remove(kCircularSymlinkAPath);
+        std::filesystem::remove(kCircularSymlinkBPath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Try_Load_Config_From_File_But_File_Has_Unsupported_Encoding_And_Exception_Thrown) {
+        const std::string utf16LeBom = "\xFF\xFE";
+        CreateConfigFileWithProvidedContent(kMalformedConfigFilePath, utf16LeBom + std::string(kLogLevelKey) + "= 1\n");
+
+        // the parser is byte-oriented and does not validate encoding, so it must not throw
+        EXPECT_NO_THROW(config_file_provider.loadConfig(kMalformedConfigFilePath));
+
+        RemoveConfigFile(kMalformedConfigFilePath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Load_Config_From_File_With_Empty_Lines_And_Configuration_Returned) {
+        CreateConfigFileWithProvidedContent(kEmptyLinesConfigFilePath,
+                                            "\n\n" + std::string(kLogLevelKey) + "= 1\n\n" + std::string(kLogPrefixKey) + "= prefix\n\n");
+
+        const std::unordered_map<std::string, std::string> config = config_file_provider.loadConfig(kEmptyLinesConfigFilePath);
+        EXPECT_EQ(config.at(kLogLevelKey), "1");
+        EXPECT_EQ(config.at(kLogPrefixKey), "prefix");
+
+        RemoveConfigFile(kEmptyLinesConfigFilePath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Load_Config_From_File_With_Commented_Lines_And_Configuration_Returned) {
+        CreateConfigFileWithProvidedContent(
+            kCommentedConfigFilePath, "# comment line\n" + std::string(kLogLevelKey) + "= 1\n# another comment\n" + std::string(kLogPrefixKey) + "= prefix\n");
+
+        const std::unordered_map<std::string, std::string> config = config_file_provider.loadConfig(kCommentedConfigFilePath);
+        EXPECT_EQ(config.size(), 2U);
+        EXPECT_EQ(config.at(kLogLevelKey), "1");
+        EXPECT_EQ(config.at(kLogPrefixKey), "prefix");
+
+        RemoveConfigFile(kCommentedConfigFilePath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Load_Config_From_File_With_Separator_At_Start_Of_Line_And_Configuration_Returned) {
+        CreateConfigFileWithProvidedContent(kSeparatorAtStartConfigFilePath, "= value_without_key\n" + std::string(kLogLevelKey) + "= 1\n");
+
+        const std::unordered_map<std::string, std::string> config = config_file_provider.loadConfig(kSeparatorAtStartConfigFilePath);
+        EXPECT_EQ(config.at(""), "value_without_key");
+        EXPECT_EQ(config.at(kLogLevelKey), "1");
+
+        RemoveConfigFile(kSeparatorAtStartConfigFilePath);
+    }
 
 }  // namespace config_file_provider_test
