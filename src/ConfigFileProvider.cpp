@@ -78,7 +78,7 @@ namespace equinox {
         }
 
         try {
-            const std::string& logPrefixValue = loadConfigMap.at(kLogPrefixKey);
+            const std::string logPrefixValue = loadConfigMap.at(kLogPrefixKey);
             if (!logPrefixValue.empty()) {
                 loggerConfig.logPrefix = logPrefixValue;
             }
@@ -93,7 +93,10 @@ namespace equinox {
         }
 
         try {
-            loggerConfig.logFileName = loadConfigMap.at(kLogFileNameKey);
+            const std::string logFileNameValue = loadConfigMap.at(kLogFileNameKey);
+            if (!logFileNameValue.empty()) {
+                loggerConfig.logFileName = logFileNameValue;
+            }
         } catch (const std::exception&) {
             std::cerr << "[EQUINOX LOGGER] [ERROR] Failed to parse log file name from config file." << std::endl;
         }
@@ -104,7 +107,10 @@ namespace equinox {
         }
 
         try {
-            loggerConfig.maxLogFiles = std::stoi(loadConfigMap.at(kMaxLogFilesKey));
+            const std::string maxLogFilesValue = loadConfigMap.at(kMaxLogFilesKey);
+            if (!maxLogFilesValue.empty()) {
+                loggerConfig.maxLogFiles = std::stoi(maxLogFilesValue);
+            }
         } catch (const std::exception&) {
             std::cerr << "[EQUINOX LOGGER] [ERROR] Failed to parse max log files from config file." << std::endl;
         }

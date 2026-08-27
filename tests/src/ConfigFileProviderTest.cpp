@@ -126,10 +126,10 @@ namespace config_file_provider_test {
     }
 
     TEST_F(ConfigFileProviderTest, Try_Read_Log_Prefix_From_Config_File_But_It_Fails_And_Default_Log_Prefix_Is_Set) {
-        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath, std::string(kLogLevelKey) + "=\n");
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath, std::string(kLogLevelKey) + "= 1\n");
 
         LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
-        EXPECT_EQ(logger_config.logPrefix, kLogDefaultPrefix);
+        EXPECT_EQ(logger_config.logPrefix, default_logger_config.logPrefix);
 
         RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
     }
@@ -138,7 +138,7 @@ namespace config_file_provider_test {
         CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath, std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "=\n");
 
         LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
-        EXPECT_EQ(logger_config.logPrefix, kLogDefaultPrefix);
+        EXPECT_EQ(logger_config.logPrefix, default_logger_config.logPrefix);
 
         RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
     }
@@ -156,7 +156,7 @@ namespace config_file_provider_test {
         CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath, std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "= prefix\n");
 
         LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
-        EXPECT_EQ(logger_config.logsOutputSink, logs_output::SINK::file);
+        EXPECT_EQ(logger_config.logsOutputSink, default_logger_config.logsOutputSink);
 
         RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
     }
@@ -167,7 +167,7 @@ namespace config_file_provider_test {
             std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "= prefix\n" + std::string(kLogsOutputSinkKey) + "=\n");
 
         LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
-        EXPECT_EQ(logger_config.logsOutputSink, logs_output::SINK::file);
+        EXPECT_EQ(logger_config.logsOutputSink, default_logger_config.logsOutputSink);
 
         RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
     }
@@ -183,13 +183,127 @@ namespace config_file_provider_test {
         RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
     }
 
-    TEST_F(ConfigFileProviderTest, Try_Read_Log_File_Name_From_Config_File_But_It_Fails_And_Default_Log_File_Name_Is_Set) {}
+    TEST_F(ConfigFileProviderTest, Try_Read_Log_File_Name_From_Config_File_But_It_Fails_And_Default_Log_File_Name_Is_Set) {
+        CreateConfigFileWithProvidedContent(
+            kConfigFileWithNoLogPrefixPath,
+            std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "= prefix\n" + std::string(kLogsOutputSinkKey) + "= 0\n");
 
-    TEST_F(ConfigFileProviderTest, Try_Read_Max_Log_File_Size_Bytes_From_Config_File_But_It_Fails_And_Default_Max_Log_File_Size_Bytes_Is_Set) {}
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        EXPECT_EQ(logger_config.logFileName, default_logger_config.logFileName);
 
-    TEST_F(ConfigFileProviderTest, Try_Read_Max_Log_Files_From_Config_File_But_It_Fails_And_Default_Max_Log_Files_Is_Set) {}
+        RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
+    }
 
-    TEST_F(ConfigFileProviderTest, Load_Config_From_File_Successfull_And_Configuration_Returned) {}
+    TEST_F(ConfigFileProviderTest, Try_Read_Log_File_Name_From_Config_File_But_Is_Empty_And_Default_Log_File_Name_Is_Set) {
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath,
+                                            std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "= prefix\n" + std::string(kLogsOutputSinkKey) +
+                                                "= 0\n" + std::string(kLogFileNameKey) + "=\n");
+
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        EXPECT_EQ(logger_config.logFileName, default_logger_config.logFileName);
+
+        RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Read_Log_File_Name_From_Config_File_And_Log_File_Name_Is_Set) {
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath,
+                                            std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "= prefix\n" + std::string(kLogsOutputSinkKey) +
+                                                "= 0\n" + std::string(kLogFileNameKey) + "= custom_log_file.log\n");
+
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        EXPECT_EQ(logger_config.logFileName, "custom_log_file.log");
+
+        RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Try_Read_Max_Log_File_Size_Bytes_From_Config_File_But_It_Fails_And_Default_Max_Log_File_Size_Bytes_Is_Set) {
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath,
+                                            std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "= prefix\n" + std::string(kLogsOutputSinkKey) +
+                                                "= 0\n" + std::string(kLogFileNameKey) + "= custom_log_file.log\n" + std::string(kMaxLogFileSizeBytesKey) +
+                                                "= invalid_value\n");
+
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        EXPECT_EQ(logger_config.maxLogFileSizeBytes, default_logger_config.maxLogFileSizeBytes);
+
+        RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Try_Read_Max_Log_File_Size_Bytes_From_Config_File_But_Is_Empty_And_Default_Max_Log_File_Size_Bytes_Is_Set) {
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath,
+                                            std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "= prefix\n" + std::string(kLogsOutputSinkKey) +
+                                                "= 0\n" + std::string(kLogFileNameKey) + "= custom_log_file.log\n" + std::string(kMaxLogFileSizeBytesKey) +
+                                                "=\n");
+
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        EXPECT_EQ(logger_config.maxLogFileSizeBytes, default_logger_config.maxLogFileSizeBytes);
+
+        RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Read_Max_Log_File_Size_Bytes_From_Config_File_And_Max_Log_File_Size_Bytes_Is_Set) {
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath,
+                                            std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "= prefix\n" + std::string(kLogsOutputSinkKey) +
+                                                "= 0\n" + std::string(kLogFileNameKey) + "= custom_log_file.log\n" + std::string(kMaxLogFileSizeBytesKey) +
+                                                "= 2097152\n");
+
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        EXPECT_EQ(logger_config.maxLogFileSizeBytes, 2097152);
+
+        RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Try_Read_Max_Log_Files_From_Config_File_But_It_Fails_And_Default_Max_Log_Files_Is_Set) {
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath,
+                                            std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "= prefix\n" + std::string(kLogsOutputSinkKey) +
+                                                "= 0\n" + std::string(kLogFileNameKey) + "= custom_log_file.log\n" + std::string(kMaxLogFileSizeBytesKey) +
+                                                "= 2097152\n" + std::string(kMaxLogFilesKey) + "= invalid_value\n");
+
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        EXPECT_EQ(logger_config.maxLogFiles, default_logger_config.maxLogFiles);
+
+        RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Try_Read_Max_Log_Files_From_Config_File_But_Is_Empty_And_Default_Max_Log_Files_Is_Set) {
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath,
+                                            std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "= prefix\n" + std::string(kLogsOutputSinkKey) +
+                                                "= 0\n" + std::string(kLogFileNameKey) + "= custom_log_file.log\n" + std::string(kMaxLogFileSizeBytesKey) +
+                                                "= 2097152\n" + std::string(kMaxLogFilesKey) + "=\n");
+
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        EXPECT_EQ(logger_config.maxLogFiles, default_logger_config.maxLogFiles);
+
+        RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Read_Max_Log_Files_From_Config_File_And_Max_Log_Files_Is_Set) {
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath,
+                                            std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "= prefix\n" + std::string(kLogsOutputSinkKey) +
+                                                "= 0\n" + std::string(kLogFileNameKey) + "= custom_log_file.log\n" + std::string(kMaxLogFileSizeBytesKey) +
+                                                "= 2097152\n" + std::string(kMaxLogFilesKey) + "= 10\n");
+
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        EXPECT_EQ(logger_config.maxLogFiles, 10);
+
+        RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
+    }
+
+    TEST_F(ConfigFileProviderTest, Load_Config_From_File_Successfull_And_Configuration_Returned) {
+        CreateConfigFileWithProvidedContent(kConfigFileWithNoLogPrefixPath,
+                                            std::string(kLogLevelKey) + "= 1\n" + std::string(kLogPrefixKey) + "= prefix\n" + std::string(kLogsOutputSinkKey) +
+                                                "= 0\n" + std::string(kLogFileNameKey) + "= custom_log_file.log\n" + std::string(kMaxLogFileSizeBytesKey) +
+                                                "= 2097152\n" + std::string(kMaxLogFilesKey) + "= 10\n");
+
+        LoggerConfig logger_config = config_file_provider.loadConfigFromFile(kConfigFileWithNoLogPrefixPath);
+        EXPECT_EQ(logger_config.logLevel, level::LOG_LEVEL::debug);
+        EXPECT_EQ(logger_config.logPrefix, "prefix");
+        EXPECT_EQ(logger_config.logsOutputSink, logs_output::SINK::console);
+        EXPECT_EQ(logger_config.maxLogFileSizeBytes, 2097152);
+        EXPECT_EQ(logger_config.logFileName, "custom_log_file.log");
+        EXPECT_EQ(logger_config.maxLogFiles, 10);
+
+        RemoveConfigFile(kConfigFileWithNoLogPrefixPath);
+    }
 
     TEST_F(ConfigFileProviderTest, Trim_Empty_String_And_Empty_String_Returned) {}
 
