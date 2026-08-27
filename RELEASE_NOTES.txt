@@ -217,3 +217,4 @@
 2026-08-27 07:18:46 +0200 | v2.1.51 | Enhance configuration handling by updating LoggerConfig methods and integrating ConfigFileProvider; add error handling for empty config file path
 2026-08-27 07:26:30 +0200 | v2.1.52 | Add mock implementation for ConfigFileProvider and update tests to integrate it
 2026-08-27 07:34:19 +0200 | v2.1.53 | Add changeLevel call in parameterized test to set log level to trace
+2026-08-27 07:40:10 +0200 | v2.1.54 | Add ConfigFileProviderTest to unit tests
