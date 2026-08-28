@@ -244,3 +244,5 @@
 2026-08-28 12:51:45 +0200 | v2.2.78 | Refactor code for consistency and readability across multiple files
 2026-08-28 12:54:37 +0200 | v2.2.79 | Add code formatting section to README.md
 2026-08-28 13:12:28 +0200 | v2.2.80 | Update copyright years and remove author comments in header files
+2026-08-28 14:10:21 +0200 | v2.2.81 | Add new logging macros for changing log level, logs sink, and flushing
+2026-08-28 14:18:50 +0200 | v2.2.82 | Replace include guards with #pragma once in multiple header files and update copyright year

@@ -30,8 +30,7 @@
  *
  */
 
-#ifndef INCLUDE_EQUINOXLOGGERENGINEIMPL_H_
-#define INCLUDE_EQUINOXLOGGERENGINEIMPL_H_
+#pragma once
 
 #include <atomic>
 #include <memory>
@@ -81,5 +80,3 @@ namespace equinox {
     };
 
 } /*namespace equinox*/
-
-#endif /* INCLUDE_EQUINOXLOGGERENGINEIMPL_H_ */

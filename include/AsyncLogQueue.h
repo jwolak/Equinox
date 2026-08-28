@@ -30,8 +30,7 @@
  *
  */
 
-#ifndef INCLUDE_ASYNCLOGQUEUE_H_
-#define INCLUDE_ASYNCLOGQUEUE_H_
+#pragma once
 
 #include <condition_variable>
 #include <cstddef>
@@ -66,5 +65,3 @@ namespace equinox {
         bool mStopRequested_;
     };
 }  // namespace equinox
-
-#endif /* INCLUDE_ASYNCLOGQUEUE_H_ */

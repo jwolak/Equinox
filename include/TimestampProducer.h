@@ -30,8 +30,7 @@
  *
  */
 
-#ifndef INCLUDE_TIMESTAMPPRODUCER_H_
-#define INCLUDE_TIMESTAMPPRODUCER_H_
+#pragma once
 
 #include <string>
 
@@ -52,5 +51,3 @@ namespace equinox {
     };
 
 } /*namespace equinox*/
-
-#endif /* INCLUDE_TIMESTAMPPRODUCER_H_ */

@@ -30,8 +30,7 @@
  *
  */
 
-#ifndef INCLUDE_COLORFORMATTER_H_
-#define INCLUDE_COLORFORMATTER_H_
+#pragma once
 
 #include <string>
 #include <string_view>
@@ -70,5 +69,3 @@ namespace equinox {
     };
 
 } /*namespace equinox*/
-
-#endif /* INCLUDE_COLORFORMATTER_H_ */

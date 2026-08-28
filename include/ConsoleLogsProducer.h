@@ -30,8 +30,7 @@
  *
  */
 
-#ifndef INCLUDE_CONSOLELOGSPRODUCER_H_
-#define INCLUDE_CONSOLELOGSPRODUCER_H_
+#pragma once
 
 #include <memory>
 #include <mutex>
@@ -66,5 +65,3 @@ namespace equinox {
     };
 
 } /*namespace equinox*/
-
-#endif /* INCLUDE_CONSOLELOGSPRODUCER_H_ */

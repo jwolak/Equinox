@@ -30,8 +30,7 @@
  *
  */
 
-#ifndef INCLUDE_FILELOGSPRODUCER_H_
-#define INCLUDE_FILELOGSPRODUCER_H_
+#pragma once
 
 #include <cstddef>
 
@@ -102,5 +101,3 @@ namespace equinox {
         std::size_t mNextRotationIndex_;
     };
 } /*namespace equinox*/
-
-#endif /* INCLUDE_FILELOGSPRODUCER_H_ */

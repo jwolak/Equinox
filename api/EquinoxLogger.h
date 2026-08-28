@@ -1,7 +1,7 @@
 /*-
  * BSD 3-Clause License
  *
- * Copyright (c) 2023, Janusz Wolak
+ * Copyright (c) 2023, 2026 Janusz Wolak
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,8 +30,7 @@
  *
  */
 
-#ifndef API_EQUINOXLOGGER_H_
-#define API_EQUINOXLOGGER_H_
+#pragma once
 
 #include "EquinoxLoggerCommon.h"
 #include "EquinoxLoggerEngine.h"
@@ -148,5 +147,3 @@ namespace equinox {
     EQUINOX_API void flush();
 
 } /*namespace equinox*/
-
-#endif /* API_EQUINOXLOGGER_H_ */
