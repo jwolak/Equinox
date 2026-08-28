@@ -1,10 +1,3 @@
-/*
- * AsyncLogQueueEngine.cpp
- *
- *  Created on: 2026
- *      Author: Janusz Wolak
- */
-
 /*-
  * BSD 3-Clause License
  *

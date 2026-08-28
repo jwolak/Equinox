@@ -1,10 +1,3 @@
-/*
- * AsyncLogQueueEngine.h
- *
- *  Created on: 2026
- *      Author: Janusz Wolak
- */
-
 #ifndef INCLUDE_ASYNCLOGQUEUEENGINE_H_
 #define INCLUDE_ASYNCLOGQUEUEENGINE_H_
 

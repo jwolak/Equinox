@@ -1,10 +1,3 @@
-/*
- * EquinoxLoggerEngine.h
- *
- *  Created on: 2023
- *      Author: Janusz Wolak
- */
-
 /*-
  * BSD 3-Clause License
  *
