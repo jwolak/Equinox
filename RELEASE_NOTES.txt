@@ -241,3 +241,4 @@
 2026-08-28 09:57:43 +0200 | v2.2.75 | Refactor LoggerConfig to use default constants for log level and output sink
 2026-08-28 09:58:34 +0200 | v2.2.76 | Add support for 'off' log level in LoggerConfig
 2026-08-28 11:45:33 +0200 | v2.2.77 | Add tests for setupFromConfigFile in EquinoxLogger and LoggerConfig
+2026-08-28 12:51:45 +0200 | v2.2.78 | Refactor code for consistency and readability across multiple files

@@ -86,7 +86,7 @@ namespace equinox {
         void logMessage(const std::string& messageToLog) override;
         void flush() override;
 
-    protected:
+       protected:
         void openLogFileAppend();
         void openLogFileTruncate();
         void rotateIfNeeded();
@@ -99,8 +99,7 @@ namespace equinox {
         std::size_t& GetMaxLogFiles();
         std::size_t& GetNextRotationIndex();
 
-
-    private:
+       private:
         std::mutex mMessageBufferAccessLock_;
         std::shared_ptr<ITimestampProducer> mTimestampProducer;
         std::ofstream mFdLogFile_;

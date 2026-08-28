@@ -43,6 +43,7 @@
 #include <condition_variable>
 #include <cstddef>
 #include <cstdint>
+
 #include <deque>
 #include <mutex>
 #include <string>
@@ -51,26 +52,26 @@
 #include "IAsyncLogQueue.h"
 
 namespace equinox {
-class AsyncLogQueue : public IAsyncLogQueue {
- public:
-  explicit AsyncLogQueue(size_t queue_max_size);
-  ~AsyncLogQueue();
-  void enqueue(const std::string& log_message) override;
-  bool dequeue(std::vector<std::string>& out, size_t max_batch_size, uint32_t timeout_ms) override;
-  void stop() override;
+    class AsyncLogQueue : public IAsyncLogQueue {
+       public:
+        explicit AsyncLogQueue(size_t queue_max_size);
+        ~AsyncLogQueue();
+        void enqueue(const std::string& log_message) override;
+        bool dequeue(std::vector<std::string>& out, size_t max_batch_size, uint32_t timeout_ms) override;
+        void stop() override;
 
- protected:
-  std::deque<std::string>& getLogMessagesQueue();
-  void setStopRequested(bool stopRequested);
-  bool getStopRequested();
+       protected:
+        std::deque<std::string>& getLogMessagesQueue();
+        void setStopRequested(bool stopRequested);
+        bool getStopRequested();
 
- private:
-  size_t mQueueMaxSize_;
-  std::deque<std::string> mLogMessagesQueue_;
-  std::mutex mLogMessagesQueueMutex_;
-  std::condition_variable mDataInQueueAvailableConditionVariable_;
-  bool mStopRequested_;
-};
+       private:
+        size_t mQueueMaxSize_;
+        std::deque<std::string> mLogMessagesQueue_;
+        std::mutex mLogMessagesQueueMutex_;
+        std::condition_variable mDataInQueueAvailableConditionVariable_;
+        bool mStopRequested_;
+    };
 }  // namespace equinox
 
 #endif /* INCLUDE_ASYNCLOGQUEUE_H_ */

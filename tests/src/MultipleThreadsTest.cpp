@@ -46,45 +46,45 @@
 #include "EquinoxLogger.h"
 
 void LogTraceInThreadOne() {
-  equinox::trace("%s", "Message in Trace from thread one");
+    equinox::trace("%s", "Message in Trace from thread one");
 }
 
 void LogDebugInThreadTwo() {
-  equinox::debug("%s", "Message in Debug from thread two");
+    equinox::debug("%s", "Message in Debug from thread two");
 }
 
 TEST(MultipleThreadsTest, Log_Trace_And_Debug_Then_Trace_Printed_As_First) {
-  equinox::setup(equinox::level::LOG_LEVEL::trace, std::string("MultipleThreadsTest"), equinox::logs_output::SINK::console);
+    equinox::setup(equinox::level::LOG_LEVEL::trace, std::string("MultipleThreadsTest"), equinox::logs_output::SINK::console);
 
-  auto fut1 = std::async(std::launch::async, LogTraceInThreadOne);
-  auto fut2 = std::async(std::launch::async, LogDebugInThreadTwo);
+    auto fut1 = std::async(std::launch::async, LogTraceInThreadOne);
+    auto fut2 = std::async(std::launch::async, LogDebugInThreadTwo);
 
-  fut1.wait();
-  fut2.wait();
+    fut1.wait();
+    fut2.wait();
 }
 
 TEST(MultipleThreadsTest, Repeated_Concurrent_Logging_Should_Not_Crash) {
-  for (int iteration = 0; iteration < 25; ++iteration) {
-    equinox::setup(equinox::level::LOG_LEVEL::trace, std::string("MultipleThreadsStressTest"), equinox::logs_output::SINK::console);
+    for (int iteration = 0; iteration < 25; ++iteration) {
+        equinox::setup(equinox::level::LOG_LEVEL::trace, std::string("MultipleThreadsStressTest"), equinox::logs_output::SINK::console);
 
-    std::vector<std::future<void>> tasks;
-    tasks.reserve(8);
-    for (int i = 0; i < 8; ++i) {
-      tasks.emplace_back(std::async(std::launch::async, [i]() {
-        if (i % 2 == 0) {
-          equinox::trace("%s", "Concurrent trace message");
-        } else {
-          equinox::debug("%s", "Concurrent debug message");
+        std::vector<std::future<void>> tasks;
+        tasks.reserve(8);
+        for (int i = 0; i < 8; ++i) {
+            tasks.emplace_back(std::async(std::launch::async, [i]() {
+                if (i % 2 == 0) {
+                    equinox::trace("%s", "Concurrent trace message");
+                } else {
+                    equinox::debug("%s", "Concurrent debug message");
+                }
+            }));
         }
-      }));
+
+        for (auto& task : tasks) {
+            task.wait();
+        }
+
+        equinox::flush();
     }
 
-    for (auto& task : tasks) {
-      task.wait();
-    }
-
-    equinox::flush();
-  }
-
-  SUCCEED();
+    SUCCEED();
 }

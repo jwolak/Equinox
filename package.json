@@ -1,11 +1,13 @@
 {
   "name": "equinox-logger-2",
-  "version": "2.2.77",
+  "version": "2.2.78",
   "private": true,
   "description": "Thread safety C++ logger with file and console output support.",
   "scripts": {
     "hooks:install": "sh ./scripts/install_hooks.sh",
     "release-notes:generate": "sh ./scripts/generate_release_history.sh",
-    "readme:sync-version": "python3 ./scripts/sync_readme_version.py"
+    "readme:sync-version": "python3 ./scripts/sync_readme_version.py",
+    "format": "bash ./scripts/format.sh",
+    "format:check": "bash ./scripts/format.sh --check"
   }
 }

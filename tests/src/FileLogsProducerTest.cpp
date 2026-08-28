@@ -14,28 +14,28 @@ namespace file_logs_producer_test {
         const std::string kTestLogFileName = "test_log.log";
         const std::size_t kTestMaxLogFileSizeBytes = 1024U;
         const std::size_t kTestMaxLogFiles = 5U;
-    }
+    }  // namespace
 
     class FileLogsProducerTestable : public FileLogsProducer {
        public:
-       FileLogsProducerTestable(std::shared_ptr<ITimestampProducer> timestampProducer) : FileLogsProducer(timestampProducer) {}
+        FileLogsProducerTestable(std::shared_ptr<ITimestampProducer> timestampProducer) : FileLogsProducer(timestampProducer) {}
 
-       using FileLogsProducer::openLogFileAppend;
-       using FileLogsProducer::openLogFileTruncate;
-       using FileLogsProducer::rotateIfNeeded;
-       using FileLogsProducer::buildRotatedFileName;
-       using FileLogsProducer::isRotationEnabled;
-       using FileLogsProducer::GetLogFileStream;
-       using FileLogsProducer::GetLogFileName;
-       using FileLogsProducer::GetMaxLogFileSizeBytes;
-       using FileLogsProducer::GetMaxLogFiles;
-       using FileLogsProducer::GetNextRotationIndex;
+        using FileLogsProducer::buildRotatedFileName;
+        using FileLogsProducer::GetLogFileName;
+        using FileLogsProducer::GetLogFileStream;
+        using FileLogsProducer::GetMaxLogFiles;
+        using FileLogsProducer::GetMaxLogFileSizeBytes;
+        using FileLogsProducer::GetNextRotationIndex;
+        using FileLogsProducer::isRotationEnabled;
+        using FileLogsProducer::openLogFileAppend;
+        using FileLogsProducer::openLogFileTruncate;
+        using FileLogsProducer::rotateIfNeeded;
     };
 
     class FileLogsProducerTest : public Test {
-    public:
+       public:
         FileLogsProducerTest() : timestamp_producer_mock(std::make_shared<StrictMock<TimestampProducerMock>>()), file_logs_producer(timestamp_producer_mock) {}
-        
+
         std::shared_ptr<StrictMock<TimestampProducerMock>> timestamp_producer_mock;
         FileLogsProducerTestable file_logs_producer;
     };
@@ -58,7 +58,6 @@ namespace file_logs_producer_test {
         EXPECT_EQ(file_logs_producer.GetMaxLogFiles(), kTestMaxLogFiles);
     }
 
-    
     TEST_F(FileLogsProducerTest, Try_Setup_File_But_File_Is_Already_Opened_And_Close_Failed) {
         file_logs_producer.setupFile(kTestLogFileName, 0U, 0U);
         file_logs_producer.GetLogFileStream().exceptions(std::ofstream::failbit | std::ofstream::badbit);
@@ -168,9 +167,9 @@ namespace file_logs_producer_test {
         EXPECT_NO_THROW(file_logs_producer.rotateIfNeeded());
     }
 
-     TEST_F(FileLogsProducerTest, Try_Rotate_If_Needed_But_File_Size_Is_Below_Threshold) {
+    TEST_F(FileLogsProducerTest, Try_Rotate_If_Needed_But_File_Size_Is_Below_Threshold) {
         file_logs_producer.GetLogFileName() = kTestLogFileName;
-        file_logs_producer.GetMaxLogFileSizeBytes() = 1024U; 
+        file_logs_producer.GetMaxLogFileSizeBytes() = 1024U;
         file_logs_producer.GetMaxLogFiles() = kTestMaxLogFiles;
         file_logs_producer.openLogFileAppend();
         EXPECT_CALL(*timestamp_producer_mock, getTimestamp()).Times(0);
@@ -226,7 +225,7 @@ namespace file_logs_producer_test {
         EXPECT_TRUE(file_logs_producer.GetLogFileStream().is_open());
         EXPECT_EQ(file_logs_producer.GetNextRotationIndex(), 2U);
     }
-        
+
     TEST_F(FileLogsProducerTest, Try_Log_Message_But_File_Is_Not_Open) {
         EXPECT_CALL(*timestamp_producer_mock, getTimestamp()).Times(0);
         EXPECT_CALL(*timestamp_producer_mock, getTimestampInUs()).Times(0);
@@ -234,7 +233,7 @@ namespace file_logs_producer_test {
         EXPECT_NO_THROW(file_logs_producer.logMessage("Test message"));
     }
 
-     TEST_F(FileLogsProducerTest, Try_Log_Message_But_Write_Failed) {
+    TEST_F(FileLogsProducerTest, Try_Log_Message_But_Write_Failed) {
         file_logs_producer.GetLogFileName() = kTestLogFileName;
         file_logs_producer.openLogFileAppend();
         file_logs_producer.GetLogFileStream().exceptions(std::ofstream::failbit | std::ofstream::badbit);
@@ -287,4 +286,4 @@ namespace file_logs_producer_test {
         EXPECT_NO_THROW(file_logs_producer.flush());
     }
 
-}
+}  // namespace file_logs_producer_test

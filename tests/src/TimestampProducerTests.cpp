@@ -46,27 +46,27 @@
 
 namespace time_stampproducer_tests {
 
-class TimestampProducerTests : public ::testing::Test {
- public:
-  TimestampProducerTests() : mTimestampProducer{std::make_unique<equinox::TimestampProducer>()} {}
+    class TimestampProducerTests : public ::testing::Test {
+       public:
+        TimestampProducerTests() : mTimestampProducer{std::make_unique<equinox::TimestampProducer>()} {}
 
-  std::unique_ptr<equinox::ITimestampProducer> mTimestampProducer;
-};
+        std::unique_ptr<equinox::ITimestampProducer> mTimestampProducer;
+    };
 
-TEST_F(TimestampProducerTests, Call_getTimestamp_And_No_Failure) {
-  ASSERT_NO_FATAL_FAILURE(mTimestampProducer->getTimestamp());
-}
+    TEST_F(TimestampProducerTests, Call_getTimestamp_And_No_Failure) {
+        ASSERT_NO_FATAL_FAILURE(mTimestampProducer->getTimestamp());
+    }
 
-TEST_F(TimestampProducerTests, Call_getTimestampInUs_And_No_Failure) {
-  ASSERT_NO_FATAL_FAILURE(mTimestampProducer->getTimestampInUs());
-}
+    TEST_F(TimestampProducerTests, Call_getTimestampInUs_And_No_Failure) {
+        ASSERT_NO_FATAL_FAILURE(mTimestampProducer->getTimestampInUs());
+    }
 
-TEST_F(TimestampProducerTests, Call_getTimestamp_And_Print_Result) {
-  std::cout << mTimestampProducer->getTimestamp() << std::endl;
-}
+    TEST_F(TimestampProducerTests, Call_getTimestamp_And_Print_Result) {
+        std::cout << mTimestampProducer->getTimestamp() << std::endl;
+    }
 
-TEST_F(TimestampProducerTests, Call_getTimestampInUs_And_Print_Result) {
-  std::cout << mTimestampProducer->getTimestampInUs() << std::endl;
-}
+    TEST_F(TimestampProducerTests, Call_getTimestampInUs_And_Print_Result) {
+        std::cout << mTimestampProducer->getTimestampInUs() << std::endl;
+    }
 
 } /*namespace time_stampproducer_tests*/
