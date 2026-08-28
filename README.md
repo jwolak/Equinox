@@ -1,4 +1,4 @@
-# Equinox logging engine 2.2.79
+# Equinox logging engine 2.2.80
 
 **Logger with support logging to file, console or both. Six levels available:**
 - Trace 
@@ -383,5 +383,5 @@ To regenerate the report:
 
 ## License
 **BSD 3-Clause License**
-<br/>Copylefts (c) 2026, Janusz Wolak
-<br/>All rights not reserved.
+<br/>Copyright (c) 2023 - 2026, Janusz Wolak
+<br/>All rights reserved.
