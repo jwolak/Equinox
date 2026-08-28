@@ -123,6 +123,13 @@ namespace equinox_logger_engine_impl_test {
         EXPECT_EQ(maxActiveCalls.load(), 1);
     }
 
+    TEST_F(EquinoxLoggerEngineTest, Call_SetupFromConfigFile_setupFromConfigFile_From_IEquinoxLoggerEngineImpl_Called) {
+        std::string config_file_path = "test_config_file_path";
+        EXPECT_CALL(*equinox_logger_engine_impl_mock, setupFromConfigFile(config_file_path)).Times(1);
+
+        equinox_logger_engine.setupFromConfigFile(config_file_path);
+    }
+
     TEST_P(EquinoxLoggerEngineSetupParamTest, Call_Setup_With_Various_Levels_Console_Sink_And_Verify_Parameters_And_Returns_True) {
         const auto logLevel = GetParam();
         EXPECT_CALL(*equinox_logger_engine_impl_mock,

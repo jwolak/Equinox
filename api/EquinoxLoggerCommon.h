@@ -90,6 +90,9 @@ namespace logs_output {
 enum class SINK : int { console = EQUINOX_SINK_CONSOLE, file = EQUINOX_SINK_FILE, console_and_file = EQUINOX_SINK_CONSOLE_AND_FILE };
 } /*namespace logs_output*/
 
+constexpr level::LOG_LEVEL kDefaultLogLevel = level::LOG_LEVEL::info;
+constexpr logs_output::SINK kDefaultLogsOutputSink = logs_output::SINK::console;
+
 } /*namespace equinox*/
 
 #endif /* API_EQUINOXLOGGERCOMMON_H_ */

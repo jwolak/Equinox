@@ -53,9 +53,9 @@ namespace equinox {
         std::size_t maxLogFiles;
 
         void SetDefaults() {
-            logLevel = level::LOG_LEVEL::info;
+            logLevel = kDefaultLogLevel;
             logPrefix = kLogDefaultPrefix;
-            logsOutputSink = logs_output::SINK::file;
+            logsOutputSink = kDefaultLogsOutputSink;
             logFileName = kLogFileName;
             maxLogFileSizeBytes = kDefaultMaxLogFileSizeBytes;
             maxLogFiles = kDefaultMaxLogFiles;
@@ -90,6 +90,10 @@ namespace equinox {
 
                 case 5:
                     this->logLevel = level::LOG_LEVEL::critical;
+                    break;
+
+                case 6:
+                    this->logLevel = level::LOG_LEVEL::off;
                     break;
             }
         }
