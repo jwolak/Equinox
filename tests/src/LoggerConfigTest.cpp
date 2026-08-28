@@ -44,31 +44,91 @@ namespace logger_config_test {
         LoggerConfig logger_config;
     };
 
-    TEST_F(LoggerConfigTest, Default_Constructor_Initializes_Logger_Config_And_Defaults_Are_Set) {}
+    TEST_F(LoggerConfigTest, Default_Constructor_Initializes_Logger_Config_And_Defaults_Are_Set) {
+        EXPECT_EQ(logger_config.logLevel, level::LOG_LEVEL::info);
+        EXPECT_EQ(logger_config.logPrefix, kLogDefaultPrefix);
+        EXPECT_EQ(logger_config.logsOutputSink, logs_output::SINK::file);
+        EXPECT_EQ(logger_config.logFileName, kLogFileName);
+        EXPECT_EQ(logger_config.maxLogFileSizeBytes, kDefaultMaxLogFileSizeBytes);
+        EXPECT_EQ(logger_config.maxLogFiles, kDefaultMaxLogFiles);
+    }
 
-    TEST_F(LoggerConfigTest, Compare_Same_Logger_Config_Struct_And_True_Returned) {}
+    TEST_F(LoggerConfigTest, Compare_Same_Logger_Config_Struct_And_True_Returned) {
+        LoggerConfig another_logger_config{};
 
-    TEST_F(LoggerConfigTest, Compare_Different_Logger_Config_Struct_And_False_Returned) {}
+        EXPECT_TRUE(logger_config == another_logger_config);
+    }
 
-    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_Zero_And_Trace_Logger_Level_Is_Set) {}
+    TEST_F(LoggerConfigTest, Compare_Different_Logger_Config_Struct_And_False_Returned) {
+        LoggerConfig another_logger_config{};
+        another_logger_config.logLevel = level::LOG_LEVEL::debug;
 
-    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_One_And_Debug_Logger_Level_Is_Set) {}
+        EXPECT_FALSE(logger_config == another_logger_config);
+    }
 
-    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_Two_And_Info_Logger_Level_Is_Set) {}
+    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_Zero_And_Trace_Logger_Level_Is_Set) {
+        logger_config.SetLogLevelFromInt(0);
 
-    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_Three_And_Warn_Logger_Level_Is_Set) {}
+        EXPECT_EQ(logger_config.logLevel, level::LOG_LEVEL::trace);
+    }
 
-    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_Four_And_Error_Logger_Level_Is_Set) {}
+    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_One_And_Debug_Logger_Level_Is_Set) {
+        logger_config.SetLogLevelFromInt(1);
 
-    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_Five_And_Critical_Logger_Level_Is_Set) {}
+        EXPECT_EQ(logger_config.logLevel, level::LOG_LEVEL::debug);
+    }
 
-    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_Six_And_Off_Logger_Level_Is_Set) {}
+    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_Two_And_Info_Logger_Level_Is_Set) {
+        logger_config.SetLogLevelFromInt(2);
 
-    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_Invalid_And_Default_Logger_Level_Is_Set) {}
+        EXPECT_EQ(logger_config.logLevel, level::LOG_LEVEL::info);
+    }
 
-    TEST_F(LoggerConfigTest, Set_Sink_Output_From_Int_Zero_And_Console_Sink_Is_Set) {}
+    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_Three_And_Warn_Logger_Level_Is_Set) {
+        logger_config.SetLogLevelFromInt(3);
 
-    TEST_F(LoggerConfigTest, Set_Sink_Output_From_Int_One_And_File_Sink_Is_Set) {}
+        EXPECT_EQ(logger_config.logLevel, level::LOG_LEVEL::warning);
+    }
 
-    TEST_F(LoggerConfigTest, Set_Sink_Output_From_Int_Invalid_And_Default_Sink_Is_Set) {}
+    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_Four_And_Error_Logger_Level_Is_Set) {
+        logger_config.SetLogLevelFromInt(4);
+
+        EXPECT_EQ(logger_config.logLevel, level::LOG_LEVEL::error);
+    }
+
+    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_Five_And_Critical_Logger_Level_Is_Set) {
+        logger_config.SetLogLevelFromInt(5);
+
+        EXPECT_EQ(logger_config.logLevel, level::LOG_LEVEL::critical);
+    }
+
+    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_Six_And_Off_Logger_Level_Is_Set) {
+        logger_config.SetLogLevelFromInt(6);
+
+        EXPECT_EQ(logger_config.logLevel, level::LOG_LEVEL::off);
+    }
+
+    TEST_F(LoggerConfigTest, Set_Logger_Level_From_Int_Invalid_And_Default_Logger_Level_Is_Set) {
+        logger_config.SetLogLevelFromInt(-1);
+
+        EXPECT_EQ(logger_config.logLevel, level::LOG_LEVEL::info);
+    }
+
+    TEST_F(LoggerConfigTest, Set_Sink_Output_From_Int_Zero_And_Console_Sink_Is_Set) {
+        logger_config.SetLogsOutputSinkFromInt(0);
+
+        EXPECT_EQ(logger_config.logsOutputSink, logs_output::SINK::console);
+    }
+
+    TEST_F(LoggerConfigTest, Set_Sink_Output_From_Int_One_And_File_Sink_Is_Set) {
+        logger_config.SetLogsOutputSinkFromInt(1);
+
+        EXPECT_EQ(logger_config.logsOutputSink, logs_output::SINK::file);
+    }
+
+    TEST_F(LoggerConfigTest, Set_Sink_Output_From_Int_Invalid_And_Default_Sink_Is_Set) {
+        logger_config.SetLogsOutputSinkFromInt(-1);
+
+        EXPECT_EQ(logger_config.logsOutputSink, logs_output::SINK::console);
+    }
 }  // namespace logger_config_test
