@@ -30,8 +30,7 @@
  *
  */
 
-#ifndef API_EQUINOXLOGGERCOMMON_H_
-#define API_EQUINOXLOGGERCOMMON_H_
+#pragma once
 
 #include <cstddef>
 
@@ -88,5 +87,3 @@ namespace equinox {
     constexpr logs_output::SINK kDefaultLogsOutputSink = logs_output::SINK::console;
 
 } /*namespace equinox*/
-
-#endif /* API_EQUINOXLOGGERCOMMON_H_ */

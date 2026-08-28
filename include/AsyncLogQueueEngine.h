@@ -1,5 +1,4 @@
-#ifndef INCLUDE_ASYNCLOGQUEUEENGINE_H_
-#define INCLUDE_ASYNCLOGQUEUEENGINE_H_
+#pragma once
 
 /*-
  * BSD 3-Clause License
@@ -76,5 +75,3 @@ namespace equinox {
         logs_output::SINK mLogsOutputSink_;
     };
 }  // namespace equinox
-
-#endif /* INCLUDE_ASYNCLOGQUEUEENGINE_H_ */

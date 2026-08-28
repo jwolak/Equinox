@@ -1,6 +1,6 @@
 {
   "name": "equinox-logger-2",
-  "version": "2.2.81",
+  "version": "2.2.82",
   "private": true,
   "description": "Thread safety C++ logger with file and console output support.",
   "scripts": {

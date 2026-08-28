@@ -30,8 +30,7 @@
  *
  */
 
-#ifndef API_EQUINOXLOGGERENGINE_H_
-#define API_EQUINOXLOGGERENGINE_H_
+#pragma once
 
 #include <fmt/printf.h>
 
@@ -95,5 +94,3 @@ namespace equinox {
     };
 
 } /*namespace equinox*/
-
-#endif /* API_EQUINOXLOGGERENGINE_H_ */

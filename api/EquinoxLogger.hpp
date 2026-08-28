@@ -1,7 +1,4 @@
-#ifndef API_EQUINOXLOGGER_HPP_
-#define API_EQUINOXLOGGER_HPP_
+#pragma once
 
 #include "EquinoxLogger.h"
 #include "EquinoxLoggerMacros.h"
-
-#endif /* API_EQUINOXLOGGER_HPP_ */
