@@ -238,3 +238,4 @@
 2026-08-27 15:23:08 +0200 | v2.2.72 | Add configuration file support to README and update example usage
 2026-08-28 08:08:17 +0200 | v2.2.73 | Add LoggerConfigTest to validate logger configuration functionality
 2026-08-28 09:50:34 +0200 | v2.2.74 | Enhance LoggerConfigTest with comprehensive tests for logger configuration functionality
+2026-08-28 09:57:43 +0200 | v2.2.75 | Refactor LoggerConfig to use default constants for log level and output sink

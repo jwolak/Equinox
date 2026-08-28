@@ -45,9 +45,9 @@ namespace logger_config_test {
     };
 
     TEST_F(LoggerConfigTest, Default_Constructor_Initializes_Logger_Config_And_Defaults_Are_Set) {
-        EXPECT_EQ(logger_config.logLevel, level::LOG_LEVEL::info);
+        EXPECT_EQ(logger_config.logLevel, kDefaultLogLevel);
         EXPECT_EQ(logger_config.logPrefix, kLogDefaultPrefix);
-        EXPECT_EQ(logger_config.logsOutputSink, logs_output::SINK::file);
+        EXPECT_EQ(logger_config.logsOutputSink, kDefaultLogsOutputSink);
         EXPECT_EQ(logger_config.logFileName, kLogFileName);
         EXPECT_EQ(logger_config.maxLogFileSizeBytes, kDefaultMaxLogFileSizeBytes);
         EXPECT_EQ(logger_config.maxLogFiles, kDefaultMaxLogFiles);
