@@ -21,3 +21,9 @@
     equinox::setup(logLevel, logPrefix, logsOutputSink, logFileName, maxLogFileSizeBytes, maxLogFiles)
 
 #define SETUP_FROM_CONFIG_FILE(configFilePath) equinox::setupFromConfigFile(configFilePath)
+
+#define CHANGE_LOG_LEVEL(newLogLevel) equinox::changeLogLevel(newLogLevel)
+
+#define CHANGE_LOGS_SINK(newLogsOutputSink) equinox::changeLogsSink(newLogsOutputSink)
+
+#define FLUSH equinox::flush()
