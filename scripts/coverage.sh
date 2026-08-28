@@ -242,6 +242,7 @@ lcov --remove "$COVERAGE_DIR/coverage.info" \
     '*/test/*' \
     '*/.vscode/*' \
     '*/CMakeFiles/*' \
+    '*/ThirdParty/fmt/*' \
     '*_test.cpp' \
     --output-file "$COVERAGE_DIR/coverage.info" \
     --ignore-errors unused \

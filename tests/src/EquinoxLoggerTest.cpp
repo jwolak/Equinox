@@ -132,4 +132,9 @@ namespace equinox_logger_test {
         EXPECT_TRUE(equinox::changeLogsOutputSink(equinox::logs_output::SINK::console));
     }
 
+    TEST(EquinoxLoggerTest, SetupFromConfigFile_Calls_SetupFromConfigFile_And_Returns_True) {
+        std::string config_file_path = "test_config_file_path";
+        ASSERT_TRUE(equinox::setupFromConfigFile(config_file_path));
+    }
+
 }  // namespace equinox_logger_test

@@ -126,6 +126,12 @@ namespace logger_config_test {
         EXPECT_EQ(logger_config.logsOutputSink, logs_output::SINK::file);
     }
 
+    TEST_F(LoggerConfigTest, Set_Sink_Output_From_Int_Two_And_Both_Sinks_Are_Set) {
+        logger_config.SetLogsOutputSinkFromInt(2);
+
+        EXPECT_EQ(logger_config.logsOutputSink, logs_output::SINK::console_and_file);
+    }
+
     TEST_F(LoggerConfigTest, Set_Sink_Output_From_Int_Invalid_And_Default_Sink_Is_Set) {
         logger_config.SetLogsOutputSinkFromInt(-1);
 
