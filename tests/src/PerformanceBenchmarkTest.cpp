@@ -45,7 +45,7 @@ namespace {
     }
 
     void RunSinkThroughputBenchmarkImpl(const std::string& sinkName, equinox::logs_output::SINK sinkType, const std::string& baseFilePath,
-                                       const std::vector<int>& messageLengths, int iterationsPerCase) {
+                                        const std::vector<int>& messageLengths, int iterationsPerCase) {
         for (const int messageLength : messageLengths) {
             const std::string logFilePath = baseFilePath + "_" + std::to_string(messageLength) + ".log";
             std::filesystem::remove(logFilePath);

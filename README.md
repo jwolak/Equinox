@@ -1,4 +1,4 @@
-# Equinox logging engine 2.2.77
+# Equinox logging engine 2.2.79
 
 **Logger with support logging to file, console or both. Six levels available:**
 - Trace 
@@ -13,6 +13,7 @@
 
 - [Features](#features)
 - [Building for source](#building-for-source)
+- [Code formatting](#code-formatting)
 - [Install](#install)
 - [Logging macros and `NDEBUG`](#logging-macros-and-ndebug)
 - [Example](#example)
@@ -31,6 +32,34 @@
 ```sh
 cmake CMakeLists.txt
 make
+```
+
+[Back to table of contents](#table-of-contents)
+
+## Code formatting
+
+Source files in `api/`, `include/`, `src/`, `examples/`, and unit tests in `tests/` (excluding `ThirdParty/` and build directories) are formatted according to [.clang-format](.clang-format) using `scripts/format.sh`:
+
+```sh
+# Format all source files and unit tests
+./scripts/format.sh
+
+# Check formatting compliance without modifying files
+./scripts/format.sh --check
+
+# Verbose output
+./scripts/format.sh --verbose
+```
+
+Alternatively, code formatting can be triggered via `npm` or `build.sh`:
+
+```sh
+# Via npm
+npm run format
+npm run format:check
+
+# Via build script
+./scripts/build.sh --format-only
 ```
 
 [Back to table of contents](#table-of-contents)

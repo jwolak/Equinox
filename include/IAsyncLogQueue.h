@@ -33,15 +33,16 @@
 #pragma once
 
 #include <cstdint>
+
 #include <string>
 #include <vector>
 
 namespace equinox {
-class IAsyncLogQueue {
- public:
-  virtual ~IAsyncLogQueue() = default;
-  virtual void enqueue(const std::string& log_message) = 0;
-  virtual bool dequeue(std::vector<std::string>& out, size_t max_batch_size, uint32_t timeout_ms) = 0;
-  virtual void stop() = 0;
-};
+    class IAsyncLogQueue {
+       public:
+        virtual ~IAsyncLogQueue() = default;
+        virtual void enqueue(const std::string& log_message) = 0;
+        virtual bool dequeue(std::vector<std::string>& out, size_t max_batch_size, uint32_t timeout_ms) = 0;
+        virtual void stop() = 0;
+    };
 }  // namespace equinox

@@ -376,34 +376,7 @@ generate_coverage() {
 
 format_code() {
     print_header "Formatting Source Code"
-
-    local search_dirs=(
-        "$PROJECT_ROOT/src"
-        "$PROJECT_ROOT/include"
-        "$PROJECT_ROOT/api"
-        "$PROJECT_ROOT/tests"
-        "$PROJECT_ROOT/examples"
-    )
-
-    local existing_dirs=()
-    local dir
-    for dir in "${search_dirs[@]}"; do
-        if [ -d "$dir" ]; then
-            existing_dirs+=("$dir")
-        fi
-    done
-
-    if [ ${#existing_dirs[@]} -eq 0 ]; then
-        print_warning "No source directories found to format"
-        return 0
-    fi
-
-    find "${existing_dirs[@]}" -type f \( \
-        -name "*.c" -o -name "*.cc" -o -name "*.cpp" -o -name "*.cxx" -o \
-        -name "*.h" -o -name "*.hpp" \
-    \) -print0 | xargs -0 -r clang-format -i -style=file
-
-    print_success "Formatting complete"
+    bash "${SCRIPT_DIR}/format.sh"
 }
 
 display_build_summary() {

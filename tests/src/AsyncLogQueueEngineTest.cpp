@@ -36,18 +36,20 @@
 
 namespace async_log_queue_engine_test {
 
-class AsyncLogQueueEngineTastable : public equinox::AsyncLogQueueEngine {
- public:
-  AsyncLogQueueEngineTastable(std::shared_ptr<equinox::ITimestampProducer> timestamp_procducer,
-                              std::unique_ptr<equinox::IConsoleLogsProducer> consoleLogsProducer, std::unique_ptr<equinox::IFileLogsProducer> fileLogsProducer,
-                              equinox::logs_output::SINK logsOutputSink, std::unique_ptr<equinox::IAsyncLogQueue> logMessageQueue)
-      : AsyncLogQueueEngine(timestamp_procducer, std::move(consoleLogsProducer), std::move(fileLogsProducer), logsOutputSink, std::move(logMessageQueue)) {}
-};
+    class AsyncLogQueueEngineTastable : public equinox::AsyncLogQueueEngine {
+       public:
+        AsyncLogQueueEngineTastable(std::shared_ptr<equinox::ITimestampProducer> timestamp_procducer,
+                                    std::unique_ptr<equinox::IConsoleLogsProducer> consoleLogsProducer,
+                                    std::unique_ptr<equinox::IFileLogsProducer> fileLogsProducer, equinox::logs_output::SINK logsOutputSink,
+                                    std::unique_ptr<equinox::IAsyncLogQueue> logMessageQueue)
+            : AsyncLogQueueEngine(timestamp_procducer, std::move(consoleLogsProducer), std::move(fileLogsProducer), logsOutputSink,
+                                  std::move(logMessageQueue)) {}
+    };
 
-class AsyncLogQueueEngineTest : public ::testing::Test {
- public:
-  AsyncLogQueueEngineTest() {}
+    class AsyncLogQueueEngineTest : public ::testing::Test {
+       public:
+        AsyncLogQueueEngineTest() {}
 
-  // AsyncLogQueueEngineTastable async_log_queue_engine;
-};
+        // AsyncLogQueueEngineTastable async_log_queue_engine;
+    };
 }  // namespace async_log_queue_engine_test

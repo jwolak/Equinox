@@ -37,175 +37,181 @@
 #include "AsyncLogQueue.h"
 
 namespace async_log_queue_test {
-namespace {
-constexpr size_t kTestQueueMaxSize = 10;
-constexpr const char* testMessage = "Test log message";
-}  // namespace
+    namespace {
+        constexpr size_t kTestQueueMaxSize = 10;
+        constexpr const char* testMessage = "Test log message";
+    }  // namespace
 
-class AsyncLogQueueForTests : public ::equinox::AsyncLogQueue {
- public:
-  explicit AsyncLogQueueForTests(size_t queue_max_size) : AsyncLogQueue(queue_max_size) {}
+    class AsyncLogQueueForTests : public ::equinox::AsyncLogQueue {
+       public:
+        explicit AsyncLogQueueForTests(size_t queue_max_size) : AsyncLogQueue(queue_max_size) {}
 
-  std::deque<std::string>& getInternalQueue() { return getLogMessagesQueue(); }
-  void setStopRequested(bool stopRequested) { AsyncLogQueue::setStopRequested(stopRequested); }
-  bool getStopRequested() { return AsyncLogQueue::getStopRequested(); }
-};
+        std::deque<std::string>& getInternalQueue() {
+            return getLogMessagesQueue();
+        }
+        void setStopRequested(bool stopRequested) {
+            AsyncLogQueue::setStopRequested(stopRequested);
+        }
+        bool getStopRequested() {
+            return AsyncLogQueue::getStopRequested();
+        }
+    };
 
-class AsyncLogQueueTest : public ::testing::Test {
- public:
-  AsyncLogQueueTest() : asyncLogQueue{kTestQueueMaxSize} {}
+    class AsyncLogQueueTest : public ::testing::Test {
+       public:
+        AsyncLogQueueTest() : asyncLogQueue{kTestQueueMaxSize} {}
 
-  AsyncLogQueueForTests asyncLogQueue;
-};
+        AsyncLogQueueForTests asyncLogQueue;
+    };
 
-TEST_F(AsyncLogQueueTest, Queue_Is_Full_And_Oldest_Message_Is_Removed) {
-  for (size_t i = 0; i < kTestQueueMaxSize; ++i) {
-    asyncLogQueue.enqueue("Log message " + std::to_string(i));
-  }
-  ASSERT_EQ(asyncLogQueue.getInternalQueue().size(), kTestQueueMaxSize);
-  asyncLogQueue.enqueue(testMessage);
+    TEST_F(AsyncLogQueueTest, Queue_Is_Full_And_Oldest_Message_Is_Removed) {
+        for (size_t i = 0; i < kTestQueueMaxSize; ++i) {
+            asyncLogQueue.enqueue("Log message " + std::to_string(i));
+        }
+        ASSERT_EQ(asyncLogQueue.getInternalQueue().size(), kTestQueueMaxSize);
+        asyncLogQueue.enqueue(testMessage);
 
-  ASSERT_EQ(asyncLogQueue.getInternalQueue().size(), kTestQueueMaxSize);
-}
-
-TEST_F(AsyncLogQueueTest, Queue_Is_Empty_And_After_Enqueue_Size_Is_One) {
-  ASSERT_EQ(asyncLogQueue.getInternalQueue().size(), 0);
-  asyncLogQueue.enqueue(testMessage);
-
-  ASSERT_EQ(asyncLogQueue.getInternalQueue().size(), 1);
-}
-
-TEST_F(AsyncLogQueueTest, Run_Enqueue_From_Two_Thread_And_Queue_Size_Is_Correct) {
-  std::thread t1([this]() {
-    for (size_t i = 0; i < kTestQueueMaxSize / 2; ++i) {
-      asyncLogQueue.enqueue("Thread 1 - Log message " + std::to_string(i));
+        ASSERT_EQ(asyncLogQueue.getInternalQueue().size(), kTestQueueMaxSize);
     }
-  });
 
-  std::thread t2([this]() {
-    for (size_t i = 0; i < kTestQueueMaxSize / 2; ++i) {
-      asyncLogQueue.enqueue("Thread 2 - Log message " + std::to_string(i));
+    TEST_F(AsyncLogQueueTest, Queue_Is_Empty_And_After_Enqueue_Size_Is_One) {
+        ASSERT_EQ(asyncLogQueue.getInternalQueue().size(), 0);
+        asyncLogQueue.enqueue(testMessage);
+
+        ASSERT_EQ(asyncLogQueue.getInternalQueue().size(), 1);
     }
-  });
 
-  t1.join();
-  t2.join();
+    TEST_F(AsyncLogQueueTest, Run_Enqueue_From_Two_Thread_And_Queue_Size_Is_Correct) {
+        std::thread t1([this]() {
+            for (size_t i = 0; i < kTestQueueMaxSize / 2; ++i) {
+                asyncLogQueue.enqueue("Thread 1 - Log message " + std::to_string(i));
+            }
+        });
 
-  ASSERT_EQ(asyncLogQueue.getInternalQueue().size(), kTestQueueMaxSize);
-}
+        std::thread t2([this]() {
+            for (size_t i = 0; i < kTestQueueMaxSize / 2; ++i) {
+                asyncLogQueue.enqueue("Thread 2 - Log message " + std::to_string(i));
+            }
+        });
 
-TEST_F(AsyncLogQueueTest, Run_Enqueue_From_Two_Thread_And_Messages_Are_Correctly_Added_To_Queue) {
-  std::thread t1([this]() {
-    for (size_t i = 0; i < kTestQueueMaxSize / 2; ++i) {
-      asyncLogQueue.enqueue("Thread 1 - Log message " + std::to_string(i));
+        t1.join();
+        t2.join();
+
+        ASSERT_EQ(asyncLogQueue.getInternalQueue().size(), kTestQueueMaxSize);
     }
-  });
 
-  std::thread t2([this]() {
-    for (size_t i = 0; i < kTestQueueMaxSize / 2; ++i) {
-      asyncLogQueue.enqueue("Thread 2 - Log message " + std::to_string(i));
+    TEST_F(AsyncLogQueueTest, Run_Enqueue_From_Two_Thread_And_Messages_Are_Correctly_Added_To_Queue) {
+        std::thread t1([this]() {
+            for (size_t i = 0; i < kTestQueueMaxSize / 2; ++i) {
+                asyncLogQueue.enqueue("Thread 1 - Log message " + std::to_string(i));
+            }
+        });
+
+        std::thread t2([this]() {
+            for (size_t i = 0; i < kTestQueueMaxSize / 2; ++i) {
+                asyncLogQueue.enqueue("Thread 2 - Log message " + std::to_string(i));
+            }
+        });
+
+        t1.join();
+        t2.join();
+
+        const auto& queue = asyncLogQueue.getInternalQueue();
+        for (size_t i = 0; i < kTestQueueMaxSize / 2; ++i) {
+            ASSERT_TRUE(std::find(queue.begin(), queue.end(), "Thread 1 - Log message " + std::to_string(i)) != queue.end());
+            ASSERT_TRUE(std::find(queue.begin(), queue.end(), "Thread 2 - Log message " + std::to_string(i)) != queue.end());
+        }
     }
-  });
 
-  t1.join();
-  t2.join();
+    TEST_F(AsyncLogQueueTest, Try_Dequeue_From_Empty_Queue_And_Return_False) {
+        std::vector<std::string> out;
 
-  const auto& queue = asyncLogQueue.getInternalQueue();
-  for (size_t i = 0; i < kTestQueueMaxSize / 2; ++i) {
-    ASSERT_TRUE(std::find(queue.begin(), queue.end(), "Thread 1 - Log message " + std::to_string(i)) != queue.end());
-    ASSERT_TRUE(std::find(queue.begin(), queue.end(), "Thread 2 - Log message " + std::to_string(i)) != queue.end());
-  }
-}
+        ASSERT_FALSE(asyncLogQueue.dequeue(out, 5, 100));
+    }
 
-TEST_F(AsyncLogQueueTest, Try_Dequeue_From_Empty_Queue_And_Return_False) {
-  std::vector<std::string> out;
+    TEST_F(AsyncLogQueueTest, Try_Dequeue_When_Stop_Is_Requested_And_Return_False) {
+        asyncLogQueue.setStopRequested(true);
+        std::vector<std::string> out;
 
-  ASSERT_FALSE(asyncLogQueue.dequeue(out, 5, 100));
-}
+        ASSERT_FALSE(asyncLogQueue.dequeue(out, 5, 100));
+    }
 
-TEST_F(AsyncLogQueueTest, Try_Dequeue_When_Stop_Is_Requested_And_Return_False) {
-  asyncLogQueue.setStopRequested(true);
-  std::vector<std::string> out;
+    TEST_F(AsyncLogQueueTest, Enqueue_And_Dequeue_Messages_And_Check_If_Dequeued_Messages_Are_Correct) {
+        std::vector<std::string> messagesToEnqueue = {"Message 1", "Message 2", "Message 3"};
+        for (const auto& msg : messagesToEnqueue) {
+            asyncLogQueue.getInternalQueue().push_back(msg);
+        }
 
-  ASSERT_FALSE(asyncLogQueue.dequeue(out, 5, 100));
-}
+        std::vector<std::string> out;
+        ASSERT_TRUE(asyncLogQueue.dequeue(out, 5, 100));
+        ASSERT_EQ(out.size(), messagesToEnqueue.size());
+        for (const auto& msg : messagesToEnqueue) {
+            ASSERT_TRUE(std::find(out.begin(), out.end(), msg) != out.end());
+        }
+    }
 
-TEST_F(AsyncLogQueueTest, Enqueue_And_Dequeue_Messages_And_Check_If_Dequeued_Messages_Are_Correct) {
-  std::vector<std::string> messagesToEnqueue = {"Message 1", "Message 2", "Message 3"};
-  for (const auto& msg : messagesToEnqueue) {
-    asyncLogQueue.getInternalQueue().push_back(msg);
-  }
+    TEST_F(AsyncLogQueueTest, Enqueue_More_Messages_Than_Max_Batch_Size_And_Check_If_Dequeued_Messages_Are_Correct) {
+        std::vector<std::string> messagesToEnqueue = {"Message 1", "Message 2", "Message 3", "Message 4", "Message 5"};
+        for (const auto& msg : messagesToEnqueue) {
+            asyncLogQueue.getInternalQueue().push_back(msg);
+        }
 
-  std::vector<std::string> out;
-  ASSERT_TRUE(asyncLogQueue.dequeue(out, 5, 100));
-  ASSERT_EQ(out.size(), messagesToEnqueue.size());
-  for (const auto& msg : messagesToEnqueue) {
-    ASSERT_TRUE(std::find(out.begin(), out.end(), msg) != out.end());
-  }
-}
+        std::vector<std::string> out;
+        ASSERT_TRUE(asyncLogQueue.dequeue(out, 3, 100));
+        ASSERT_EQ(out.size(), 3);
+        for (size_t i = 0; i < 3; ++i) {
+            ASSERT_TRUE(std::find(out.begin(), out.end(), messagesToEnqueue[i]) != out.end());
+        }
+    }
 
-TEST_F(AsyncLogQueueTest, Enqueue_More_Messages_Than_Max_Batch_Size_And_Check_If_Dequeued_Messages_Are_Correct) {
-  std::vector<std::string> messagesToEnqueue = {"Message 1", "Message 2", "Message 3", "Message 4", "Message 5"};
-  for (const auto& msg : messagesToEnqueue) {
-    asyncLogQueue.getInternalQueue().push_back(msg);
-  }
+    TEST_F(AsyncLogQueueTest, Dequeue_From_Two_Threads_And_Check_If_Messages_Are_Correctly_Dequeued) {
+        std::vector<std::string> messagesToEnqueue = {"Message 1", "Message 2", "Message 3", "Message 4", "Message 5"};
+        for (const auto& msg : messagesToEnqueue) {
+            asyncLogQueue.getInternalQueue().push_back(msg);
+        }
 
-  std::vector<std::string> out;
-  ASSERT_TRUE(asyncLogQueue.dequeue(out, 3, 100));
-  ASSERT_EQ(out.size(), 3);
-  for (size_t i = 0; i < 3; ++i) {
-    ASSERT_TRUE(std::find(out.begin(), out.end(), messagesToEnqueue[i]) != out.end());
-  }
-}
+        std::vector<std::string> out1, out2;
+        std::thread t1([this, &out1]() {
+            bool result = asyncLogQueue.dequeue(out1, 3, 100);
+            ASSERT_TRUE(result);
+        });
 
-TEST_F(AsyncLogQueueTest, Dequeue_From_Two_Threads_And_Check_If_Messages_Are_Correctly_Dequeued) {
-  std::vector<std::string> messagesToEnqueue = {"Message 1", "Message 2", "Message 3", "Message 4", "Message 5"};
-  for (const auto& msg : messagesToEnqueue) {
-    asyncLogQueue.getInternalQueue().push_back(msg);
-  }
+        std::thread t2([this, &out2]() {
+            bool result = asyncLogQueue.dequeue(out2, 3, 100);
+            ASSERT_TRUE(result);
+        });
 
-  std::vector<std::string> out1, out2;
-  std::thread t1([this, &out1]() {
-    bool result = asyncLogQueue.dequeue(out1, 3, 100);
-    ASSERT_TRUE(result);
-  });
+        t1.join();
+        t2.join();
 
-  std::thread t2([this, &out2]() {
-    bool result = asyncLogQueue.dequeue(out2, 3, 100);
-    ASSERT_TRUE(result);
-  });
+        std::vector<std::string> allDequeuedMessages;
+        allDequeuedMessages.insert(allDequeuedMessages.end(), out1.begin(), out1.end());
+        allDequeuedMessages.insert(allDequeuedMessages.end(), out2.begin(), out2.end());
 
-  t1.join();
-  t2.join();
+        for (const auto& msg : messagesToEnqueue) {
+            ASSERT_TRUE(std::find(allDequeuedMessages.begin(), allDequeuedMessages.end(), msg) != allDequeuedMessages.end());
+        }
+    }
 
-  std::vector<std::string> allDequeuedMessages;
-  allDequeuedMessages.insert(allDequeuedMessages.end(), out1.begin(), out1.end());
-  allDequeuedMessages.insert(allDequeuedMessages.end(), out2.begin(), out2.end());
+    TEST_F(AsyncLogQueueTest, Dequeue_All_Messages_And_Check_If_Queue_Is_Empty) {
+        std::vector<std::string> messagesToEnqueue = {"Message 1", "Message 2", "Message 3"};
+        for (const auto& msg : messagesToEnqueue) {
+            asyncLogQueue.getInternalQueue().push_back(msg);
+        }
 
-  for (const auto& msg : messagesToEnqueue) {
-    ASSERT_TRUE(std::find(allDequeuedMessages.begin(), allDequeuedMessages.end(), msg) != allDequeuedMessages.end());
-  }
-}
+        std::vector<std::string> out;
+        asyncLogQueue.dequeue(out, 5, 100);
 
-TEST_F(AsyncLogQueueTest, Dequeue_All_Messages_And_Check_If_Queue_Is_Empty) {
-  std::vector<std::string> messagesToEnqueue = {"Message 1", "Message 2", "Message 3"};
-  for (const auto& msg : messagesToEnqueue) {
-    asyncLogQueue.getInternalQueue().push_back(msg);
-  }
+        ASSERT_TRUE(asyncLogQueue.getInternalQueue().empty());
+    }
 
-  std::vector<std::string> out;
-  asyncLogQueue.dequeue(out, 5, 100);
+    TEST_F(AsyncLogQueueTest, Stop_Queue_And_Check_If_Dequeue_Returns_False) {
+        asyncLogQueue.stop();
 
-  ASSERT_TRUE(asyncLogQueue.getInternalQueue().empty());
-}
+        ASSERT_TRUE(asyncLogQueue.getStopRequested());
+    }
 
-TEST_F(AsyncLogQueueTest, Stop_Queue_And_Check_If_Dequeue_Returns_False) {
-  asyncLogQueue.stop();
-
-  ASSERT_TRUE(asyncLogQueue.getStopRequested());
-}
-
-TEST_F(AsyncLogQueueTest, Check_If_Stop_Request_Set_To_False_By_Default) {
-  ASSERT_FALSE(asyncLogQueue.getStopRequested());
-}
+    TEST_F(AsyncLogQueueTest, Check_If_Stop_Request_Set_To_False_By_Default) {
+        ASSERT_FALSE(asyncLogQueue.getStopRequested());
+    }
 }  // namespace async_log_queue_test
