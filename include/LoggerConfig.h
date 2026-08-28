@@ -91,6 +91,10 @@ namespace equinox {
                 case 5:
                     this->logLevel = level::LOG_LEVEL::critical;
                     break;
+
+                case 6:
+                    this->logLevel = level::LOG_LEVEL::off;
+                    break;
             }
         }
 
