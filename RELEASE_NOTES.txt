@@ -246,3 +246,5 @@
 2026-08-28 13:12:28 +0200 | v2.2.80 | Update copyright years and remove author comments in header files
 2026-08-28 14:10:21 +0200 | v2.2.81 | Add new logging macros for changing log level, logs sink, and flushing
 2026-08-28 14:18:50 +0200 | v2.2.82 | Replace include guards with #pragma once in multiple header files and update copyright year
+2026-09-03 17:06:32 +0200 | v2.2.83 | Update README.md with new logging macros and examples; add BSD 3-Clause License to multiple header files
+2026-09-03 17:14:42 +0200 | v2.2.84 | Enhance README.md with detailed build script options and usage examples
