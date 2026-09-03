@@ -1,4 +1,4 @@
-# Equinox logging engine 2.2.82
+# Equinox logging engine 2.2.83
 
 **Logger with support logging to file, console or both. Six levels available:**
 - Trace 
@@ -80,12 +80,15 @@ The project also provides convenience macros in `EquinoxLoggerMacros.h`:
 ```cpp
 #include "EquinoxLoggerMacros.h"
 
-EQUINOX_TRACE("trace message %d", 1);
-EQUINOX_DEBUG("debug message %d", 2);
-EQUINOX_INFO("info message %d", 3);
-EQUINOX_WARNING("warning message %d", 4);
-EQUINOX_ERROR("error message %d", 5);
-EQUINOX_CRITICAL("critical message %d", 6);
+SETUP_LOGGER(equinox::level::LOG_LEVEL::trace, std::string("equinox-macro_test"), equinox::logs_output::SINK::console_and_file, std::string("equinox.log"),
+             3U * 1024U * 1024U, 5U);
+LOG_TRACE("Example MACRO trace log no:    [%d]", 1);
+LOG_DEBUG("Example MACRO debug log no:    [%d]", 2);
+LOG_INFO("Example MACRO info log no:     [%d]", 3);
+LOG_WARNING("Example MACRO warning log no:  [%d]", 4);
+LOG_ERROR("Example MACRO error log no:    [%d]", 5);
+LOG_CRITICAL("Example MACRO critical log no: [%d]", 6);
+
 ```
 
 The macro behavior depends on the standard `NDEBUG` flag:
