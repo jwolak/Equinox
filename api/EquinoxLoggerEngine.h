@@ -40,10 +40,10 @@
 #include <string>
 
 #include "EquinoxLoggerCommon.h"
-#include "IEquinoxLoggerEngineImpl.h"
 
 namespace equinox {
 
+    class IEquinoxLoggerEngineImpl;
     class EquinoxLoggerEngineImpl;
 
     class EQUINOX_API EquinoxLoggerEngine {
@@ -54,11 +54,11 @@ namespace equinox {
         EquinoxLoggerEngine(EquinoxLoggerEngine&&) = delete;
         void operator=(const EquinoxLoggerEngine&) = delete;
         void operator=(const EquinoxLoggerEngine&&) = delete;
+        ~EquinoxLoggerEngine();
 
         template <typename... Args>
         void log(level::LOG_LEVEL msgLevel, const std::string& msgFormat, Args&&... args) {
-            if (!mEquinoxLoggerEngineImpl_->shouldLog(msgLevel)) {
-                // If the message level is below the current log level, do not format or log the message
+            if (!shouldLog(msgLevel)) {
                 return;
             }
 
@@ -67,8 +67,7 @@ namespace equinox {
                 if (formattedMessage.size() > 4095U) {
                     formattedMessage.resize(4095U);
                 }
-                std::lock_guard<std::mutex> lock(mEngineMutex_);
-                mEquinoxLoggerEngineImpl_->logMessage(msgLevel, formattedMessage);
+                logFormattedMessage(msgLevel, formattedMessage);
             } catch (const fmt::format_error& ex) {
                 std::cout << "[EquinoxLoggerEngine] Message formatting error: " << ex.what() << std::endl;
             } catch (const std::exception& ex) {
@@ -89,6 +88,9 @@ namespace equinox {
         EquinoxLoggerEngine(std::unique_ptr<IEquinoxLoggerEngineImpl> mEquinoxLoggerEngineImpl);
 
        private:
+        bool shouldLog(level::LOG_LEVEL msgLevel) const;
+        void logFormattedMessage(level::LOG_LEVEL msgLevel, const std::string& formattedMessage);
+
         std::unique_ptr<IEquinoxLoggerEngineImpl> mEquinoxLoggerEngineImpl_;
         mutable std::mutex mEngineMutex_;
     };
