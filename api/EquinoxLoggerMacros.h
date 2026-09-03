@@ -54,7 +54,7 @@
 
 #define SETUP_FROM_CONFIG_FILE(configFilePath) equinox::setupFromConfigFile(configFilePath)
 
-#define CHANGE_LOG_LEVEL(newLogLevel) equinox::changeLogLevel(newLogLevel)
+#define CHANGE_LOG_LEVEL(newLogLevel) equinox::changeLevel(newLogLevel)
 
 #define CHANGE_LOGS_SINK(newLogsOutputSink) equinox::changeLogsSink(newLogsOutputSink)
 

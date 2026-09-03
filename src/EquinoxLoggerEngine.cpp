@@ -38,9 +38,20 @@ equinox::EquinoxLoggerEngine::EquinoxLoggerEngine() : mEquinoxLoggerEngineImpl_{
 equinox::EquinoxLoggerEngine::EquinoxLoggerEngine(std::unique_ptr<IEquinoxLoggerEngineImpl> mEquinoxLoggerEngineImpl)
     : mEquinoxLoggerEngineImpl_{std::move(mEquinoxLoggerEngineImpl)} {}
 
+equinox::EquinoxLoggerEngine::~EquinoxLoggerEngine() = default;
+
 equinox::EquinoxLoggerEngine& equinox::EquinoxLoggerEngine::getInstance() {
     static EquinoxLoggerEngine sEquinoxLoggerEngine;
     return sEquinoxLoggerEngine;
+}
+
+bool equinox::EquinoxLoggerEngine::shouldLog(level::LOG_LEVEL msgLevel) const {
+    return mEquinoxLoggerEngineImpl_->shouldLog(msgLevel);
+}
+
+void equinox::EquinoxLoggerEngine::logFormattedMessage(level::LOG_LEVEL msgLevel, const std::string& formattedMessage) {
+    std::lock_guard<std::mutex> lock(mEngineMutex_);
+    mEquinoxLoggerEngineImpl_->logMessage(msgLevel, formattedMessage);
 }
 
 bool equinox::EquinoxLoggerEngine::setup(equinox::level::LOG_LEVEL logLevel, const std::string& logPrefix, equinox::logs_output::SINK logsOutputSink,
