@@ -1,4 +1,4 @@
-# Equinox logging engine 2.2.83
+# Equinox logging engine 2.2.84
 
 **Logger with support logging to file, console or both. Six levels available:**
 - Trace 
@@ -29,10 +29,61 @@
 - configured build to shared/static lib
 
 ## Building for source
+
+The project can be built with CMake and Make directly:
+
 ```sh
 cmake CMakeLists.txt
 make
 ```
+
+For a clean, configurable build, use [`scripts/build.sh`](scripts/build.sh). The script removes the selected build directory before configuring it with CMake, builds with all available CPU cores, and stores the results under `build/`.
+
+```sh
+# Show available options
+./scripts/build.sh --help
+
+# Build the shared library in Debug mode (default build type)
+./scripts/build.sh debug
+
+# Build the Release library together with examples and tests
+./scripts/build.sh release examples tests
+
+# Build only the static library
+./scripts/build.sh release --static
+
+# Build both shared and static libraries
+./scripts/build.sh debug --both
+```
+
+### Build script options
+
+Build type and targets:
+
+- `debug` or `release` selects the build type; `debug` is the default.
+- `examples` builds the example applications.
+- `tests` or `unit` builds and runs the unit tests.
+- `format` formats the source files before building.
+
+Library and test options:
+
+- `--shared` builds the shared library (the default).
+- `--static` builds only the static library.
+- `--both` builds shared and static libraries in separate directories.
+- `--skip-tests` builds the tests without running them.
+- `--coverage` builds the Debug configuration, runs the tests, and generates an LCOV report.
+- `--format-only` formats the source files and exits without building.
+- `--clean` is accepted for compatibility; the selected build directory is always cleaned.
+
+For example, test coverage can be generated with:
+
+```sh
+./scripts/build.sh debug tests --coverage
+```
+
+The main build artifacts are written to `build/Debug/` or `build/Release/`. When `--both` is used, they are written to `build/Debug-shared/` and `build/Debug-static/` (or the corresponding Release directories). The HTML coverage report is available at `build/Debug/coverage/html/index.html`.
+
+Building tests requires GoogleTest. Coverage additionally requires `lcov` and `genhtml`; on Debian/Ubuntu, the script can try to install them using `apt-get`.
 
 [Back to table of contents](#table-of-contents)
 
